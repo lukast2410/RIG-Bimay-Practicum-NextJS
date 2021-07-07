@@ -1,70 +1,70 @@
-import axios from 'axios';
-import Greeting from './Greeting';
-import Navbar from './Navbar';
-import { useContext, useEffect } from 'react';
-import $ from 'jquery';
-import { useRouter } from 'next/router';
-import { UserContext } from '../contexts/UserContext';
-import Link from 'next/link';
+import axios from 'axios'
+import Greeting from './Greeting'
+import Navbar from './Navbar'
+import { useContext, useEffect } from 'react'
+import $ from 'jquery'
+import { useRouter } from 'next/router'
+import { UserContext } from '../contexts/UserContext'
+import Link from 'next/link'
 
 export default function Header() {
 	const router = useRouter()
 	const [user, setUser] = useContext(UserContext)
 	const smt: any[] = user?.Semesters
 	const currentSemesterIndex = smt?.findIndex((x) => x.SemesterId == user?.SemesterId)
-	const currentSemester = smt?.find(x => x.SemesterId == user?.SemesterId)
+	const currentSemester = smt?.find((x) => x.SemesterId == user?.SemesterId)
 
 	useEffect(() => {
 		$(document).ready(function () {
-			let isOpen = false;
+			let isOpen = false
 
 			$('.option').click(function () {
 				isOpen = !isOpen
 				var val = $(this).attr('data-value'),
 					$drop = $('.drop'),
 					prevActive = $('.active').attr('data-value'),
-					options = $('.option').length;
-				$drop.find('.active').addClass('mini-hack');
-				$drop.toggleClass('visible');
-				$drop.removeClass('withBG');
-				$(this).css('top');
-				$drop.toggleClass('opacity');
-				$('.mini-hack').removeClass('mini-hack');
+					options = $('.option').length
+				$drop.find('.active').addClass('mini-hack')
+				$drop.toggleClass('visible')
+				$drop.removeClass('withBG')
+				$(this).css('top')
+				$drop.toggleClass('opacity')
+				$('.mini-hack').removeClass('mini-hack')
 				if ($drop.hasClass('visible')) {
-					$drop.addClass('withBG');
+					$drop.addClass('withBG')
 				}
-				triggerAnimation();
-			});
+				triggerAnimation()
+			})
 
 			$('.drop').blur(function () {
-				if(isOpen){
+				if (isOpen) {
 					var val = $(this).attr('data-value'),
 						$drop = $('.drop'),
 						prevActive = $('.active').attr('data-value'),
-						options = $('.option').length;
-					$drop.find('.active').addClass('mini-hack');
-					$drop.toggleClass('visible');
-					$drop.removeClass('withBG');
-					$(this).css('top');
-					$drop.toggleClass('opacity');
-					$('.mini-hack').removeClass('mini-hack');
+						options = $('.option').length
+					$drop.find('.active').addClass('mini-hack')
+					$drop.toggleClass('visible')
+					$drop.removeClass('withBG')
+					$(this).css('top')
+					$drop.toggleClass('opacity')
+					$('.mini-hack').removeClass('mini-hack')
 					if ($drop.hasClass('visible')) {
-						$drop.addClass('withBG');
+						$drop.addClass('withBG')
 					}
-					triggerAnimation();
+					triggerAnimation()
 					isOpen = false
 				}
 			})
 
 			function triggerAnimation() {
-				var finalWidth = $('.drop').hasClass('visible') ? 17 : 15;
-				$('.drop').css('width', '19em');
+				var finalWidth = $('.drop').hasClass('visible') ? 17 : 15
+				$('.drop').css('width', '19em')
 				setTimeout(function () {
-					$('.drop').css('width', finalWidth + 'em');
-				}, 400);
+					$('.drop').css('width', finalWidth + 'em')
+				}, 400)
 			}
-		});
-	}, []);
+		})
+	}, [])
 
 	const handleChangeSemester = async (idx) => {
 		await axios
@@ -73,16 +73,16 @@ export default function Header() {
 			})
 			.then((res) => {
 				router.replace(router.asPath)
-			});
-	};
+			})
+	}
 
 	return (
-		<div>
+		<div id='header-main'>
 			<header className={`border-b border-solid border-gray-200`}>
 				<div className={`flex justify-between px-4 mr-auto ml-auto pb-5 max-w-screen-2xl`}>
 					<div className={`flex`}>
 						<img src='https://academic-slc.apps.binus.ac.id/assets/ribbon.png' alt='Not Found' />
-						<Link href="/">
+						<Link href='/'>
 							<a href='/' className={`ml-2`}>
 								<img src='https://academic-slc.apps.binus.ac.id/assets/logo.png' alt='Not Found' />
 							</a>
@@ -90,37 +90,41 @@ export default function Header() {
 					</div>
 					<div className={`flex flex-col pt-5 items-end relative w-full`}>
 						<div>
-							<b>
+							<b className='flex flex-col text-right sm:flex-row'>
 								<Greeting />
 								<span className={`text-binus-blue`}>{user?.Data.Name}</span>
 							</b>
 						</div>
-						<div className={`absolute top-16 z-10`} >
-							<button className={`drop w-60 focus:outline-none text-left`} >
-								<div className={`option active placeholder`} data-value={currentSemesterIndex}>
-									{currentSemester?.Description}
-								</div>
-								{smt?.map((element, idx) => {
-									if (idx == currentSemesterIndex) {
-										return (
-											<div key={idx} className='active option' data-value={idx}>
-												{element.Description}
-											</div>
-										);
-									} else {
-										return (
-											<div
-												key={idx}
-												className={`option`}
-												data-value={idx}
-												onClick={() => handleChangeSemester(idx)}
-											>
-												{element.Description}
-											</div>
-										);
-									}
-								})}
-							</button>
+						<div className='mt-3 relative h-9'>
+							<div className={`absolute right-0 top-0 z-10`}>
+								<button
+									className={`drop w-60 max-h-80 overflow-auto focus:outline-none focus:bg-grey text-left border border-gray-300`}
+								>
+									<div className={`option active placeholder`} data-value={currentSemesterIndex}>
+										{currentSemester?.Description}
+									</div>
+									{smt?.map((element, idx) => {
+										if (idx == currentSemesterIndex) {
+											return (
+												<div key={idx} className='active option' data-value={idx}>
+													{element.Description}
+												</div>
+											)
+										} else {
+											return (
+												<div
+													key={idx}
+													className={`option`}
+													data-value={idx}
+													onClick={() => handleChangeSemester(idx)}
+												>
+													{element.Description}
+												</div>
+											)
+										}
+									})}
+								</button>
+							</div>
 						</div>
 					</div>
 					<style jsx>
@@ -131,17 +135,11 @@ export default function Header() {
 								-webkit-transition: width 0.3s;
 								transition: width 0.3s;
 								will-change: width;
-								border: 2px solid #ced4da;
 								border-radius: 0.25rem;
-							}
-
-							.placeholder {
-								border-radius: 0.15rem;
 							}
 
 							.drop.withBG .placeholder {
 								background-color: #ced4da;
-								border-radius: 0.1rem 0.1rem 0 0;
 							}
 
 							.drop .active {
@@ -248,7 +246,7 @@ export default function Header() {
 					</style>
 				</div>
 			</header>
-            <Navbar/>
+			<Navbar />
 		</div>
-	);
+	)
 }

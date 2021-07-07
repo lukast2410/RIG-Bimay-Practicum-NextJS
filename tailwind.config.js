@@ -5,6 +5,8 @@ module.exports = {
     extend: {
       colors: {
         'binus-blue': '#00a9e2',
+        'binus-blue-100': 'rgba(0, 169, 226, 0.15)',
+        'grey': '#ced4da'
       },
       maxWidth: {
         'screen-2xl': '1460px'
@@ -19,10 +21,12 @@ module.exports = {
         blink: 'blink 0.5s linear infinite alternate',
       },
     },
-
   },
   variants: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    require('@tailwindcss/forms')
+  ],
+  important: true
 }

@@ -4,7 +4,7 @@ import withSession from '../../lib/session';
 export default withSession(async (req, res) => {
 	const { semester } = await req.body;
 	const user = req.session.get('user');
-	const getCoursesUrl = `https://laboratory.binus.ac.id/lapi/api/Binusmaya/GetSchedule?SemesterId=`;
+	const getCoursesUrl = `${process.env.NEXT_PUBLIC_LABORATORY_URL}Binusmaya/GetSchedule?SemesterId=`;
 
 	try {
 		user.SemesterId = semester

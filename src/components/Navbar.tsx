@@ -1,30 +1,31 @@
-import React, { Fragment, useContext, useState } from 'react';
-import { Disclosure, Menu, Popover, Transition } from '@headlessui/react';
-import { ChevronDownIcon, SearchIcon } from '@heroicons/react/solid';
-import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
-import axios from 'axios';
-import { useRouter } from 'next/router';
-import { UserContext } from '../contexts/UserContext';
-import Link from 'next/link';
+import React, { Fragment, useContext, useState } from 'react'
+import { Disclosure, Menu, Popover, Transition } from '@headlessui/react'
+import { ChevronDownIcon, SearchIcon } from '@heroicons/react/solid'
+import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
+import axios from 'axios'
+import { useRouter } from 'next/router'
+import { UserContext } from '../contexts/UserContext'
+import Link from 'next/link'
 
 function classNames(...classes) {
-	return classes.filter(Boolean).join(' ');
+	return classes.filter(Boolean).join(' ')
 }
 
 export default function Navbar() {
-	const [user, setUser] = useContext(UserContext);
-	const router = useRouter();
-	const courses: any[] = user?.Courses;
-	const [hover, setHover] = useState(false);
+	const [user, setUser] = useContext(UserContext)
+	const router = useRouter()
+	const courses: any[] = user?.Courses
+	const [hover, setHover] = useState(false)
+	const isStudent = user?.Data.Role != 'Software Teaching Assistant'
 
 	const handleSignOut = async (e) => {
-		e.preventDefault();
+		e.preventDefault()
 
-		await axios.post(`/api/logout`);
-		router.push('/auth/login');
-	};
+		await axios.post(`/api/logout`)
+		router.push('/auth/login')
+	}
 
 	return (
 		<Disclosure as='nav' className='bg-white shadow'>
@@ -32,68 +33,69 @@ export default function Navbar() {
 				<>
 					<div className='max-w-screen-2xl mx-auto px-2 sm:px-4 md:px-8'>
 						<div className='flex justify-between h-16'>
-							<div className='flex px-2 md:px-0'>
+							<div className='flex px-1 md:px-0'>
 								<div className='hidden md:flex md:space-x-8'>
-									<Link href="/">
+									<Link href='/'>
 										<a
-											className={`border-binus-blue font-bold text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 hover:text-binus-blue`}
+											className={`${router.route == '/' ? 'border-binus-blue border-b-2 text-gray-900' : 'text-gray-500 hover:border-gray-300'} font-bold inline-flex items-center px-1 pt-1 hover:text-binus-blue`}
 										>
 											Home
 										</a>
 									</Link>
-									<div
-										className='relative font-bold text-gray-500 hover:text-binus-blue inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-gray-300 cursor-pointer'
-										onMouseEnter={() => setHover(true)}
-										onMouseLeave={() => setHover(false)}
-									>
-										<Popover className='relative'>
-											<Popover.Button className='group bg-white rounded-md inline-flex items-center text-base font-bold  focus:outline-none'>
-												<span>Courses</span>
-												<ChevronDownIcon className='ml-2 h-5 w-5' aria-hidden='true' />
-											</Popover.Button>
-
-											<Transition
-												show={hover}
-												as={Fragment}
-												enter='transition ease-out duration-200'
-												enterFrom='opacity-0 translate-y-1'
-												enterTo='opacity-100 translate-y-0'
-												leave='transition ease-in duration-150'
-												leaveFrom='opacity-100 translate-y-0'
-												leaveTo='opacity-0 translate-y-1'
+									{!isStudent ? null : (
+										<>
+											<div
+												className={`${router.route.search('course') >= 0 ? 'border-binus-blue border-b-2 text-gray-900' : 'text-gray-500 hover:border-gray-300'} relative font-bold hover:text-binus-blue inline-flex items-center px-1 pt-1 border-b-2 border-transparent cursor-pointer`}
+												onMouseEnter={() => setHover(true)}
+												onMouseLeave={() => setHover(false)}
 											>
-												<Popover.Panel
-													static
-													className='absolute z-10 left-1/2 transform -translate-x-1/4 mt-3 px-2 w-max sm:px-0'
+												<Popover className='relative'>
+													<Popover.Button className='group bg-white rounded-md inline-flex items-center text-base font-bold focus:outline-none'>
+														<span>Courses</span>
+														<ChevronDownIcon className='ml-2 h-5 w-5 mt-1' aria-hidden='true' />
+													</Popover.Button>
+
+													<Transition
+														show={hover}
+														as={Fragment}
+														enter='transition ease-out duration-200'
+														enterFrom='opacity-0 translate-y-1'
+														enterTo='opacity-100 translate-y-0'
+														leave='transition ease-in duration-150'
+														leaveFrom='opacity-100 translate-y-0'
+														leaveTo='opacity-0 translate-y-1'
+													>
+														<Popover.Panel
+															static
+															className='absolute z-10 left-1/2 transform -translate-x-1/4 mt-3 px-2 w-max sm:px-0'
+														>
+															<div className='rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden'>
+																<div className='relative grid gap-3 bg-white px-5 py-6 sm:gap-8'>
+																	{courses?.map((item, idx) => (
+																		<Link key={`course ${idx}`} href={`/course/${item.Subject}`}>
+																			<a className='-m-3 p-3 block rounded-md hover:bg-gray-100'>
+																				<p className='text-base font-medium text-gray-900'>{item.Subject}</p>
+																			</a>
+																		</Link>
+																	))}
+																</div>
+															</div>
+														</Popover.Panel>
+													</Transition>
+												</Popover>
+											</div>
+											<Link href='/schedule'>
+												<a
+													className={`${router.route.search('schedule') >= 0 ? 'border-binus-blue border-b-2 text-gray-900' : 'text-gray-500 hover:border-gray-300'} font-bold inline-flex items-center px-1 pt-1 hover:text-binus-blue`}
 												>
-													<div className='rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden'>
-														<div className='relative grid gap-3 bg-white px-5 py-6 sm:gap-8'>
-															{courses?.map((item, idx) => (
-																<Link key={`course ${idx}`} href={`/course/${item.Subject}`}>
-																	<a className='-m-3 p-3 block rounded-md hover:bg-gray-100
-																	'>
-																		<p className='text-base font-medium text-gray-900'>{item.Subject}</p>
-																	</a>
-																</Link>
-															))}
-														</div>
-													</div>
-												</Popover.Panel>
-											</Transition>
-										</Popover>
-									</div>
-									<Link href="/schedule">
+													Schedule
+												</a>
+											</Link>
+										</>
+									)}
+									<Link href='/extra-class'>
 										<a
-											href='#'
-											className={`font-bold text-gray-500 hover:text-binus-blue inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-gray-300`}
-										>
-											Schedule
-										</a>
-									</Link>
-									<Link href="/extra-class">
-										<a
-											href='#'
-											className={` font-bold text-gray-500 hover:text-binus-blue inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-gray-300`}
+											className={`${router.route.search('extra-class') >= 0 ? 'border-binus-blue border-b-2 text-gray-900' : 'text-gray-500 hover:border-gray-300'} font-bold inline-flex items-center px-1 pt-1 hover:text-binus-blue`}
 										>
 											Extra Class
 										</a>
@@ -121,7 +123,11 @@ export default function Navbar() {
 							</div>
 							<div className='flex items-center md:hidden'>
 								{/* Mobile menu button */}
-								<Disclosure.Button className='inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500'>
+								<button className='flex-shrink-0 bg-white p-1 m-1 text-gray-500 rounded-full hover:text-binus-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-binus-blue'>
+									<span className='sr-only'>View notifications</span>
+									<BellIcon className='h-6 w-6' aria-hidden='true' />
+								</button>
+								<Disclosure.Button className='inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-binus-blue'>
 									<span className='sr-only'>Open main menu</span>
 									{open ? (
 										<XIcon className='block h-6 w-6' aria-hidden='true' />
@@ -147,74 +153,58 @@ export default function Navbar() {
 					</div>
 
 					<Disclosure.Panel className='md:hidden'>
-						<div className='pt-2 pb-3 space-y-1'>
-							<a
-								href='#'
-								className={`border-binus-blue bg-indigo-50 text-indigo-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
-							>
-								Dashboard
-							</a>
-							<a
-								href='#'
-								className={`text-gray-600 hover:bg-gray-50 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent hover:border-gray-300`}
-							>
-								Team
-							</a>
-							<a
-								href='#'
-								className={`text-gray-600 hover:bg-gray-50 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent hover:border-gray-300`}
-							>
-								Projects
-							</a>
-							<a
-								href='#'
-								className={`text-gray-600 hover:bg-gray-50 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent hover:border-gray-300`}
-							>
-								Calendar
-							</a>
+						<div className='pt-2 pb-2 space-y-1'>
+							<Link href='/'>
+								<a
+									className={`border-binus-blue bg-blue-50 text-binus-blue block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
+								>
+									Home
+								</a>
+							</Link>
+							{!isStudent ? null : (
+								<Link href='/schedule'>
+									<a
+										className={`text-gray-600 hover:bg-gray-50 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent hover:border-gray-300`}
+									>
+										Schedules
+									</a>
+								</Link>
+							)}
+							<Link href='/extra-class'>
+								<a
+									className={`text-gray-600 hover:bg-gray-50 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent hover:border-gray-300`}
+								>
+									Extra Class
+								</a>
+							</Link>
 						</div>
-						<div className={`border-gray-300 pt-4 pb-3 border-t`}>
-							<div className='flex items-center px-4'>
-								<div className='flex-shrink-0'>
-									<img
-										className='h-10 w-10 rounded-full'
-										src='https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80'
-										alt=''
-									/>
+						{!isStudent ? null : (
+							<div className={`border-gray-300 pt-2 pb-2 border-t space-y-1`}>
+								<div className='text-gray-700 block pl-3 pr-4 py-1 border-l-4 text-base font-semibold border-transparent'>
+									Courses
 								</div>
-								<div className='ml-3'>
-									<div className='text-base font-medium text-gray-800'>Tom Cook</div>
-									<div className='text-sm font-medium text-gray-500'>tom@example.com</div>
-								</div>
-								<button className='ml-auto flex-shrink-0 bg-white p-1 text-gray-400 rounded-full hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'>
-									<span className='sr-only'>View notifications</span>
-									<BellIcon className='h-6 w-6' aria-hidden='true' />
-								</button>
+								{courses?.map((item, idx) => (
+									<Link key={idx} href={`/course/${item.Subject}`}>
+										<a
+											className={`text-gray-600 hover:bg-gray-50 hover:text-gray-800 block pl-6 pr-4 py-2 border-l-4 text-base font-medium border-transparent hover:border-gray-300`}
+										>
+											{item.Subject}
+										</a>
+									</Link>
+								))}
 							</div>
-							<div className='mt-3 space-y-1'>
-								<a
-									href='#'
-									className='block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100'
-								>
-									Your Profile
-								</a>
-								<a
-									href='#'
-									className='block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100'
-								>
-									Settings
-								</a>
-								<a
-									href='#'
-									className='block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100'
-								>
-									Sign out
-								</a>
+						)}
+						<div className={`border-gray-300 pt-2 pb-2 border-t`}>
+							<div
+								className='block px-4 py-2 text-base font-medium text-gray-500 hover:text-binus-blue hover:bg-gray-100 cursor-pointer'
+								onClick={handleSignOut}
+							>
+								Sign out
 							</div>
 						</div>
 					</Disclosure.Panel>
 				</>
 			)}
 		</Disclosure>
-	);
+	)
 }

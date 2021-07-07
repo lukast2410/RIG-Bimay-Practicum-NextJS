@@ -1,36 +1,59 @@
-import Head from 'next/head';
-import Particle from 'react-particles-js';
-import axios from 'axios';
-import useUser from '../../lib/useUser';
-import styles from '../../../styles/pages/Login.module.scss';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faLock } from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
+import Head from 'next/head'
+import Particle from 'react-particles-js'
+import axios from 'axios'
+import useUser from '../../lib/useUser'
+import styles from '../../../styles/pages/Login.module.scss'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faUser, faLock } from '@fortawesome/free-solid-svg-icons'
+import { XIcon, XCircleIcon } from '@heroicons/react/solid'
+import { useState } from 'react'
+import { EncryptToBase64 } from '../api/aes'
 
 export default function Login() {
 	const { mutateUser } = useUser({
 		redirectTo: '/',
 		redirectIfFound: true,
-	});
+	})
 	const [isLogin, setLogin] = useState(false)
+	const [isFailed, setFailed] = useState(false)
 
 	const handleLogin = async (e) => {
-		e.preventDefault();
+		e.preventDefault()
 
 		setLogin(true)
-		console.log(isLogin)
-		const body = {
+		let body = {
 			username: e.target.username.value,
 			password: e.target.password.value,
-		};
-
-		try {
-			await mutateUser(axios.post(`/api/login`, body));
-		} catch (error) {
-			console.log('Error happened: ' + error);
+			role: 'Student'
 		}
-		setLogin(false)
-	};
+
+		const numbers = /^[0-9]+$/
+		const binusian = /^[Bb][Nn][0-9]+$/
+		const initial = /^[A-Za-z][A-Za-z][0-9][0-9]-[0-9]/
+		const astCode = /^[Ll][Cc][0-9A-Za-z]+$/
+		if (numbers.test(body.username) || binusian.test(body.username)) {
+			try {
+				await mutateUser(axios.post(`/api/login`, body))
+			} catch (error) {
+				setFailed(true)
+				setLogin(false)
+				console.log('Error happened: ' + error)
+			}
+		} else if (initial.test(body.username) || astCode.test(body.username)) {
+			body.role = 'Assistant'
+			body.password = EncryptToBase64(body.username, body.password)
+			try {
+				await mutateUser(axios.post(`/api/login`, body))
+			} catch (error) {
+				setFailed(true)
+				setLogin(false)
+				console.log('Error happened: ' + error)
+			}
+		} else {
+			setFailed(true)
+			setLogin(false)
+		}
+	}
 
 	return (
 		<main>
@@ -39,30 +62,88 @@ export default function Login() {
 				<meta name='description' content='Login to Binusmaya Practicum' />
 			</Head>
 			<div className={`${styles.itemCenter}`}>
-				<form onSubmit={handleLogin} name='formLogin' className={`rounded-xl lg:bg-grey-700 ${styles.formLogin}`} id='form-login' autoComplete='off'>
+				<form
+					onSubmit={handleLogin}
+					name='formLogin'
+					className={`rounded-xl lg:bg-grey-700 ${styles.formLogin}`}
+					id='form-login'
+					autoComplete='off'
+				>
 					<i className={styles.CIbanner}></i>
 					<span className={styles.logoBinus}></span>
 
 					<div className={styles.loginInputContainer}>
+						<div className={`rounded-md bg-red-100 p-2.5 ${styles.inputControl}`} hidden={!isFailed}>
+							<div className='flex'>
+								<div className='flex-shrink-0'>
+									<XCircleIcon className='h-5 w-5 text-red-500' aria-hidden='true' />
+								</div>
+								<div className='ml-3'>
+									<p className='text-sm font-medium text-red-900'>Authentication Failed!</p>
+								</div>
+								<div className='ml-auto pl-3'>
+									<div className='-mx-1.5 -my-1.5'>
+										<button
+											type='button'
+											className='inline-flex bg-red-100 rounded-md p-1.5 text-red-500 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-red-50 focus:ring-red-600'
+											onClick={() => setFailed(false)}
+										>
+											<span className='sr-only'>Dismiss</span>
+											<XIcon className='h-5 w-5' aria-hidden='true' />
+										</button>
+									</div>
+								</div>
+							</div>
+						</div>
+
 						<div className={`rounded-md ${styles.inputControl}`}>
-							<input name="username" placeholder='NIM / Binusian Number' required autoFocus={true} className={`rounded-md ${styles.inputComponent}`} />
+							<input
+								name='username'
+								placeholder='NIM / Binusian Number'
+								required
+								autoFocus={true}
+								className={`rounded-md ${styles.inputComponent}`}
+							/>
 							<FontAwesomeIcon icon={faUser} className={styles.fa} />
 						</div>
 
 						<div className={`${styles.inputControl}`}>
-							<input name='password' type='password' placeholder='Password' required className={`rounded-md ${styles.inputComponent}`} />
+							<input
+								name='password'
+								type='password'
+								placeholder='Password'
+								required
+								className={`rounded-md ${styles.inputComponent}`}
+							/>
 							<FontAwesomeIcon icon={faLock} className={styles.fa} />
 						</div>
 
-						<button type="submit" className={`rounded-md inline-flex items-center justify-center transition ease-in-out duration-150 focus:outline-none ${styles.loginBtn}`}>
+						<button
+							type='submit'
+							className={`rounded-md inline-flex items-center justify-center transition ease-in-out duration-150 focus:outline-none ${styles.loginBtn}`}
+						>
 							{isLogin ? (
-								<svg className="animate-spin h-5 w-5 -ml-4 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-									<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-									<path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+								<svg
+									className='animate-spin h-5 w-5 -ml-4 mr-2 text-white'
+									xmlns='http://www.w3.org/2000/svg'
+									fill='none'
+									viewBox='0 0 24 24'
+								>
+									<circle
+										className='opacity-25'
+										cx='12'
+										cy='12'
+										r='10'
+										stroke='currentColor'
+										strokeWidth='4'
+									></circle>
+									<path
+										className='opacity-75'
+										fill='currentColor'
+										d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
+									></path>
 								</svg>
-							) : (
-								<></>
-							)}
+							) : null }
 							Login
 						</button>
 					</div>
@@ -197,5 +278,5 @@ export default function Login() {
 				}}
 			/>
 		</main>
-	);
+	)
 }
