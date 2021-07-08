@@ -1,0 +1,136 @@
+$binus-blue: #00a9e2;
+$binus-blue-hover: #0096c9;
+
+.particlesJS{
+    width: 100%;
+    height: 100vh;
+    background: linear-gradient(-30deg, #00d2ff, #3a7bd5);
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    position: fixed;
+}
+
+.itemCenter{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.formLogin{
+    width: 350px;
+    min-height: 325px;
+    background: white;
+    position: relative;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    padding: 15px 50px 40px 50px;
+    box-sizing: border-box;
+    z-index: 1;
+}
+
+.CIbanner{
+    top: 0;
+    left: 10px;
+    width: 35px;
+    height: 108px;
+    position: absolute;
+    background: url("https://academic-slc.apps.binus.ac.id/assets/ribbon.png");
+    z-index: 1;
+}
+
+.logoBinus{
+    width: 120px;
+    height: 100px;
+    background: url("https://academic-slc.apps.binus.ac.id/assets/logo.svg") center no-repeat;
+    background-size: auto;
+    display: block;
+    margin-left: 15px;
+}
+
+.loginInputContainer{
+    margin-top: 35px;
+}
+
+.inputControl{
+    width: 100%;
+    position: relative;
+    margin: 10px 0;
+}
+
+.inputComponent{
+    width: 100%;
+    height: auto;
+    padding: 7px 10px 7px 35px;
+    border: 1px solid #bbbbbb;
+    transition: border-color 0.1s ease-out;
+    box-sizing: border-box;
+}
+
+.inputComponent:focus {
+    outline: 0;
+    border-color: $binus-blue;
+    color: $binus-blue;
+
+    & + .fa {
+        color: $binus-blue;
+    }
+}
+
+.fa{
+    top: 0;
+    left: 0;
+    color: #bbb;
+    position: absolute;
+    margin: 9px 10px;
+    font-size: 15pt;
+    transition: color 0.1s ease-out;
+}
+
+.loginBtn{
+    width: 100%;
+    background: $binus-blue;
+    padding: 7px;
+    border: 0;
+    color: white;
+    font-weight: bold;
+    transition: background 0.1s ease-out;
+
+    &:hover{
+        background-color: $binus-blue-hover;
+    }
+}
+
+.textCenter{
+    position: absolute;
+    bottom: 10px;
+    color: white;
+    font-weight: bold;
+    font-size: 1rem;
+    width: 100%;
+    text-align: center;
+    z-index: 1;
+
+    .mobileFooter{
+        display: none;
+    }
+}
+
+@media screen and (max-width: 600px){
+    .textCenter{
+        .desktopFooter{
+            display: none;
+        }
+
+        .mobileFooter{
+            display: block;
+        }
+    }
+
+    .formLogin {
+        width: 100%;
+        max-width: 350px;
+        margin: 0;
+    }
+}

@@ -1,0 +1,23 @@
+@keyframes blink {
+    0%{
+        opacity: 0;
+    }
+    100%{
+        opacity: 1;
+    }
+}
+
+.cursor{
+    position: relative;
+}
+
+.cursor::after{
+    bottom: 0;
+    right: -3px;
+    position: absolute;
+    content: "";
+    width: 2px;
+    height: 18px;
+    background: #777777;
+    animation: blink 0.5s linear infinite alternate;
+}
