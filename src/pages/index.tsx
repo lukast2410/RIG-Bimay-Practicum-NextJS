@@ -7,15 +7,16 @@ import Events from '../components/home/Events'
 import DividerWithMessage from '../components/home/DividerWithMessage'
 import Identity from '../components/home/Identity'
 import RandomQuotes from '../components/home/RandomQuotes'
+import AstExtraClasses from '../components/home/AstExtraClasses'
 import axios from 'axios'
 
 function classNames(...classes) {
 	return classes.filter(Boolean).join(' ')
 }
 
-export default function Home({ user, procedures, events }) {
+export default function Home({ user, procedures, events, extra }) {
 	const [userData, setUserData] = useContext(UserContext)
-	console.log(user)
+	console.log(extra)
 	useEffect(() => setUserData(user), [user])
 
 	if (!user || !user.isLoggedIn) {
@@ -72,11 +73,14 @@ export default function Home({ user, procedures, events }) {
 	return (
 		<Layout title='Binusmaya Practicum'>
 			{/* Identity */}
-			<Identity isStudent={isStudent} user={user}/>
+			<Identity isStudent={isStudent} user={user} />
 
 			{/* practicum shedule now */}
 			{!isStudent ? (
-				<RandomQuotes/>
+				<>
+					<AstExtraClasses extra={extra}/>
+					<RandomQuotes />
+				</>
 			) : (
 				<>
 					<div className='max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8'>
@@ -303,7 +307,13 @@ export default function Home({ user, procedures, events }) {
 								</div>
 							</div>
 						) : (
-							<DividerWithMessage message='No practicum for this shift' size='md' bg='white' mt='-mt-3' color='gray-900'/>
+							<DividerWithMessage
+								message='No practicum for this shift'
+								size='md'
+								bg='white'
+								mt='-mt-3'
+								color='gray-900'
+							/>
 						)}
 					</div>
 					{/* Procedure & rules */}
@@ -331,11 +341,12 @@ export const getServerSideProps = withSession(async function ({ req, res }) {
 	const token = userData?.Token.token
 
 	if (userData.Data.Role == 'Software Teaching Assistant') {
-		const smt = await axios
-			.get(process.env.NEXT_PUBLIC_LABORATORY_URL + 'Schedule/GetSemesters')
-			.then((res) => {
+		const [smt, extra] = await Promise.all([
+			axios.get(process.env.NEXT_PUBLIC_LABORATORY_URL + 'Schedule/GetSemesters').then((res) => {
 				return res.data
-			})
+			}),
+			axios.get(process.env.NEXT_PUBLIC_EXTRA_URL + 'ExtraClassHeader/Assistant/' + userData.Data.Name).then((res) => res.data),
+		])
 
 		const user = {
 			...userData,
@@ -345,6 +356,7 @@ export const getServerSideProps = withSession(async function ({ req, res }) {
 		return {
 			props: {
 				user,
+				extra
 			},
 		}
 	}

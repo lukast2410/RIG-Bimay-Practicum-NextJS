@@ -98,7 +98,7 @@ export default function Header() {
 						<div className='mt-3 relative h-9'>
 							<div className={`absolute right-0 top-0 z-10`}>
 								<button
-									className={`drop w-60 max-h-80 overflow-auto focus:outline-none focus:bg-grey text-left border border-gray-300`}
+									className={`drop max-h-80 overflow-auto focus:outline-none focus:bg-grey text-left border border-gray-300`}
 								>
 									<div className={`option active placeholder`} data-value={currentSemesterIndex}>
 										{currentSemester?.Description}
@@ -130,6 +130,7 @@ export default function Header() {
 					<style jsx>
 						{`
 							.drop {
+								width: 15rem;
 								color: #212529;
 								position: relative;
 								-webkit-transition: width 0.3s;

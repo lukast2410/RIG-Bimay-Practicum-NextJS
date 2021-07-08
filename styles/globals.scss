@@ -41,3 +41,8 @@ input, button{
   line-height: inherit;
   font-family: inherit;
 }
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(0.5);
+}

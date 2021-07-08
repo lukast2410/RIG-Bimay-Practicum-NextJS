@@ -27,6 +27,7 @@ export default function ExtraClass({ user, listCourse }) {
 		return <h1>Loading...</h1>
 	}
 
+	console.log(listCourse)
 	const [course, setCourse] = useState(listCourse[0])
 	const [shift, setShift] = useState(listShift[0])
 	const date = new Date()
@@ -82,7 +83,7 @@ export default function ExtraClass({ user, listCourse }) {
 								<div className='mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6'>
 									<div className='sm:col-span-6'>
 										<label htmlFor='first_name' className='block text-sm font-medium text-gray-700'>
-											First Assistant<strong className='text-red-700'>*</strong> (ex. NP)
+											First Assistant<strong className='text-red-700'>*</strong> (ex. NP17-1)
 										</label>
 										<div className='mt-1'>
 											<input
@@ -92,14 +93,14 @@ export default function ExtraClass({ user, listCourse }) {
 												autoComplete=''
 												className='shadow-sm block w-full sm:text-sm border-gray-300 bg-gray-200 rounded-md font-medium'
 												disabled={true}
-												value={user?.Data.Name.substr(0, 2)}
+												value={user?.Data.Name}
 											/>
 										</div>
 									</div>
 
 									<div className='sm:col-span-6'>
 											<label htmlFor='last_name' className='block text-sm font-medium text-gray-700'>
-												Second Assistant (ex. DL)
+												Second Assistant (ex. DL18-2)
 											</label>
 										<div className='mt-1'>
 											<input
@@ -157,6 +158,7 @@ export default function ExtraClass({ user, listCourse }) {
 												name='room'
 												id='room'
 												autoComplete=''
+												maxLength={50}
 												className='shadow-sm focus:ring-binus-blue focus:border-binus-blue block w-full sm:text-sm border-gray-300 rounded-md'
 											/>
 										</div>
@@ -173,6 +175,7 @@ export default function ExtraClass({ user, listCourse }) {
 												id='vidcon'
 												name='vidcon'
 												rows={2}
+												maxLength={500}
 												className='shadow-sm focus:ring-binus-blue focus:border-binus-blue block w-full sm:text-sm border-gray-300 rounded-md'
 												defaultValue={''}
 												autoComplete=''
@@ -214,6 +217,7 @@ export default function ExtraClass({ user, listCourse }) {
 												id='topics'
 												name='topics'
 												rows={5}
+												maxLength={500}
 												className='shadow-sm focus:ring-binus-blue focus:border-binus-blue block w-full sm:text-sm border-gray-300 rounded-md'
 												defaultValue={''}
 												autoComplete=''

@@ -25,7 +25,7 @@ export default function RandomQuotes() {
 
 	return (
 		<section className='max-w-screen-2xl mx-auto pb-4 px-4 my-4 sm:pb-6 sm:px-6 sm:my-4 lg:pb-6 lg:px-8 lg:my-6'>
-			<div className='rounded-lg shadow-lg bg-white border border-gray-150 overflow-hidden'>
+			<div className='rounded-lg shadow bg-white border border-gray-150 overflow-hidden'>
 				<div className='relative max-w-7xl mx-auto pt-20 pb-12 px-4 sm:px-6 lg:px-8 lg:py-10'>
 					<svg
 						className='absolute top-full left-0 transform translate-x-80 -translate-y-24 lg:left-1/3'
@@ -105,7 +105,7 @@ export default function RandomQuotes() {
 										</div>
 										<div className='flex items-center ml-4 lg:ml-0'>
 											<span className='text-xl font-medium text-gray-900'>by&nbsp;</span>
-											<span className='text-xl font-medium text-indigo-600'>{initial}</span>
+											<span className='text-xl font-medium text-blue-700'>{initial}</span>
 										</div>
 									</div>
 								</footer>
