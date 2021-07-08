@@ -107,8 +107,8 @@ export default function Subject({ user, subject, courseDetail }) {
 };
 
 export const getServerSideProps = withSession(async function ({ req, res, query }) {
-	const user = req.session.get('user');
-		if (!user || Date.now() >= new Date(user.Token.expires).getTime()) {
+	const userData = req.session.get('user');
+		if (!userData || Date.now() >= new Date(userData.Token.expires).getTime()) {
 			return {
 				redirect: {
 				destination: '/auth/login',
@@ -116,8 +116,20 @@ export const getServerSideProps = withSession(async function ({ req, res, query 
 				},
 			};
 		}
+		const token = userData?.Token.token
 
-	const subject = user.Courses.find(x => x.Subject == query.subject)
+		const courses = await axios
+			.get(
+				process.env.NEXT_PUBLIC_LABORATORY_URL + 'Binusmaya/GetSchedule?SemesterId=' + userData.SemesterId,
+				{
+					headers: {
+						authorization: 'Bearer ' + token,
+					},
+				}
+			)
+			.then(res => res.data)
+
+	const subject = courses.find(x => x.Subject == query.subject)
 		if (!subject) {
 			return {
 				redirect: {
@@ -127,18 +139,33 @@ export const getServerSideProps = withSession(async function ({ req, res, query 
 			};
 	}
 
-	const url = 'https://laboratory.binus.ac.id/lapi/api/Binusmaya/GetScheduleDetail';
-	const courseDetail = await axios.get(url, {
-		headers: {
-			authorization: `Bearer ${user.Token.token}`
-		},
-		data: {
-			SemesterId: user.SemesterId,
-			ClassTransactionId: subject.ClassTransactionId,
-			CourseOutlineId: subject.CourseOutlineId
-		}
-	})
-	.then(response => response.data);
+	const url = `${process.env.NEXT_PUBLIC_LABORATORY_URL}Binusmaya/GetScheduleDetail`
+	const [smt, courseDetail] = await Promise.all([
+		axios
+			.get(process.env.NEXT_PUBLIC_LABORATORY_URL + 'Binusmaya/GetSemester', {
+				headers: {
+					authorization: 'Bearer ' + token,
+				},
+			})
+			.then(res => res.data),
+		axios.get(url, {
+			headers: {
+				authorization: `Bearer ${token}`
+			},
+			data: {
+				SemesterId: userData.SemesterId,
+				ClassTransactionId: subject.ClassTransactionId,
+				CourseOutlineId: subject.CourseOutlineId
+			}
+		})
+		.then(response => response.data)
+	])
+
+	const user = {
+		...userData,
+		Semesters: smt,
+		Courses: courses,
+	}
 
 
 	return {

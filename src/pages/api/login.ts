@@ -29,24 +29,10 @@ export default withSession(async (req, res) => {
 				.then((res) => {
 					return res.data;
 				});
-
-			const courses = await axios
-					.get(
-						process.env.NEXT_PUBLIC_LABORATORY_URL + 'Binusmaya/GetSchedule?SemesterId=' + smt[0].SemesterId,
-						{
-							headers: {
-								authorization: 'Bearer ' + data.Token.token,
-							},
-						}
-					)
-					.then((res) => {
-						return res.data
-					})
 	
 			user = {
 				isLoggedIn: true,
 				SemesterId: smt[0].SemesterId,
-				Courses: courses,
 				Data: data.User,
 				Token: data.Token,
 			};

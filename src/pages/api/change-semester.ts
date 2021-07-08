@@ -8,16 +8,6 @@ export default withSession(async (req, res) => {
 
 	try {
 		user.SemesterId = semester
-		const courses = await axios
-			.get(getCoursesUrl + semester, {
-				headers: {
-					authorization: 'Bearer ' + user.Token.token,
-				},
-			}).then(res => {
-				return res.data
-			})
-
-		user.Courses = courses
 		req.session.set('user', user);
 		await req.session.save();
 		res.json(user);

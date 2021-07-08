@@ -361,7 +361,7 @@ export const getServerSideProps = withSession(async function ({ req, res }) {
 		}
 	}
 
-	const [smt, procedures, events] = await Promise.all([
+	const [smt, courses, procedures, events] = await Promise.all([
 		axios
 			.get(process.env.NEXT_PUBLIC_LABORATORY_URL + 'Binusmaya/GetSemester', {
 				headers: {
@@ -371,6 +371,18 @@ export const getServerSideProps = withSession(async function ({ req, res }) {
 			.then((res) => {
 				return res.data
 			}),
+			axios
+					.get(
+						process.env.NEXT_PUBLIC_LABORATORY_URL + 'Binusmaya/GetSchedule?SemesterId=' + userData.SemesterId,
+						{
+							headers: {
+								authorization: 'Bearer ' + token,
+							},
+						}
+					)
+					.then((res) => {
+						return res.data
+					}),
 		axios
 			.get(process.env.NEXT_PUBLIC_LABORATORY_URL + 'Binusmaya/GetProcedures', {
 				headers: {
@@ -394,6 +406,7 @@ export const getServerSideProps = withSession(async function ({ req, res }) {
 	const user = {
 		...userData,
 		Semesters: smt,
+		Courses: courses,
 	}
 
 	return {

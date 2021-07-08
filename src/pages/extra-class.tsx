@@ -280,9 +280,6 @@ export const getServerSideProps = withSession(async function ({ req, res }) {
 	}
 
 	const token = userData?.Token.token
-	const today = []
-	const previous = []
-	const upcoming = []
 	const now = new Date()
 	now.setHours(0, 0, 0, 0)
 
@@ -307,8 +304,19 @@ export const getServerSideProps = withSession(async function ({ req, res }) {
 		}
 	}
 
+	const courses = await axios
+	.get(
+		process.env.NEXT_PUBLIC_LABORATORY_URL + 'Binusmaya/GetSchedule?SemesterId=' + userData.SemesterId,
+		{
+			headers: {
+				authorization: 'Bearer ' + token,
+			},
+		}
+	)
+	.then(res => res.data)
+
 	let listCourse = ''
-	userData.Courses.forEach((x, idx) => {
+	courses.forEach((x, idx) => {
 		listCourse += x.Subject
 		if (idx + 1 != userData.Courses.length) {
 			listCourse += ','
@@ -321,9 +329,7 @@ export const getServerSideProps = withSession(async function ({ req, res }) {
 					authorization: 'Bearer ' + token,
 				},
 			})
-			.then((res) => {
-				return res.data
-			}),
+			.then(res => res.data),
 		axios
 			.get(process.env.NEXT_PUBLIC_EXTRA_URL + 'ExtraClassHeader/Courses/' + listCourse)
 			.then((res) => res.data),
@@ -332,6 +338,7 @@ export const getServerSideProps = withSession(async function ({ req, res }) {
 	const user = {
 		...userData,
 		Semesters: smt,
+		Courses: courses,
 	}
 
 	return {
