@@ -11,6 +11,7 @@ import GroupForming from "../../../components/Course/Group/GroupForming"
 import axios from "axios";
 import CourseBreadcrumbs from "../../../components/Course/Breadcrumbs";
 import NextNProgress from 'nextjs-progressbar'
+import DividerWithMessage from "../../../components/home/DividerWithMessage";
 
 export default function Group({ user, subject, courseDetail, groupProject, groupConfirmation }) {
 	const [userData, setUserData] = useContext(UserContext)
@@ -19,6 +20,9 @@ export default function Group({ user, subject, courseDetail, groupProject, group
 
 	useEffect(() => {
 		setUserData(user);
+		window.scrollTo({
+			top: section.current.offsetTop,
+		})
 	}, [user])
 
 	const urls = [
@@ -102,9 +106,15 @@ export default function Group({ user, subject, courseDetail, groupProject, group
 			</div>
 			<div className="group-forming mt-6" >
 				{
-					courseDetail.StudentGroupDetail.Group && 
+					courseDetail.StudentGroupDetail.Group != null ? 
 					(
 						<GroupForming groupProject={groupProject} studentGroupDetail={courseDetail.StudentGroupDetail} groupConfirmation={groupConfirmation}/>
+					)
+					:
+					(
+						<div className='py-4 px-5 rounded-md bg-red-50'>
+							<DividerWithMessage message={`You don't have any group forming`} bg='red-50' size='lg' mt='' color='red-800'/>
+						</div>
 					)
 				}	
 			</div>
@@ -183,12 +193,13 @@ export const getServerSideProps = withSession(async function ({ req, res, query 
 		.then(res => res.data),
 	])
 
+	const softwareCourse = courses.filter((course) => course.Laboratory === "Software")
+
 	const user = {
 		...userData,
 		Semesters: smt,
-		Courses: courses,
+		Courses: softwareCourse,
 	}
-
 	return {
 		props: {
 			user,

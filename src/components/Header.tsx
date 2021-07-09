@@ -57,7 +57,7 @@ export default function Header() {
 			})
 
 			function triggerAnimation() {
-				var finalWidth = $('.drop').hasClass('visible') ? 17 : 15
+				var finalWidth = $('.drop').hasClass('visible') ? 17 : 16
 				$('.drop').css('width', '19em')
 				setTimeout(function () {
 					$('.drop').css('width', finalWidth + 'em')
@@ -130,7 +130,7 @@ export default function Header() {
 					<style jsx>
 						{`
 							.drop {
-								width: 15rem;
+								width: 16rem;
 								color: #212529;
 								position: relative;
 								-webkit-transition: width 0.3s;

@@ -2,7 +2,7 @@
 import Link from 'next/link';
 import DividerWithMessage from '../../home/DividerWithMessage';
 
-export default function SubmissionDescriptionLists({onlineTasks}) {
+export default function SubmissionDescriptionLists({onlineTasks, classTransactionId}) {
 
   return (
     <div className="mt-4 xl:hidden pb-2">
@@ -13,7 +13,7 @@ export default function SubmissionDescriptionLists({onlineTasks}) {
         onlineTasks.length == 0 ?
         (
         <div className='py-4 px-5 rounded-md bg-red-50'>
-            <DividerWithMessage message='There is no submitted answer' bg='red-50' size='lg' mt='' color='red-800'/>
+            <DividerWithMessage message='There is no available online task for this subject' bg='red-50' size='lg' mt='' color='red-800'/>
         </div>
         )
         :
@@ -44,7 +44,7 @@ export default function SubmissionDescriptionLists({onlineTasks}) {
                 <div className="py-2 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                   <dt className="text-sm font-medium text-gray-500">Case</dt>
                   <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                    <Link href="#">
+                    <Link href={`https://bluejack.binus.ac.id/binusmayalab/Laboratory/GetTaskFile/${task.SemesterId}/${task.CourseOutlineId}/${classTransactionId}/Project/1`}>
                         <button type="button"
                             className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-binus-blue bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             Download

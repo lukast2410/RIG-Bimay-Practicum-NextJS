@@ -9,7 +9,7 @@ export default function SessionMaterial({sessionDetail, classTransactionId}) {
     }
 
     return (
-      <div className="flex flex-col">
+      <div className="flex flex-col hidden lg:block">
         <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
             <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg rounded-md">
@@ -58,29 +58,39 @@ export default function SessionMaterial({sessionDetail, classTransactionId}) {
                   {sessionDetail.map((material, idx) => (
                     <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{material.Session}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{getFormattedDate(material.Date)}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{getFormattedDate(material.Date)}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                           {material.Topic}
                           <ul className="divide-y divide-gray-200 list-disc">
                                 {
                                     material.SubTopics.map((m, idx) => (
                                         <li className="py-4 flex" key={idx}>
                                             <div className="ml-3">
-                                                <p className="text-sm text-gray-500">{m.Value}</p>
+                                                <p className="text-sm text-gray-900">{m.Value}</p>
                                             </div>
                                         </li>
                                     ))
                                 }
                             </ul>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{material.Room === "" ? "-" : material.Room}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{material.Shift}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-binus-blue">
-                        <Link href={`https://bluejack.binus.ac.id/binusmayalab/Laboratory/GetCase/${classTransactionId}/${material.Session}/${material.CaseId}`}>
-                          <button type="button" className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-binus-blue bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                            Download Case
-                          </button>
-                        </Link>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{material.Room === "" ? "-" : material.Room}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{material.Shift}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm ">
+                        {
+                          material.CaseId == "00000000-0000-0000-0000-000000000000"
+                          ?
+                          (
+                            <p  className="ml-6">No File</p>
+                          )
+                          :
+                          (
+                            <Link href={`https://bluejack.binus.ac.id/binusmayalab/Laboratory/GetCase/${classTransactionId}/${material.Session}/${material.CaseId}`}>
+                              <button type="button" className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-binus-blue bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                Download Case
+                              </button>
+                            </Link>
+                          )
+                        }
                       </td>
                     </tr>
                   ))}

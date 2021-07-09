@@ -105,8 +105,8 @@ export default function CaseSubmission({ user, subject, courseDetail }) {
 				</div>
 			</div>
 			<div className="session-material mt-6" >
-				<SubmissionDescriptionLists onlineTasks={courseDetail.OnlineTasks} />
-				<CaseSubmissionComponent onlineTasks={courseDetail.OnlineTasks} submittedAnswers={courseDetail.SubmitedAnswers}/>
+				<SubmissionDescriptionLists onlineTasks={courseDetail.OnlineTasks} classTransactionId={subject.ClassTransactionId}/>
+				<CaseSubmissionComponent onlineTasks={courseDetail.OnlineTasks} classTransactionId={subject.ClassTransactionId}/>
 				<AnswerDescriptionLists submittedAnswers={courseDetail.SubmitedAnswers}/>
 				<SubmittedAnswer submittedAnswers={courseDetail.SubmitedAnswers}/>
 			</div>
@@ -149,6 +149,7 @@ export const getServerSideProps = withSession(async function ({ req, res, query 
     }
 
 	const url = `${process.env.NEXT_PUBLIC_LABORATORY_URL}Binusmaya/GetScheduleDetail`
+	
 	const [smt, courseDetail] = await Promise.all([
 		axios
 			.get(process.env.NEXT_PUBLIC_LABORATORY_URL + 'Binusmaya/GetSemester', {
@@ -169,18 +170,19 @@ export const getServerSideProps = withSession(async function ({ req, res, query 
 		})
 		.then(response => response.data)
 	])
+	const softwareCourse = courses.filter((course) => course.Laboratory === "Software")
 
 	const user = {
 		...userData,
 		Semesters: smt,
-		Courses: courses,
+		Courses: softwareCourse,
 	}
 
     return {
         props: {
           user,
           subject,
-					courseDetail
+		  courseDetail
         },
     };
 });

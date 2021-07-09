@@ -5,7 +5,7 @@ import axios from 'axios'
 import { UserContext } from '../../../contexts/UserContext'
 import { ErrorModalContext } from '../../../contexts/ErrorModalContext'
 
-export default function GroupRegistrationModal({open, setOpen, studentsData, classTransactionId, getGroupProject}) {
+export default function GroupRegistrationModal({setOpen, openRegistrationModal, setOpenRegistrationModal, studentsData, classTransactionId, getGroupProject}) {
 
   const cancelButtonRef = useRef()
   const [userData, setUserData] = useContext(UserContext);
@@ -46,18 +46,19 @@ export default function GroupRegistrationModal({open, setOpen, studentsData, cla
     }
 
     setOpen(false);
+    setOpenRegistrationModal(false);
   }
 
   return (
 
-    <Transition.Root show={open} as={Fragment}>
+    <Transition.Root show={openRegistrationModal} as={Fragment}>
       <Dialog
         as="div"
         static
         className="fixed z-10 inset-0 overflow-y-auto"
         initialFocus={cancelButtonRef}
-        open={open}
-        onClose={setOpen}
+        open={openRegistrationModal}
+        onClose={setOpenRegistrationModal}
       >
         <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
           <Transition.Child
@@ -99,7 +100,7 @@ export default function GroupRegistrationModal({open, setOpen, studentsData, cla
                         <ul className="-my-5 divide-y divide-gray-200">
                           {studentsData && studentsData.map((student, idx) => (
                               <li key={idx} className="py-5 " >
-                                <div className="relative focus-within:ring-2 focus-within:ring-indigo-500">
+                                <div className="relative focus-within:ring-2 focus-within:ring-binus-blue">
                                     <h3 className="text-sm font-semibold text-gray-800">
                                     <span className="absolute inset-0" aria-hidden="true" />
                                         {student.Number}
@@ -118,7 +119,7 @@ export default function GroupRegistrationModal({open, setOpen, studentsData, cla
               <div className="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
                 <button
                   type="button"
-                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm"
+                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-binus-blue text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-binus-blue sm:col-start-2 sm:text-sm"
                   onClick={createGroup}
                 >
                   {
@@ -137,8 +138,11 @@ export default function GroupRegistrationModal({open, setOpen, studentsData, cla
                 </button>
                 <button
                   type="button"
-                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm"
-                  onClick={() => setOpen(false)}
+                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-binus-blue sm:mt-0 sm:col-start-1 sm:text-sm"
+                  onClick={() => {
+                    setOpen(false);
+                    setOpenRegistrationModal(false);
+                  }}
                   ref={cancelButtonRef}
                 >
                   Cancel

@@ -1,5 +1,5 @@
 import Router from "next/router";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Layout from "../../../components/Layout";
 import { UserContext } from "../../../contexts/UserContext";
 import withSession from "../../../lib/session";
@@ -15,6 +15,7 @@ import NextNProgress from 'nextjs-progressbar'
 export default function Subject({ user, subject, courseDetail }) {
 	const [userData, setUserData] = useContext(UserContext)
 	const [optionValue, setOptionValue] = useState(0);
+	const section = useRef(null);
 
 	const urls = [
 		`/course/${courseDetail.CourseOutlineDetail.CourseCode}-${courseDetail.CourseOutlineDetail.CourseName}/info`,
@@ -30,6 +31,9 @@ export default function Subject({ user, subject, courseDetail }) {
 
 	useEffect(() => {
 		setUserData(user);
+		window.scrollTo({
+			top: section.current.offsetTop,
+		})
 	}, [user])
 
 	if (!user || !user.isLoggedIn) {
@@ -68,7 +72,7 @@ export default function Subject({ user, subject, courseDetail }) {
 							<option className="options" value={3}>Group Forming</option>
 						</select>
 				</div>
-				<div className="hidden sm:block">
+				<div className="hidden sm:block" ref={section}>
 					<div className="border-b border-gray-200">
 						<nav className="-mb-px flex" aria-label="Tabs">
 							<Link href={urls[0]}>
@@ -161,10 +165,12 @@ export const getServerSideProps = withSession(async function ({ req, res, query 
 		.then(response => response.data)
 	])
 
+	const softwareCourse = courses.filter((course) => course.Laboratory === "Software")
+
 	const user = {
 		...userData,
 		Semesters: smt,
-		Courses: courses,
+		Courses: softwareCourse,
 	}
 
 

@@ -1,10 +1,9 @@
 import axios from "axios"
 import { useContext, useState } from "react"
 import { UserContext } from "../../../contexts/UserContext"
-import GroupRegistrationModal from "./GroupRegistrationModal"
 import GroupRegistrationErrorModal from "./GroupRegistrationErrorModal"
-import styles from '../../../../styles/pages/Login.module.scss';
 import { ErrorModalContext } from "../../../contexts/ErrorModalContext"
+import GroupAgreement from "./GroupAgreement"
 
 export default function GroupRegistration({studentGroupDetail, getGroupProject}) {
 
@@ -16,8 +15,6 @@ export default function GroupRegistration({studentGroupDetail, getGroupProject})
 
     const createGroup = async (e) => {
       e.preventDefault();
-
-      if(!checkCheckbox()) return;
 
       setLoading(true);
 
@@ -53,17 +50,6 @@ export default function GroupRegistration({studentGroupDetail, getGroupProject})
 
     }
 
-    const checkCheckbox = () => {
-      const checkbox = document.querySelector("#remember_me") as HTMLInputElement ;
-      if(!checkbox.checked){
-        setErrorModal({
-          show: true,
-          message: "You have to agree to Terms and Regulations!"
-        })
-        return false;
-      }
-      return true;
-    }
 
     return (
       <div className="flex flex-col justify-center pb-12 sm:px-6 lg:px-8">
@@ -92,7 +78,7 @@ export default function GroupRegistration({studentGroupDetail, getGroupProject})
                           autoComplete=""
                           value={student.StudentNumber}
                           disabled
-                          className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm bg-gray-100 studentTxt"
+                          className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-binus-blue focus:border-binus-blue sm:text-sm bg-gray-100 studentTxt"
                         />
                       )
 
@@ -104,7 +90,7 @@ export default function GroupRegistration({studentGroupDetail, getGroupProject})
                           name={`student${idx + 1}`}
                           type="text"
                           autoComplete=""
-                          className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm studentTxt"
+                          className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-binus-blue focus:border-binus-blue sm:text-sm studentTxt"
                         />
 
                       )
@@ -114,27 +100,10 @@ export default function GroupRegistration({studentGroupDetail, getGroupProject})
                 ))
               }
   
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <input
-                    id="remember_me"
-                    name="remember_me"
-                    type="checkbox"
-                    className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                  />
-                  <label htmlFor="" className="ml-2 block text-sm text-gray-900">
-                    I Agree to
-                    <a className="text-binus-blue ml-1 cursor-pointer" href="/course/COMP6115-Object%20Oriented%20Analysis%20&%20Design/info">
-                      Terms and Regulations 
-                    </a>
-                  </label>
-                </div>
-              </div>
-  
               <div>
                 <button
                   type="submit"
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-binus-blue transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition ease-out duration-300"
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-binus-blue transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-binus-blue transition ease-out duration-300"
                 >
                   {
                     isLoading ? 
@@ -155,7 +124,7 @@ export default function GroupRegistration({studentGroupDetail, getGroupProject})
           </div>
         </div>
 
-        <GroupRegistrationModal open={open} setOpen={setOpen} studentsData={studentsData} classTransactionId={studentGroupDetail.Group.ClassTransactionId} getGroupProject={getGroupProject} />
+        <GroupAgreement  open={open} setOpen={setOpen} studentsData={studentsData} classTransactionId={studentGroupDetail.Group.ClassTransactionId} getGroupProject={getGroupProject}  />
         <GroupRegistrationErrorModal/>
       </div>
     )

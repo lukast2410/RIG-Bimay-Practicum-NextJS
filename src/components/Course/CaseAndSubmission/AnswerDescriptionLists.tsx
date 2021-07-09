@@ -1,4 +1,4 @@
-/* This example requires Tailwind CSS v2.0+ */
+
 import Link from 'next/link';
 import DividerWithMessage from '../../home/DividerWithMessage';
 
@@ -28,7 +28,7 @@ export default function AnswerDescriptionLists({submittedAnswers}) {
         submittedAnswers.length == 0 ?
         (
         <div className='py-4 px-5 rounded-md bg-red-50'>
-            <DividerWithMessage message='There is no submitted answer' bg='red-50' size='lg' mt='' color='red-800'/>
+            <DividerWithMessage message='There is no submitted answer for this subject' bg='red-50' size='lg' mt='' color='red-800'/>
         </div>
         )
         :

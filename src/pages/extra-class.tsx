@@ -335,10 +335,12 @@ export const getServerSideProps = withSession(async function ({ req, res }) {
 			.then((res) => res.data),
 	])
 
+	const softwareCourse = courses.filter((course) => course.Laboratory === "Software")
+
 	const user = {
 		...userData,
 		Semesters: smt,
-		Courses: courses,
+		Courses: softwareCourse,
 	}
 
 	return {

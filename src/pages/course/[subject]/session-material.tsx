@@ -1,16 +1,16 @@
 import Router from "next/router";
 import { useContext, useEffect, useRef, useState } from "react";
 import Layout from "../../../components/Layout";
-import SessionMaterial from "../../../components/Course/SessionMaterial";
+import SessionMaterial from "../../../components/Course/SessionMaterials/SessionMaterial";
 import { UserContext } from "../../../contexts/UserContext";
 import withSession from "../../../lib/session";
-import styles from '../../../styles/pages/Course.module.scss';
 import Link from 'next/link';
 import ClassDescription from "../../../components/Course/CourseInformation/ClassDescription";
 import LearningOutcome from "../../../components/Course/CourseInformation/LearningOutcome";
 import axios from "axios";
 import CourseBreadcrumbs from "../../../components/Course/Breadcrumbs";
 import NextNProgress from 'nextjs-progressbar'
+import SessionMaterialDisclosure from "../../../components/Course/SessionMaterials/SessionMaterialDisclosure";
 
 export default function SessionAndMaterials({ user, subject, courseDetail }) {
 	const [userData, setUserData] = useContext(UserContext)
@@ -19,6 +19,9 @@ export default function SessionAndMaterials({ user, subject, courseDetail }) {
 
 	useEffect(() => {
 		setUserData(user);
+		window.scrollTo({
+			top: section.current.offsetTop,
+		});
 	}, [user])
 	
 	const urls = [
@@ -100,6 +103,7 @@ export default function SessionAndMaterials({ user, subject, courseDetail }) {
 				</div>
 			</div>
 			<div className="session-material mt-6" >
+				<SessionMaterialDisclosure sessionDetail={courseDetail.SessionDetail} classTransactionId={subject.ClassTransactionId}/>
 				<SessionMaterial sessionDetail={courseDetail.SessionDetail} classTransactionId={subject.ClassTransactionId}/>
 			</div>
 		</div>
@@ -162,10 +166,12 @@ export const getServerSideProps = withSession(async function ({ req, res, query 
 		.then(response => response.data)
 	])
 
+	const softwareCourse = courses.filter((course) => course.Laboratory === "Software")
+
 	const user = {
 		...userData,
 		Semesters: smt,
-		Courses: courses,
+		Courses: softwareCourse,
 	}
 
 	return {

@@ -27,7 +27,7 @@ export default function SubmittedAnswer({submittedAnswers}){
         submittedAnswers.length == 0 ?
         (
         <div className='py-4 px-5 rounded-md bg-red-50'>
-            <DividerWithMessage message='There is no submitted answer' bg='red-50' size='lg' mt='' color='red-800'/>
+            <DividerWithMessage message='There is no submitted answer for this subject' bg='red-50' size='lg' mt='' color='red-800'/>
         </div>
         )
 
@@ -86,20 +86,20 @@ export default function SubmittedAnswer({submittedAnswers}){
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                         {answer.Type}-{answer.Number}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {answer.StatusFile}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {answer.Uploader}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                         {getFormattedDate(answer.UploadDate)}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{answer.FinalizedBy ==
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{answer.FinalizedBy ==
                                         null ? '-' : answer.FinalizedBy}
                                     </td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{answer.FinalizedDate
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{answer.FinalizedDate
                                         == null ? '-' : getFormattedDate(answer.FinalizedDate)}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{answer.Hash}</td>
-                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{answer.TotalSize}
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{answer.Hash}</td>
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{answer.TotalSize}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-purple-600">
                                         <Link href={answer.Source}>
