@@ -37,6 +37,8 @@ export default function GroupRegistrationModal({setOpen, openRegistrationModal, 
     .then(res => res.data);
 
     setLoading(false);
+    setOpenRegistrationModal(false);
+    setOpen(false);
     
     if(!responseData.Status){
       setErrorModal({show: true, message: responseData.Message})
@@ -45,8 +47,6 @@ export default function GroupRegistrationModal({setOpen, openRegistrationModal, 
         getGroupProject();
     }
 
-    setOpen(false);
-    setOpenRegistrationModal(false);
   }
 
   return (
