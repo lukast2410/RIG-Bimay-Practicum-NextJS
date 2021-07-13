@@ -1,6 +1,6 @@
 export default function Note({message}) {
   return (
-    <div className="rounded-md bg-yellow-50 p-4 mr-3 mt-4 z-50">
+    <div className="rounded-md bg-yellow-50 p-4 mr-3 xl:mt-4 z-50">
       <div className="flex">
         <div className="flex-shrink-0">
           <svg
@@ -20,7 +20,24 @@ export default function Note({message}) {
         <div className="ml-3">
           <h3 className="text-sm font-medium text-yellow-800">Note</h3>
           <div className="mt-2 text-sm text-yellow-700">
-            <p>{message}</p>
+            {
+              message == "default"
+              ?
+              (
+                <p>
+                  If the formed group does not match what you have chosen, please contact the Laboratory Assistant or Complaint Handling Laboratory
+                  <a href="https://linktr.ee/slcbinusuniv" className="ml-1 text-binus-blue">
+                    here
+                  </a>
+                </p>
+              )
+              :
+              (
+                <p>
+                  {message}
+                </p>
+              )
+            }
           </div>
         </div>
       </div>

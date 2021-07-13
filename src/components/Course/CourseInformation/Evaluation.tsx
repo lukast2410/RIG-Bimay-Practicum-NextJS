@@ -1,9 +1,6 @@
 export default function Evaluation({theoryEvaluation, labEvaluation}){
-
-    console.log(labEvaluation);
-
     return(
-        <div className="pb-5 border-b border-gray-200">
+        <div className="pb-6 border-b border-gray-200">
             <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4 text-center">
                 Evaluation Component
             </h3>

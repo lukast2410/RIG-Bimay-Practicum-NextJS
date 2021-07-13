@@ -9,7 +9,7 @@ export default function SessionMaterial({sessionDetail, classTransactionId}) {
     }
 
     return (
-      <div className="flex flex-col hidden lg:block">
+      <div className="flex flex-col hidden lg:block pb-6">
         <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
             <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg rounded-md">
@@ -59,7 +59,7 @@ export default function SessionMaterial({sessionDetail, classTransactionId}) {
                     <tr key={idx} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-100'}>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{material.Session}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{getFormattedDate(material.Date)}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="px-6 py-4 text-sm text-gray-900">
                           {material.Topic}
                           <ul className="divide-y divide-gray-200 list-disc">
                                 {

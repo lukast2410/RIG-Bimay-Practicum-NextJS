@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useContext, useState } from "react";
-import { ErrorModalProvider } from "../../../contexts/ErrorModalContext";
+import {ModalProvider } from "../../../contexts/ModalContext";
 import { UserContext } from "../../../contexts/UserContext";
+import Loading from "../Loading";
 import Note from "../Note";
 import NotificationAlert from "../NotificationAlert";
 import GroupRegistration from "./GroupRegistration";
@@ -20,8 +21,6 @@ export default function GroupForming({
     isShow: false,
     message: "",
   });
-
-  console.log(studentGroupDetail);
 
   const getGroupProject = async () => {
     const getGroupProjectUrl =
@@ -99,7 +98,7 @@ export default function GroupForming({
   };
 
   return (
-    <ErrorModalProvider>
+    <ModalProvider>
       <NotificationAlert show={show} setShow={setShow} />
       <div className="rounded-md pb-4">
         {group.Students && (
@@ -109,7 +108,7 @@ export default function GroupForming({
               : `Group Froming - Group ${studentGroupDetail.Group.GroupNumber}`}
           </h3>
         )}
-        {group.Students == null ? (
+        {group.Students == null && studentGroupDetail.Group.Id == null ? (
           <GroupRegistration
             studentGroupDetail={studentGroupDetail}
             getGroupProject={getGroupProject}
@@ -140,35 +139,64 @@ export default function GroupForming({
                         >
                           Name
                         </th>
-
-                        <th
-                          scope="col"
-                          className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
-                        >
-                          Status
-                        </th>
+                        {
+                          !studentGroupDetail.Group.Id &&
+                          (
+                            <th
+                              scope="col"
+                              className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+                            >
+                              Status
+                            </th>
+                          )
+                        }   
                       </tr>
                     </thead>
                     <tbody>
-                      {group.Students.map((student, idx) => (
-                        <tr
-                          key={idx}
-                          className={idx % 2 === 0 ? "bg-white" : "bg-gray-100"}
-                        >
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {idx + 1}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {student.StudentNumber}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {student.Name}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {student.IsAccept == false ? "Pending" : "Accept"}
-                          </td>
-                        </tr>
-                      ))}
+                      {studentGroupDetail.Group.Id != null
+                        ? studentGroupDetail.Group.Students.map(
+                            (student, idx) => (
+                              <tr
+                                key={idx}
+                                className={
+                                  idx % 2 === 0 ? "bg-white" : "bg-gray-100"
+                                }
+                              >
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                  {idx + 1}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                  {student.StudentNumber}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                  {student.Name}
+                                </td>
+                              </tr>
+                            )
+                          )
+                        : group.Students.map((student, idx) => (
+                            <tr
+                              key={idx}
+                              className={
+                                idx % 2 === 0 ? "bg-white" : "bg-gray-100"
+                              }
+                            >
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {idx + 1}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {student.StudentNumber}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {student.Name}
+                              </td>
+                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                {student.IsAccept == false
+                                  ? "Pending"
+                                  : "Accept"}
+                              </td>
+                            </tr>
+                          ))}
                     </tbody>
                   </table>
                 </div>
@@ -184,26 +212,7 @@ export default function GroupForming({
                     onClick={() => finalizeConfirmation(true)}
                   >
                     {isAccLoading ? (
-                      <svg
-                        className="animate-spin h-5 w-5 -ml-4 mr-2 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
+                      <Loading color="text-white" />
                     ) : (
                       <></>
                     )}
@@ -215,26 +224,7 @@ export default function GroupForming({
                     onClick={() => finalizeConfirmation(false)}
                   >
                     {isDeclineLoading ? (
-                      <svg
-                        className="animate-spin h-5 w-5 -ml-4 mr-2 text-white"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                      >
-                        <circle
-                          className="opacity-25"
-                          cx="12"
-                          cy="12"
-                          r="10"
-                          stroke="currentColor"
-                          strokeWidth="4"
-                        ></circle>
-                        <path
-                          className="opacity-75"
-                          fill="currentColor"
-                          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                        ></path>
-                      </svg>
+                      <Loading color="text-white"/>
                     ) : (
                       <></>
                     )}
@@ -243,9 +233,20 @@ export default function GroupForming({
                 </div>
               </div>
             )}
+            {studentGroupDetail.Group.Id != null ? (
+              <div className="mt-4 font-medium text-sm">
+                <div className="flex justify-between">
+                  <p className="mb-2">Group ID : {studentGroupDetail.Group.Id}</p>
+                  <p className="mb-2">{studentGroupDetail.Group.Status}</p>
+                </div>
+                <Note message={"default"} />
+              </div>
+            ) : (
+              <></>
+            )}
           </div>
         )}
       </div>
-    </ErrorModalProvider>
+    </ModalProvider>
   );
 }

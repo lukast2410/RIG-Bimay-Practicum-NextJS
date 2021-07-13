@@ -10,12 +10,15 @@ import Evaluation from "../../../components/Course/CourseInformation/Evaluation"
 import axios from "axios";
 import CourseBreadcrumbs from "../../../components/Course/Breadcrumbs";
 import NextNProgress from 'nextjs-progressbar'
+import ReactHtmlParser from 'react-html-parser';
+
 
 
 export default function Subject({ user, subject, courseDetail }) {
 	const [userData, setUserData] = useContext(UserContext)
 	const [optionValue, setOptionValue] = useState(0);
 	const section = useRef(null);
+	let desc = "";
 
 	const urls = [
 		`/course/${courseDetail.CourseOutlineDetail.CourseCode}-${courseDetail.CourseOutlineDetail.CourseName}/info`,
@@ -49,15 +52,16 @@ export default function Subject({ user, subject, courseDetail }) {
 					<CourseBreadcrumbs courseOutlineDetail={courseDetail.CourseOutlineDetail}/>
 				</div>
 				<h1 className="text-3xl font-bold mb-4 mt-4">{courseDetail.CourseOutlineDetail.CourseName}</h1>
-				<p>{courseDetail.CourseOutlineDetail.CourseDescription}</p>
+				<div>{ReactHtmlParser(courseDetail.CourseOutlineDetail.CourseDescription)}</div>
 			</div>
 			<div className="course-content flex flex-col justify-between xl:flex-row">
 				<div className="w-full mb-4 xl:w-3/5 xl:mb-0">
 					<LearningOutcome learningOutcome={courseDetail.CourseOutlineDetail.LearningOutcome} />
 				</div>
 				<div className="flex-none">
-					<ClassDescription subject={subject}/>
+					<ClassDescription subject={subject} onlineTask={courseDetail.OnlineTasks}/>
 				</div>
+				
 			</div>
 			<div className="course-tab mt-6">
 				<div className="sm:hidden">

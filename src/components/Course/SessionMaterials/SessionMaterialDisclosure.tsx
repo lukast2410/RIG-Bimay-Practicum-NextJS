@@ -24,8 +24,8 @@ export default function SessionMaterialDisclosure({
 
   return (
     <div className="w-full lg:hidden pb-4">
-      {sessionDetail.map((material) => (
-        <div className="w-full bg-white shadow-md rounded-md">
+      {sessionDetail.map((material, idx) => (
+        <div className="w-full bg-white shadow-md rounded-md" key={idx}>
           <Disclosure>
             {({ open }) => (
               <>

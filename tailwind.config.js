@@ -9,7 +9,10 @@ module.exports = {
         'grey': '#ced4da'
       },
       maxWidth: {
-        'screen-2xl': '1460px'
+        'screen-2xl': '1460px',
+        '1/4': '15rem',
+        '1/2': '50%',
+        '3/4': '75%',
       },
       keyframes: {
         blink: {
