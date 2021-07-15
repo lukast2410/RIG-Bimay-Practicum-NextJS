@@ -8,7 +8,7 @@ import LearningOutcome from "../../../components/Course/CourseInformation/Learni
 import ClassDescription from "../../../components/Course/CourseInformation/ClassDescription";
 import Evaluation from "../../../components/Course/CourseInformation/Evaluation";
 import axios from "axios";
-import CourseBreadcrumbs from "../../../components/Course/Breadcrumbs";
+import CourseBreadcrumbs from "../../../components/Course/CourseInformation/Breadcrumbs";
 import NextNProgress from 'nextjs-progressbar'
 import ReactHtmlParser from 'react-html-parser';
 
@@ -36,6 +36,7 @@ export default function Subject({ user, subject, courseDetail }) {
 		setUserData(user);
 		window.scrollTo({
 			top: section.current.offsetTop,
+			behavior: "auto"
 		})
 	}, [user])
 

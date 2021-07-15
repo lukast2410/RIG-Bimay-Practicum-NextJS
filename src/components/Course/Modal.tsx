@@ -88,7 +88,7 @@ export default function Modal() {
                       error: modal.error,
                     });
 
-                    if(modal.error == false) window.location.reload();
+                    if(modal.error == false) router.replace(router.asPath);
                   }}
                 >
                   Go back

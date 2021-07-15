@@ -9,7 +9,7 @@ import ClassDescription from "../../../components/Course/CourseInformation/Class
 import LearningOutcome from "../../../components/Course/CourseInformation/LearningOutcome";
 import GroupForming from "../../../components/Course/Group/GroupForming";
 import axios from "axios";
-import CourseBreadcrumbs from "../../../components/Course/Breadcrumbs";
+import CourseBreadcrumbs from "../../../components/Course/CourseInformation/Breadcrumbs";
 import NextNProgress from "nextjs-progressbar";
 import DividerWithMessage from "../../../components/home/DividerWithMessage";
 import ReactHtmlParser from 'react-html-parser';

@@ -9,19 +9,25 @@ import Loading from "../Loading";
 import { ModalContext } from "../../../contexts/ModalContext";
 import Modal from "../Modal";
 import SubmissionDescriptionLists from "../../../components/Course/CaseAndSubmission/SubmissionDescriptionLists";
+import LoadingProgressBar from "../LoadingProgressBar";
 
 export default function CaseSubmissionComponent({
   onlineTasks,
   classTransactionId,
-  courseCode
+  courseCode,
 }) {
   const [userData, setUserData] = useContext(UserContext);
+  const [counter, setCounter] = useState(1);
   const [isLoading, setLoading] = useState(false);
+  const [totalCounter, setTotalCounter] = useState(1);
   const [modal, setModal] = useContext(ModalContext);
+  const [uploadPercentage, setUploadPercentage] = useState(0);
+  const [loadingProgressBar, setLoadingProgressBar] = useState(false);
 
-  const semester = userData?.Semesters.find((s) => s.SemesterId === userData.SemesterId);
+  const semester = userData?.Semesters.find(
+    (s) => s.SemesterId === userData.SemesterId
+  );
   const semesterName = semester?.Description.replace("/", "-");
-  
 
   const getCurrentTimeUrl =
     "https://laboratory.binus.ac.id/lapi/api/general/time";
@@ -31,6 +37,7 @@ export default function CaseSubmissionComponent({
 
   const uploadAnswer = async (event) => {
     setLoading(true);
+    setLoadingProgressBar(true);
 
     const currentTime = await axios
       .get(getCurrentTimeUrl)
@@ -41,6 +48,7 @@ export default function CaseSubmissionComponent({
       new Date(onlineTasks[0].Deadline).getTime()
     ) {
       setLoading(false);
+      setLoadingProgressBar(false);
       setModal({
         show: true,
         message: "Cannot upload the answer! Already passed the deadline!",
@@ -57,7 +65,10 @@ export default function CaseSubmissionComponent({
       })
       .then((res) => res.data);
 
-    const path = `/lab/${semesterName}/Project/${courseCode}/${onlineTasks[0].ClassName.replace(" ", "")}/${userData.Data.UserName}`;
+    const path = `/lab/${semesterName}/Project/${courseCode}/${onlineTasks[0].ClassName.replace(
+      " ",
+      ""
+    )}/${userData.Data.UserName}`;
 
     const file = event.target.files[0];
     const fileName = file.name.split(".")[0];
@@ -68,6 +79,8 @@ export default function CaseSubmissionComponent({
       fileName: `${fileName}_${uuidv1()}.${fileExt}`,
       rangeSize: 10 * 1024 * 1024,
     };
+
+    setTotalCounter(Math.ceil(file.size / options.rangeSize));
 
     const urlGraph = `https://graph.microsoft.com/v1.0/me/drive/root:${options.path}/${options.fileName}:/createUploadSession`;
 
@@ -126,13 +139,15 @@ export default function CaseSubmissionComponent({
       })
       .then((res) => res.data);
 
+    setLoading(false);
+    setLoadingProgressBar(false);
+    setUploadPercentage(0);
+
     setModal({
       show: true,
       message: "Successfully uploaded your answer!",
       error: false,
     });
-
-    setLoading(false);
   };
 
   const uploadBytes = async (
@@ -143,7 +158,11 @@ export default function CaseSubmissionComponent({
     maxBytes,
     range
   ) => {
+    let count = 1;
+    let totalCount = Math.ceil(file.size / range);
+
     while (true) {
+
       if (maxBytes >= file.size) maxBytes = file.size;
 
       const fileBlob = file.slice(minBytes, maxBytes);
@@ -151,18 +170,32 @@ export default function CaseSubmissionComponent({
       const response = await axios
         .put(uploadUrl, fileBlob, {
           headers: {
-            "Content-Range": `bytes ${minBytes}-${fileBlob.size - 1}/${
-              fileBlob.size
+            "Content-Range": `bytes ${minBytes}-${maxBytes - 1}/${
+              file.size
             }`,
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
+          },
+          onUploadProgress: function (progressEvent) {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            setUploadPercentage(percentCompleted);
           },
         })
         .then((res) => res.data);
 
       if (response["nextExpectedRanges"] !== undefined) {
         minBytes = maxBytes;
-        maxBytes = minBytes + range - 1;
+        maxBytes = minBytes + range;
+      }
+
+      console.log(counter)
+      console.log(totalCount)
+
+      if (count < totalCount){
+        count++;
+        setCounter(count)
       }
 
       if (response["id"] !== undefined) {
@@ -198,6 +231,13 @@ export default function CaseSubmissionComponent({
         </div>
       ) : (
         <div>
+          <LoadingProgressBar
+            loadingProgressBar={loadingProgressBar}
+            setLoadingProgressBar={setLoadingProgressBar}
+            uploadPercentage={uploadPercentage}
+            counter={counter}
+            totalCounter={totalCounter}
+          />
           <SubmissionDescriptionLists
             onlineTasks={onlineTasks}
             classTransactionId={classTransactionId}

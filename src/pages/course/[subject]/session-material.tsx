@@ -8,7 +8,7 @@ import Link from "next/link";
 import ClassDescription from "../../../components/Course/CourseInformation/ClassDescription";
 import LearningOutcome from "../../../components/Course/CourseInformation/LearningOutcome";
 import axios from "axios";
-import CourseBreadcrumbs from "../../../components/Course/Breadcrumbs";
+import CourseBreadcrumbs from "../../../components/Course/CourseInformation/Breadcrumbs";
 import NextNProgress from "nextjs-progressbar";
 import SessionMaterialDisclosure from "../../../components/Course/SessionMaterials/SessionMaterialDisclosure";
 import ReactHtmlParser from 'react-html-parser';

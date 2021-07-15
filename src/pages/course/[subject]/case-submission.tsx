@@ -9,10 +9,8 @@ import LearningOutcome from "../../../components/Course/CourseInformation/Learni
 import CaseSubmissionComponent from "../../../components/Course/CaseAndSubmission/CaseSubmission";
 import SubmittedAnswer from "../../../components/Course/CaseAndSubmission/SubmittedAnswer";
 import axios from "axios";
-import CourseBreadcrumbs from "../../../components/Course/Breadcrumbs";
+import CourseBreadcrumbs from "../../../components/Course/CourseInformation/Breadcrumbs";
 import NextNProgress from "nextjs-progressbar";
-import AnswerDescriptionLists from "../../../components/Course/CaseAndSubmission/AnswerDescriptionLists";
-import SubmissionDescriptionLists from "../../../components/Course/CaseAndSubmission/SubmissionDescriptionLists";
 import ReactHtmlParser from 'react-html-parser';
 import { ModalProvider } from "../../../contexts/ModalContext";
 
