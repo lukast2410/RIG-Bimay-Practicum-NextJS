@@ -1,12 +1,15 @@
 import axios from 'axios'
 import { useContext, useEffect, useState } from 'react'
-import Layout from '../components/Layout'
-import ListData from '../components/extraclass/ListData'
-import SuccessMessage from '../components/extraclass/SuccessMessage'
-import { UserContext } from '../contexts/UserContext'
-import withSession from '../lib/session'
+import Layout from '../../components/Layout'
+import ListData from '../../components/extraclass/ListData'
+import SuccessMessage from '../../components/extraclass/SuccessMessage'
+import { UserContext } from '../../contexts/UserContext'
+import withSession from '../../lib/session'
 import { v4 as uuid } from 'uuid'
 import router from 'next/router'
+import CreateConfirmation from '../../components/extraclass/CreateConfirmation'
+import ListClass from '../../components/extraclass/ListClass'
+import { SocketContext } from '../../contexts/SocketContext'
 
 const listShift = [
 	{ id: 1, Name: '1 (07:20 - 09:00)' },
@@ -19,15 +22,15 @@ const listShift = [
 	{ id: 8, Name: '8 (21:20 - 23:00)' },
 ]
 
-export default function ExtraClass({ user, listCourse }) {
+export default function ExtraClass({ user, listCourse, classes }) {
 	const [userData, setUserData] = useContext(UserContext)
+	const socket = useContext(SocketContext)
 	useEffect(() => setUserData(user), [user])
 
 	if (!user || !user.isLoggedIn) {
 		return <h1>Loading...</h1>
 	}
 
-	console.log(listCourse)
 	const [course, setCourse] = useState(listCourse[0])
 	const [shift, setShift] = useState(listShift[0])
 	const date = new Date()
@@ -36,39 +39,84 @@ export default function ExtraClass({ user, listCourse }) {
 	const today = date.getFullYear() + '-' + mm + '-' + dd
 
 	const [open, setOpen] = useState(false)
+	const [openConfirmation, setOpenConfirmation] = useState(false)
 	const [isSaving, setSaving] = useState(false)
-	const handleSaveExtraClass = async (e) => {
+	const [bodyData, setBodyData] = useState({})
+	const [listClass, setListClass] = useState(classes)
+	const [selectedClass, setSelectedClass] = useState(listClass[0])
+	const [isLoading, setLoading] = useState(false)
+
+	const settingCourseClasses = async (c) => {
+		setCourse(c)
+		setLoading(true)
+		const result = await axios
+			.get(
+				`${process.env.NEXT_PUBLIC_LABORATORY_URL}ClassTransaction/GetClassTransactionByUser?semesterId=${user.SemesterId}&coId=${c.CourseOutlineId}`,
+				{
+					headers: {
+						authorization: 'Bearer ' + user.Token.token,
+					},
+				}
+			)
+			.then((res) => res.data)
+		setListClass(result)
+		setSelectedClass(result[0])
+		setLoading(false)
+	}
+
+	const handleSubmit = async (e) => {
 		e.preventDefault()
 
+		const id = uuid()
+		const room = e.target.room.value.length == 0 ? 'Online' : e.target.room.value
 		const body = {
-			ExtraClassId: uuid(),
-			Course: course.Name,
-			Assistant1: e.target.first_ast.value.toUpperCase(),
-			Assistant2: e.target.second_ast.value.toUpperCase(),
-			Topics: e.target.topics.value,
-			Room: e.target.room.value,
-			LinkZoom: e.target.vidcon.value,
-			LinkRecord: e.target.record.value,
-			ExtraClassDate: e.target.date.value,
-			Shift: shift.id,
-			StartAbsent: null,
+			ClassTransactionId: selectedClass.ClassTransactionId,
+			ExtraClass: {
+				ExtraClassId: id,
+				SemesterId: user.SemesterId,
+				Course: course.Name,
+				Class: selectedClass.ClassName,
+				Assistant1: e.target.first_ast.value.toUpperCase(),
+				Assistant2: e.target.second_ast.value.toUpperCase(),
+				Topics: e.target.topics.value,
+				Room: room,
+				LinkZoom: e.target.vidcon.value,
+				LinkRecord: '',
+				ExtraClassDate: e.target.date.value,
+				Shift: shift.id,
+				StartAbsent: null,
+			},
 		}
 
+		setBodyData(body)
+		console.log(body)
+		setOpenConfirmation(true)
+	}
+
+	const handleSaveExtraClass = async (body) => {
+		const id = body.ExtraClassId
+
 		setSaving(true)
-		const result = await axios
-			.post(process.env.NEXT_PUBLIC_EXTRA_URL + 'ExtraClassHeader', body)
+		const header = await axios
+			.post(process.env.NEXT_PUBLIC_EXTRA_URL + 'ExtraClassHeader', body, {
+				headers: {
+					authorization: 'Bearer ' + user.Token.token,
+				},
+			})
 			.then((res) => res.data)
 
+		console.log(header)
 		setSaving(false)
+		setOpenConfirmation(false)
+		socket.emit('broadcastExtraClass', header.Notification)
 		setOpen(true)
-		console.log(result)
 	}
 
 	return (
 		<Layout title='Add New Extra Class'>
 			<div className='px-4 py-5 md:py-7 sm:px-5'>
 				<div className='max-w-screen-md mx-auto px-4 py-5 rounded-lg sm:px-6 lg:px-8'>
-					<form className='space-y-5 divide-y-2 divide-gray-400' onSubmit={handleSaveExtraClass}>
+					<form className='space-y-5 divide-y-2 divide-gray-400' onSubmit={handleSubmit}>
 						<div className='space-y-8 divide-y divide-gray-200'>
 							<div>
 								<div className='text-center'>
@@ -77,7 +125,9 @@ export default function ExtraClass({ user, listCourse }) {
 								</div>
 
 								<div className=''>
-									<p className='mt-1 font-semibold text-sm text-gray-900'><strong className='text-red-700'>*</strong> Required</p>
+									<p className='mt-1 font-semibold text-sm text-gray-900'>
+										<strong className='text-red-700'>*</strong> Required
+									</p>
 								</div>
 
 								<div className='mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6'>
@@ -91,17 +141,16 @@ export default function ExtraClass({ user, listCourse }) {
 												name='first_ast'
 												id='first_ast'
 												autoComplete=''
-												className='shadow-sm block w-full sm:text-sm border-gray-300 bg-gray-200 rounded-md font-medium'
-												disabled={true}
-												value={user?.Data.Name}
+												className='shadow-sm focus:ring-binus-blue focus:border-binus-blue block w-full sm:text-sm border-gray-300 rounded-md font-medium'
+												defaultValue={user?.Data.Name}
 											/>
 										</div>
 									</div>
 
 									<div className='sm:col-span-6'>
-											<label htmlFor='last_name' className='block text-sm font-medium text-gray-700'>
-												Second Assistant (ex. DL18-2)
-											</label>
+										<label htmlFor='last_name' className='block text-sm font-medium text-gray-700'>
+											Second Assistant (ex. DL18-2)
+										</label>
 										<div className='mt-1'>
 											<input
 												type='text'
@@ -109,7 +158,6 @@ export default function ExtraClass({ user, listCourse }) {
 												id='second_ast'
 												autoComplete=''
 												className='shadow-sm focus:ring-binus-blue focus:border-binus-blue block w-full sm:text-sm border-gray-300 rounded-md font-medium'
-												pattern='[A-Za-z]{2}'
 											/>
 										</div>
 									</div>
@@ -119,7 +167,19 @@ export default function ExtraClass({ user, listCourse }) {
 											label='Select Course'
 											listData={listCourse}
 											selectedData={course}
-											setSelectedData={setCourse}
+											setSelectedData={settingCourseClasses}
+											disable={false}
+										/>
+									</div>
+
+									<div className='sm:col-span-6'>
+										<ListClass
+											label='Select Class'
+											listData={listClass}
+											selectedData={selectedClass}
+											setSelectedData={setSelectedClass}
+											disable={false}
+											isLoading={isLoading}
 										/>
 									</div>
 
@@ -145,13 +205,14 @@ export default function ExtraClass({ user, listCourse }) {
 											listData={listShift}
 											selectedData={shift}
 											setSelectedData={setShift}
+											disable={false}
 										/>
 									</div>
 
 									<div className='sm:col-span-6'>
-											<label htmlFor='room' className='block text-sm font-medium text-gray-700'>
-												Room
-											</label>
+										<label htmlFor='room' className='block text-sm font-medium text-gray-700'>
+											Room
+										</label>
 										<div className='mt-1'>
 											<input
 												type='text'
@@ -160,6 +221,7 @@ export default function ExtraClass({ user, listCourse }) {
 												autoComplete=''
 												maxLength={50}
 												className='shadow-sm focus:ring-binus-blue focus:border-binus-blue block w-full sm:text-sm border-gray-300 rounded-md'
+												defaultValue={'Online'}
 											/>
 										</div>
 									</div>
@@ -167,9 +229,9 @@ export default function ExtraClass({ user, listCourse }) {
 
 								<div className='mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6'>
 									<div className='sm:col-span-6 md:col-span-6'>
-											<label htmlFor='vidcon' className='block text-sm font-medium text-gray-700'>
-												Link Video Conference
-											</label>
+										<label htmlFor='vidcon' className='block text-sm font-medium text-gray-700'>
+											Link Video Conference
+										</label>
 										<div className='mt-1'>
 											<textarea
 												id='vidcon'
@@ -183,29 +245,6 @@ export default function ExtraClass({ user, listCourse }) {
 										</div>
 									</div>
 								</div>
-
-								{/* <div className='mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6'>
-									<div className='sm:col-span-6 md:col-span-5'>
-										<div className='flex justify-between'>
-											<label htmlFor='record' className='block text-sm font-medium text-gray-700'>
-												Link Recording
-											</label>
-											<span className='text-sm text-gray-500' id='email-optional'>
-												Optional
-											</span>
-										</div>
-										<div className='mt-1'>
-											<textarea
-												id='record'
-												name='record'
-												rows={2}
-												className='shadow-sm focus:ring-binus-blue focus:border-binus-blue block w-full sm:text-sm border-gray-300 rounded-md'
-												defaultValue={''}
-												autoComplete=''
-											/>
-										</div>
-									</div>
-								</div> */}
 
 								<div className='mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6'>
 									<div className='sm:col-span-6'>
@@ -236,42 +275,29 @@ export default function ExtraClass({ user, listCourse }) {
 									type='submit'
 									className='ml-3 inline-flex justify-center items-center py-1.5 px-10 border border-transparent shadow-sm text-md font-bold rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none'
 								>
-									{isSaving ? (
-										<svg
-											className='animate-spin h-5 w-5 -ml-4 mr-2 text-white'
-											xmlns='http://www.w3.org/2000/svg'
-											fill='none'
-											viewBox='0 0 24 24'
-										>
-											<circle
-												className='opacity-25'
-												cx='12'
-												cy='12'
-												r='10'
-												stroke='currentColor'
-												strokeWidth='4'
-											></circle>
-											<path
-												className='opacity-75'
-												fill='currentColor'
-												d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
-											></path>
-										</svg>
-									) : null }
-									Save
+									Create
 								</button>
 							</div>
 						</div>
 					</form>
 				</div>
 			</div>
+			<CreateConfirmation
+				open={openConfirmation}
+				setOpen={setOpenConfirmation}
+				callback={handleSaveExtraClass}
+				isLoading={isSaving}
+				data={bodyData}
+			/>
 			<SuccessMessage
 				open={open}
 				setOpen={setOpen}
-				title='Extra Class Saved!'
-				desc='The extra class successfully saved and will be notified to the students.'
+				title='Extra Class Created!'
+				desc='The extra class successfully created and will be notified to the students.'
 				textBtn='Go back to extra class'
-				callback={() => {router.push('/extra-class')}}
+				callback={() => {
+					router.push('/extra-class')
+				}}
 			/>
 		</Layout>
 	)
@@ -280,7 +306,8 @@ export default function ExtraClass({ user, listCourse }) {
 export const getServerSideProps = withSession(async function ({ req, res }) {
 	const userData = req.session.get('user')
 
-	if (!userData || Date.now() >= new Date(userData.Token.expires).getTime()) {
+	if (!userData || !userData.Token || Date.now() >= new Date(userData.Token.expires).getTime()) {
+		req.session.destroy()
 		return {
 			redirect: {
 				destination: '/auth/login',
@@ -289,12 +316,12 @@ export const getServerSideProps = withSession(async function ({ req, res }) {
 		}
 	} else if (userData.Data.Role == 'Software Teaching Assistant') {
 		const token = userData?.Token.token
-		const [smt, listCourse] = await Promise.all([
+		const [smt, listCourse, notif] = await Promise.all([
 			axios.get(process.env.NEXT_PUBLIC_LABORATORY_URL + 'Schedule/GetSemesters').then((res) => res.data),
 			axios
 				.get(
 					process.env.NEXT_PUBLIC_LABORATORY_URL +
-						'Course/GetCourseOutlineInSemester?semesterId=' +
+						'course/GetCourseOutlineInSemesterByUser?semesterId=' +
 						userData.SemesterId,
 					{
 						headers: {
@@ -303,17 +330,41 @@ export const getServerSideProps = withSession(async function ({ req, res }) {
 					}
 				)
 				.then((res) => res.data),
+			axios
+				.get(`${process.env.NEXT_PUBLIC_EXTRA_URL}Notification/UserNotification/Limit?start=0&max=5`, {
+					headers: {
+						authorization: 'Bearer ' + token,
+					},
+					data: {
+						SemesterId: userData.SemesterId,
+						StudentId: userData.Data.Name,
+					},
+				})
+				.then((res) => res.data),
 		])
 
 		const user = {
 			...userData,
 			Semesters: smt,
+			Notifications: notif.data,
 		}
+
+		const classes = await axios
+			.get(
+				`${process.env.NEXT_PUBLIC_LABORATORY_URL}ClassTransaction/GetClassTransactionByUser?semesterId=${userData.SemesterId}&coId=${listCourse[0].CourseOutlineId}`,
+				{
+					headers: {
+						authorization: 'Bearer ' + token,
+					},
+				}
+			)
+			.then((res) => res.data)
 
 		return {
 			props: {
 				user,
 				listCourse,
+				classes,
 			},
 		}
 	}

@@ -12,7 +12,7 @@ export default function Events({ events }) {
 
 				{/* Events Empty */}
 				<div className='text-center py-3'>
-					<h3 className='sm:text-lg font-bold'>You have no event</h3>
+					<h3 className='sm:text-lg font-bold'>- You have no event -</h3>
 				</div>
 
 				{/* Events not empty */}

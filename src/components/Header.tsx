@@ -1,18 +1,61 @@
 import axios from 'axios'
 import Greeting from './Greeting'
 import Navbar from './Navbar'
-import { useContext, useEffect } from 'react'
+import { Fragment, useContext, useEffect, useState } from 'react'
 import $ from 'jquery'
 import { useRouter } from 'next/router'
 import { UserContext } from '../contexts/UserContext'
 import Link from 'next/link'
+import { SocketContext } from '../contexts/SocketContext'
+import { BellIcon, XIcon } from '@heroicons/react/solid'
+import { Transition } from '@headlessui/react'
+import { Notification } from '../classes/Notification'
 
 export default function Header() {
 	const router = useRouter()
 	const [user, setUser] = useContext(UserContext)
+	const [notif, setNotif] = useState<Notification>(null)
+	const [show, setShow] = useState(false)
 	const smt: any[] = user?.Semesters
 	const currentSemesterIndex = smt?.findIndex((x) => x.SemesterId == user?.SemesterId)
 	const currentSemester = smt?.find((x) => x.SemesterId == user?.SemesterId)
+	const socket = useContext(SocketContext)
+	const isStudent = user?.Data.Role != 'Software Teaching Assistant'
+	const userSocketId = isStudent ? user?.Data.UserName : user?.Data.Name
+
+	useEffect(() => {
+		let mounted = false
+		let connected = false
+		if(mounted) return
+
+		if(user){
+			socket.removeAllListeners('connect')
+			socket.removeAllListeners('sendMessage')
+
+			socket.on('connect', () => {
+					socket.emit('userConnected', { id: userSocketId })
+					connected = true
+					console.log('connected user: ' + userSocketId + " socket: " + socket.id)
+			})
+
+			if(!connected){
+				socket.emit('userConnected', { id: userSocketId })
+				console.log('emit user: ' + userSocketId)
+			}
+
+			if(user.Notifications){
+				socket.on('sendMessage', (data: Notification) => {
+					setNotif(data)
+					setShow(true)
+					setUser({ ...user, Notifications: [data, ...user.Notifications] })
+				})
+			}
+		}
+
+		return () => {
+			mounted = true
+		}
+	}, [user])
 
 	useEffect(() => {
 		$(document).ready(function () {
@@ -77,8 +120,55 @@ export default function Header() {
 	}
 
 	return (
-		<div id='header-main'>
+		<>
 			<header className={`border-b border-solid border-gray-200`}>
+				<div
+					aria-live='assertive'
+					className='fixed inset-0 flex px-4 py-6 pointer-events-none sm:p-6 items-start z-50'
+				>
+					<div className='w-full flex flex-col items-center space-y-4 sm:items-end'>
+						{/* Notification panel, dynamically insert this into the live region when it needs to be displayed */}
+						<Transition
+							show={show}
+							as={Fragment}
+							enter='transform ease-out duration-300 transition'
+							enterFrom='translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2'
+							enterTo='translate-y-0 opacity-100 sm:translate-x-0'
+							leave='transition ease-in duration-100'
+							leaveFrom='opacity-100'
+							leaveTo='opacity-0'
+						>
+							<div className='max-w-sm w-full bg-blue-600 shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden'>
+								<div className='p-4'>
+									<div className='flex items-start'>
+										<div className='flex-shrink-0'>
+											<BellIcon className='h-6 w-6 text-white mt-0.5' aria-hidden='true' />
+										</div>
+										<div className='ml-3 w-0 flex-1'>
+											<Link href={`/extra-class/${notif?.ContentId}`}>
+												<a>
+													<p className='text-sm font-bold text-white'>{notif?.Title}</p>
+													<p className='text-sm text-gray-100'>{notif?.Content}</p>
+												</a>
+											</Link>
+										</div>
+										<div className='ml-4 flex-shrink-0 flex'>
+											<button
+												className='bg-blue-600 rounded-md inline-flex text-white hover:text-gray-200 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-gray-200'
+												onClick={() => {
+													setShow(false)
+												}}
+											>
+												<span className='sr-only'>Close</span>
+												<XIcon className='h-5 w-5' aria-hidden='true' />
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</Transition>
+					</div>
+				</div>
 				<div className={`flex justify-between px-4 mr-auto ml-auto pb-5 max-w-screen-2xl`}>
 					<div className={`flex`}>
 						<img src='https://academic-slc.apps.binus.ac.id/assets/ribbon.png' alt='Not Found' />
@@ -96,9 +186,9 @@ export default function Header() {
 							</b>
 						</div>
 						<div className='mt-3 relative h-9'>
-							<div className={`absolute right-0 top-0 z-10`}>
+							<div className={`absolute right-0 top-0 z-20`}>
 								<button
-									className={`drop max-h-80 overflow-auto focus:outline-none focus:bg-grey text-left border border-gray-300`}
+									className={`drop max-h-80 overflow-auto focus:outline-none focus:text-left border border-gray-300 focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-binus-blue`}
 								>
 									<div className={`option active placeholder`} data-value={currentSemesterIndex}>
 										{currentSemester?.Description}
@@ -248,6 +338,6 @@ export default function Header() {
 				</div>
 			</header>
 			<Navbar />
-		</div>
+		</>
 	)
 }

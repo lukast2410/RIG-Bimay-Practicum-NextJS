@@ -11,7 +11,7 @@ export default function Layout({children, title}) {
             </Head>
             <NextNProgress
                 color='#00a9e2'
-                startPosition={0.2}
+                startPosition={0.7}
                 stopDelayMs={200}
                 height={3}
                 options={{ easing: 'ease', speed: '300', showSpinner: false }}
