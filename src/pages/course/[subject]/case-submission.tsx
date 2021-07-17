@@ -117,14 +117,15 @@ export default function CaseSubmission({ user, subject, courseDetail }) {
 
 export const getServerSideProps = withSession(async function ({ req, res, query }) {
 	const userData = req.session.get('user');
-		if (!userData || Date.now() >= new Date(userData.Token.expires).getTime()) {
-			return {
-				redirect: {
-					destination: '/auth/login',
-					permanent: false,
-				},
-			};
-    }
+	if (!userData || !userData.Token || Date.now() >= new Date(userData.Token.expires).getTime()) {
+		req.session.destroy()
+		return {
+			redirect: {
+				destination: '/auth/login',
+				permanent: false,
+			},
+		}
+	}
 		const token = userData?.Token.token
 
 		const courses = await axios

@@ -50,6 +50,7 @@ export default withSession(async (req, res) => {
 			data.User.UserName = name
 			let date = new Date()
 			date.setDate(date.getDate() + 1)
+			console.log(data.Token)
 
 			const token = {
 				token: data.Token.access_token,

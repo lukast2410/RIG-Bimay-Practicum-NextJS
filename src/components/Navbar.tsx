@@ -1,6 +1,6 @@
-import React, { Fragment, useContext, useState } from 'react'
-import { Disclosure, Menu, Popover, Transition } from '@headlessui/react'
-import { ChevronDownIcon, SearchIcon } from '@heroicons/react/solid'
+import React, { Fragment, useContext, useEffect, useState } from 'react'
+import { Disclosure, Popover, Transition } from '@headlessui/react'
+import { ChevronDownIcon } from '@heroicons/react/solid'
 import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
@@ -8,10 +8,8 @@ import axios from 'axios'
 import { useRouter } from 'next/router'
 import { UserContext } from '../contexts/UserContext'
 import Link from 'next/link'
-
-function classNames(...classes) {
-	return classes.filter(Boolean).join(' ')
-}
+import { SocketContext } from '../contexts/SocketContext'
+import NotificationMenu from './notification/NotificationMenu'
 
 export default function Navbar() {
 	const [user, setUser] = useContext(UserContext)
@@ -19,25 +17,31 @@ export default function Navbar() {
 	const courses: any[] = user?.Courses
 	const [hover, setHover] = useState(false)
 	const isStudent = user?.Data.Role != 'Software Teaching Assistant'
+	const socket = useContext(SocketContext)
 
 	const handleSignOut = async (e) => {
 		e.preventDefault()
 
 		await axios.post(`/api/logout`)
+		socket.emit('userSignout', { id: user.Data.UserName })
 		router.push('/auth/login')
 	}
 
 	return (
-		<Disclosure as='nav' className='bg-white shadow'>
+		<Disclosure as='nav' className='bg-white shadow sticky top-0 z-10'>
 			{({ open }) => (
 				<>
 					<div className='max-w-screen-2xl mx-auto px-2 sm:px-4 md:px-8'>
-						<div className='flex justify-between h-16'>
-							<div className='flex px-1 md:px-0'>
-								<div className='hidden md:flex md:space-x-8'>
+						<div className='flex sm:justify-between h-12 sm:h-16'>
+							<div className='flex'>
+								<div className='hidden sm:flex sm:space-x-8'>
 									<Link href='/'>
 										<a
-											className={`${router.route == '/' ? 'border-binus-blue border-b-2 text-gray-900' : 'text-gray-500 hover:border-gray-300'} font-bold inline-flex items-center px-1 pt-1 hover:text-binus-blue`}
+											className={`${
+												router.route == '/'
+													? 'border-binus-blue border-b-2 text-gray-900'
+													: 'text-gray-500 hover:border-gray-300'
+											} font-bold inline-flex items-center px-1 pt-1 hover:text-binus-blue`}
 										>
 											Home
 										</a>
@@ -45,7 +49,11 @@ export default function Navbar() {
 									{!isStudent ? null : (
 										<>
 											<div
-												className={`${router.route.search('course') >= 0 ? 'border-binus-blue border-b-2 text-gray-900' : 'text-gray-500 hover:border-gray-300'} relative font-bold hover:text-binus-blue inline-flex items-center px-1 pt-1 border-b-2 border-transparent cursor-pointer`}
+												className={`${
+													router.route.search('course') >= 0
+														? 'border-binus-blue border-b-2 text-gray-900'
+														: 'text-gray-500 hover:border-gray-300'
+												} relative font-bold hover:text-binus-blue inline-flex items-center px-1 pt-1 border-b-2 border-transparent cursor-pointer`}
 												onMouseEnter={() => setHover(true)}
 												onMouseLeave={() => setHover(false)}
 											>
@@ -86,7 +94,11 @@ export default function Navbar() {
 											</div>
 											<Link href='/schedule'>
 												<a
-													className={`${router.route.search('schedule') >= 0 ? 'border-binus-blue border-b-2 text-gray-900' : 'text-gray-500 hover:border-gray-300'} font-bold inline-flex items-center px-1 pt-1 hover:text-binus-blue`}
+													className={`${
+														router.route.search('schedule') >= 0
+															? 'border-binus-blue border-b-2 text-gray-900'
+															: 'text-gray-500 hover:border-gray-300'
+													} font-bold inline-flex items-center px-1 pt-1 hover:text-binus-blue`}
 												>
 													Schedule
 												</a>
@@ -95,38 +107,19 @@ export default function Navbar() {
 									)}
 									<Link href='/extra-class'>
 										<a
-											className={`${router.route.search('extra-class') >= 0 ? 'border-binus-blue border-b-2 text-gray-900' : 'text-gray-500 hover:border-gray-300'} font-bold inline-flex items-center px-1 pt-1 hover:text-binus-blue`}
+											className={`${
+												router.route.search('extra-class') >= 0
+													? 'border-binus-blue border-b-2 text-gray-900'
+													: 'text-gray-500 hover:border-gray-300'
+											} font-bold inline-flex items-center px-1 pt-1 hover:text-binus-blue`}
 										>
 											Extra Class
 										</a>
 									</Link>
 								</div>
 							</div>
-							<div className='flex-1 flex items-center justify-center px-2 md:ml-6 md:justify-end'>
-								<div className='max-w-lg w-full md:max-w-xs'>
-									<label htmlFor='search' className='sr-only'>
-										Search
-									</label>
-									<div className='relative'>
-										<div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
-											<SearchIcon className='h-5 w-5 text-gray-400' aria-hidden='true' />
-										</div>
-										<input
-											id='search'
-											name='search'
-											className={`block w-full pl-10 pr-3 py-2 border rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-binus-blue focus:border-binus-blue sm:text-sm`}
-											placeholder='Search'
-											type='search'
-										/>
-									</div>
-								</div>
-							</div>
-							<div className='flex items-center md:hidden'>
+							<div className='flex items-center justify-between w-full px-1 sm:hidden'>
 								{/* Mobile menu button */}
-								<button className='flex-shrink-0 bg-white p-1 m-1 text-gray-500 rounded-full hover:text-binus-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-binus-blue'>
-									<span className='sr-only'>View notifications</span>
-									<BellIcon className='h-6 w-6' aria-hidden='true' />
-								</button>
 								<Disclosure.Button className='inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-binus-blue'>
 									<span className='sr-only'>Open main menu</span>
 									{open ? (
@@ -135,12 +128,10 @@ export default function Navbar() {
 										<MenuIcon className='block h-6 w-6' aria-hidden='true' />
 									)}
 								</Disclosure.Button>
+								<NotificationMenu/>
 							</div>
-							<div className='hidden md:ml-4 md:flex md:items-center' onFocus={() => console.log('tes')}>
-								<button className='flex-shrink-0 bg-white p-1 text-gray-500 rounded-full hover:text-binus-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-binus-blue'>
-									<span className='sr-only'>View notifications</span>
-									<BellIcon className='h-6 w-6' aria-hidden='true' />
-								</button>
+							<div className='hidden sm:ml-4 sm:flex sm:items-center'>
+								<NotificationMenu/>
 								<div
 									className={`font-bold text-gray-500 hover:text-binus-blue cursor-pointer ml-4 `}
 									onClick={handleSignOut}
@@ -152,11 +143,15 @@ export default function Navbar() {
 						</div>
 					</div>
 
-					<Disclosure.Panel className='md:hidden'>
+					<Disclosure.Panel className='sm:hidden'>
 						<div className='pt-2 pb-2 space-y-1'>
 							<Link href='/'>
 								<a
-									className={`border-binus-blue bg-blue-50 text-binus-blue block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
+									className={`${
+										router.route == '/'
+											? 'border-binus-blue bg-blue-50 text-binus-blue'
+											: 'text-gray-600 hover:bg-gray-50 hover:text-gray-800 border-transparent hover:border-gray-300'
+									} block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
 								>
 									Home
 								</a>
@@ -164,7 +159,11 @@ export default function Navbar() {
 							{!isStudent ? null : (
 								<Link href='/schedule'>
 									<a
-										className={`text-gray-600 hover:bg-gray-50 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent hover:border-gray-300`}
+										className={`${
+											router.route.search('schedule') >= 0
+												? 'border-binus-blue bg-blue-50 text-binus-blue'
+												: 'text-gray-600 hover:bg-gray-50 hover:text-gray-800 border-transparent hover:border-gray-300'
+										} block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
 									>
 										Schedules
 									</a>
@@ -172,7 +171,11 @@ export default function Navbar() {
 							)}
 							<Link href='/extra-class'>
 								<a
-									className={`text-gray-600 hover:bg-gray-50 hover:text-gray-800 block pl-3 pr-4 py-2 border-l-4 text-base font-medium border-transparent hover:border-gray-300`}
+									className={`${
+										router.route.search('extra-class') >= 0
+											? 'border-binus-blue bg-blue-50 text-binus-blue'
+											: 'text-gray-600 hover:bg-gray-50 hover:text-gray-800 border-transparent hover:border-gray-300'
+									} block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
 								>
 									Extra Class
 								</a>
@@ -180,13 +183,15 @@ export default function Navbar() {
 						</div>
 						{!isStudent ? null : (
 							<div className={`border-gray-300 pt-2 pb-2 border-t space-y-1`}>
-								<div className='text-gray-700 block pl-3 pr-4 py-1 border-l-4 text-base font-semibold border-transparent'>
-									Courses
-								</div>
+								<div className='text-gray-700 block text-center pt-1 text-base font-bold'>Courses</div>
 								{courses?.map((item, idx) => (
-									<Link key={idx} href={`/course/${item.Subject}`}>
+									<Link key={idx} href={`/course/${item.Subject}/info`}>
 										<a
-											className={`text-gray-600 hover:bg-gray-50 hover:text-gray-800 block pl-6 pr-4 py-2 border-l-4 text-base font-medium border-transparent hover:border-gray-300`}
+											className={`${
+												router.query.subject == item.Subject
+													? 'border-binus-blue bg-blue-50 text-binus-blue'
+													: 'text-gray-600 hover:bg-gray-50 hover:text-gray-800 border-transparent hover:border-gray-300'
+											} block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
 										>
 											{item.Subject}
 										</a>

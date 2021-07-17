@@ -1,62 +1,60 @@
-import { LocationMarkerIcon } from '@heroicons/react/solid'
+import { CalendarIcon, LocationMarkerIcon, UsersIcon, ChevronRightIcon, DesktopComputerIcon } from '@heroicons/react/solid'
+import Link from 'next/link'
+import { formatDate, listShift } from '../../pages/api/helper'
 
-const listShift = [
-	{ id: 1, Name: '07:20 - 09:00' },
-	{ id: 2, Name: '09:20 - 11:00' },
-	{ id: 3, Name: '11:20 - 13:00' },
-	{ id: 4, Name: '13:20 - 15:00' },
-	{ id: 5, Name: '15:20 - 17:00' },
-	{ id: 6, Name: '17:20 - 19:00' },
-	{ id: 7, Name: '19:20 - 21:00' },
-	{ id: 8, Name: '21:20 - 23:00' },
-]
-
-const formatDate = (date) => {
-	let monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-
-	let day = date.getDate()
-
-	let monthIndex = date.getMonth()
-	let monthName = monthNames[monthIndex]
-
-	let year = date.getFullYear()
-
-	return `${day} ${monthName} ${year}`
-}
-
-export default function ExtraClassGrid({ key, extra }) {
+export default function ExtraClassGrid({ extra }) {
 	const course = extra.Course.split('-')
-	const ast = extra.Assistant1 + (extra.Assistant2.length == 0 ? '' : ' & ' + extra.Assistant2)
   const date = formatDate(new Date(extra.ExtraClassDate))
+
 	return (
-		<div key={key} className='flex flex-col rounded-lg shadow-lg overflow-hidden'>
-			<div className='flex-shrink-0 bg-binus-blue text-white font-medium text-center py-2 px-4'>
-				<p className='text-xl font-semibold'>{course[0]}</p>
-				<p className='text-lg leading-tight border-b-2 border-white pb-1.5'>{course[1]}</p>
-				<p className='text-base pt-1'>{ast}</p>
-			</div>
-			<div className='flex-1 bg-white pt-2 pb-4 px-4 flex flex-col justify-between'>
-				<div className='flex-1'>
-					<a href='' className='block'>
-						<p className='text-lg font-semibold text-gray-900 overflow-ellipsis overflow-hidden whitespace-nowrap'>
+		<li>
+			<Link href={`/extra-class/${extra.ExtraClassId}`}>
+				<a className="block hover:bg-gray-100">
+					<div className="px-3 py-3 sm:px-4 lg:py-4 lg:px-6">
+						<div className="flex items-center justify-between relative">
+							<div className='flex flex-col sm:flex-row'>
+								<p className="text-sm font-bold text-blue-800 truncate">{course[0]}&nbsp;</p>
+								<p className="text-sm font-medium text-blue-600 truncate">{course[1]}</p>
+							</div>
+							<div className="flex-shrink-0 flex absolute right-0 top-0">
+								<p className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+									{listShift[extra.Shift - 1].Name}
+								</p>
+							</div>
+						</div>
+						<div className='font-medium whitespace-nowrap overflow-hidden overflow-ellipsis max-w-sm'>
 							{extra.Topics}
-						</p>
-					</a>
-				</div>
-				<div className='mt-2 flex items-center text-gray-500 text-sm font-medium'>
-					{listShift[extra.Shift - 1].Name}
-				</div>
-				<div className='mt-1 flex items-center text-gray-500 text-sm font-medium'>{date}</div>
-				<div className='flex justify-between'>
-					<div className='mt-1 flex items-center text-gray-500 text-sm font-medium'>
-						<LocationMarkerIcon className='h-4 w-4 mr-1' />
-						{extra.Room}
+						</div>
+						<div className="mt-2 sm:flex sm:justify-between">
+							<div className="sm:flex">
+								<div className="flex items-center text-sm text-gray-500">
+									<UsersIcon className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" aria-hidden="true" />
+									<p className='px-2 text-xs leading-6 font-semibold rounded-full bg-blue-100 text-blue-800'>{extra.Assistant1}</p>
+									{extra.Assistant2 != '' && (
+										<p className='ml-2 px-2 text-xs leading-6 font-semibold rounded-full bg-blue-100 text-blue-800'>{extra.Assistant2}</p>
+									)}
+								</div>
+								<div className='mt-2 flex items-center sm:mt-0 sm:ml-6'>
+									<p className="flex items-center text-sm text-gray-500">
+										<LocationMarkerIcon className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" aria-hidden="true" />
+										{extra.Room}
+									</p>
+								</div>
+								<div className='mt-2 flex items-center sm:mt-0 sm:ml-6'>
+									<p className="flex items-center text-sm text-gray-500">
+										<DesktopComputerIcon className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" aria-hidden="true" />
+										{extra.Class}
+									</p>
+								</div>
+							</div>
+							<div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+								<CalendarIcon className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" aria-hidden="true" />
+									{date}
+							</div>
+						</div>
 					</div>
-					<div className='mt-1 flex items-center text-blue-600 text-sm font-medium cursor-pointer hover:text-blue-700'>
-						Read More
-					</div>
-				</div>
-			</div>
-		</div>
+				</a>
+			</Link>
+		</li>
 	)
 }

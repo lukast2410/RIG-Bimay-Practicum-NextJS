@@ -6,8 +6,11 @@ import styles from '../../../styles/pages/Login.module.scss'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUser, faLock } from '@fortawesome/free-solid-svg-icons'
 import { XIcon, XCircleIcon } from '@heroicons/react/solid'
-import { useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { EncryptToBase64 } from '../api/aes'
+import router from 'next/router'
+import withSession from '../../lib/session'
+import { SocketContext } from '../../contexts/SocketContext'
 
 export default function Login() {
 	const { mutateUser } = useUser({
@@ -34,6 +37,7 @@ export default function Login() {
 		if (numbers.test(body.username) || binusian.test(body.username)) {
 			try {
 				await mutateUser(axios.post(`/api/login`, body))
+				router.push('/')
 			} catch (error) {
 				setFailed(true)
 				setLogin(false)
@@ -44,6 +48,7 @@ export default function Login() {
 			body.password = EncryptToBase64(body.username, body.password)
 			try {
 				await mutateUser(axios.post(`/api/login`, body))
+				router.push('/')
 			} catch (error) {
 				setFailed(true)
 				setLogin(false)
@@ -120,7 +125,7 @@ export default function Login() {
 
 						<button
 							type='submit'
-							className={`rounded-md inline-flex items-center justify-center transition ease-in-out duration-150 focus:outline-none ${styles.loginBtn}`}
+							className={`rounded-md inline-flex items-center justify-center transition ease-in-out duration-150 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-binus-blue ${styles.loginBtn}`}
 						>
 							{isLogin ? (
 								<svg
@@ -280,3 +285,18 @@ export default function Login() {
 		</main>
 	)
 }
+
+export const getServerSideProps = withSession(async function ({ req, res }) {
+	const userData = req.session.get('user')
+
+	if (userData && userData.Token && Date.now() <= new Date(userData.Token.expires).getTime()) {
+		return {
+			redirect: {
+				destination: '/',
+				permanent: false,
+			},
+		}
+	}
+
+	return { props: {} }
+})
