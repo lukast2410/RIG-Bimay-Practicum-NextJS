@@ -1,5 +1,5 @@
 import Router from "next/router";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Layout from "../../../components/Layout";
 import { UserContext } from "../../../contexts/UserContext";
 import withSession from "../../../lib/session";
@@ -8,13 +8,17 @@ import LearningOutcome from "../../../components/Course/CourseInformation/Learni
 import ClassDescription from "../../../components/Course/CourseInformation/ClassDescription";
 import Evaluation from "../../../components/Course/CourseInformation/Evaluation";
 import axios from "axios";
-import CourseBreadcrumbs from "../../../components/Course/Breadcrumbs";
+import CourseBreadcrumbs from "../../../components/Course/CourseInformation/Breadcrumbs";
 import NextNProgress from 'nextjs-progressbar'
+import ReactHtmlParser from 'react-html-parser';
+
 
 
 export default function Subject({ user, subject, courseDetail }) {
 	const [userData, setUserData] = useContext(UserContext)
 	const [optionValue, setOptionValue] = useState(0);
+	const section = useRef(null);
+	let desc = "";
 
 	const urls = [
 		`/course/${courseDetail.CourseOutlineDetail.CourseCode}-${courseDetail.CourseOutlineDetail.CourseName}/info`,
@@ -30,6 +34,10 @@ export default function Subject({ user, subject, courseDetail }) {
 
 	useEffect(() => {
 		setUserData(user);
+		window.scrollTo({
+			top: section.current.offsetTop,
+			behavior: "auto"
+		})
 	}, [user])
 
 	if (!user || !user.isLoggedIn) {
@@ -45,15 +53,16 @@ export default function Subject({ user, subject, courseDetail }) {
 					<CourseBreadcrumbs courseOutlineDetail={courseDetail.CourseOutlineDetail}/>
 				</div>
 				<h1 className="text-3xl font-bold mb-4 mt-4">{courseDetail.CourseOutlineDetail.CourseName}</h1>
-				<p>{courseDetail.CourseOutlineDetail.CourseDescription}</p>
+				<div>{ReactHtmlParser(courseDetail.CourseOutlineDetail.CourseDescription)}</div>
 			</div>
 			<div className="course-content flex flex-col justify-between xl:flex-row">
 				<div className="w-full mb-4 xl:w-3/5 xl:mb-0">
 					<LearningOutcome learningOutcome={courseDetail.CourseOutlineDetail.LearningOutcome} />
 				</div>
 				<div className="flex-none">
-					<ClassDescription subject={subject}/>
+					<ClassDescription subject={subject} studentGroupDetail={courseDetail.StudentGroupDetail}/>
 				</div>
+				
 			</div>
 			<div className="course-tab mt-6">
 				<div className="sm:hidden">
@@ -68,7 +77,7 @@ export default function Subject({ user, subject, courseDetail }) {
 							<option className="options" value={3}>Group Forming</option>
 						</select>
 				</div>
-				<div className="hidden sm:block">
+				<div className="hidden sm:block" ref={section}>
 					<div className="border-b border-gray-200">
 						<nav className="-mb-px flex" aria-label="Tabs">
 							<Link href={urls[0]}>
@@ -162,10 +171,12 @@ export const getServerSideProps = withSession(async function ({ req, res, query 
 		.then(response => response.data)
 	])
 
+	const softwareCourse = courses.filter((course) => course.Laboratory === "Software")
+
 	const user = {
 		...userData,
 		Semesters: smt,
-		Courses: courses,
+		Courses: softwareCourse,
 	}
 
 

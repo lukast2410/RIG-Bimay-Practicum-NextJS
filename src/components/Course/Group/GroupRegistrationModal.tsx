@@ -3,15 +3,17 @@ import { Dialog, Transition } from '@headlessui/react'
 import { ExclamationIcon } from '@heroicons/react/outline'
 import axios from 'axios'
 import { UserContext } from '../../../contexts/UserContext'
-import { ErrorModalContext } from '../../../contexts/ErrorModalContext'
+import { ModalContext } from '../../../contexts/ModalContext'
+import Loading from '../Loading'
 
-export default function GroupRegistrationModal({open, setOpen, studentsData, classTransactionId, getGroupProject}) {
+export default function GroupRegistrationModal({setOpen, openRegistrationModal, setOpenRegistrationModal, studentsData, classTransactionId, getGroupProject}) {
 
   const cancelButtonRef = useRef()
   const [userData, setUserData] = useContext(UserContext);
   const url = 'https://laboratory.binus.ac.id/lapi/api/Binusmaya/SaveGroupConfirmation'
   const [isLoading, setLoading] = useState(false);
-  const [errorModal, setErrorModal] = useContext(ErrorModalContext);
+  const [modal, setModal] = useContext(ModalContext);
+ 
 
   const createGroup = async () => {
 
@@ -37,29 +39,30 @@ export default function GroupRegistrationModal({open, setOpen, studentsData, cla
     .then(res => res.data);
 
     setLoading(false);
+    setOpenRegistrationModal(false);
+    setOpen(false);
     
     if(!responseData.Status){
-      setErrorModal({show: true, message: responseData.Message})
+      setModal({show: true, message: responseData.Message, error: true})
     }
     else {
         getGroupProject();
     }
 
-    setOpen(false);
   }
 
   return (
 
-    <Transition.Root show={open} as={Fragment}>
+    <Transition.Root show={openRegistrationModal} as={Fragment}>
       <Dialog
         as="div"
         static
         className="fixed z-10 inset-0 overflow-y-auto"
         initialFocus={cancelButtonRef}
-        open={open}
-        onClose={setOpen}
+        open={openRegistrationModal}
+        onClose={setOpenRegistrationModal}
       >
-        <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div className="flex items-center justify-center min-h-screen text-center sm:block sm:p-0">
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -85,7 +88,7 @@ export default function GroupRegistrationModal({open, setOpen, studentsData, cla
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+            <div className="inline-block align-bottom bg-white rounded-lg p-8 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
               <div>
                 <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100">
                     <ExclamationIcon className="h-6 w-6 text-yellow-400" aria-hidden="true" />
@@ -99,7 +102,7 @@ export default function GroupRegistrationModal({open, setOpen, studentsData, cla
                         <ul className="-my-5 divide-y divide-gray-200">
                           {studentsData && studentsData.map((student, idx) => (
                               <li key={idx} className="py-5 " >
-                                <div className="relative focus-within:ring-2 focus-within:ring-indigo-500">
+                                <div className="relative focus-within:ring-2 focus-within:ring-binus-blue">
                                     <h3 className="text-sm font-semibold text-gray-800">
                                     <span className="absolute inset-0" aria-hidden="true" />
                                         {student.Number}
@@ -118,17 +121,14 @@ export default function GroupRegistrationModal({open, setOpen, studentsData, cla
               <div className="mt-5 sm:mt-6 sm:grid sm:grid-cols-2 sm:gap-3 sm:grid-flow-row-dense">
                 <button
                   type="button"
-                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm"
+                  className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 sm:col-start-2 sm:text-sm"
                   onClick={createGroup}
                 >
                   {
                     isLoading 
                     ?
                     (
-                     <svg className="animate-spin h-5 w-5 -ml-4 mr-2 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
+                     <Loading color="text-white"/>
                     )
                     :
                     <></>
@@ -137,8 +137,11 @@ export default function GroupRegistrationModal({open, setOpen, studentsData, cla
                 </button>
                 <button
                   type="button"
-                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:col-start-1 sm:text-sm"
-                  onClick={() => setOpen(false)}
+                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-binus-blue sm:mt-0 sm:col-start-1 sm:text-sm"
+                  onClick={() => {
+                    setOpenRegistrationModal(false);
+                    setOpen(false);
+                  }}
                   ref={cancelButtonRef}
                 >
                   Cancel

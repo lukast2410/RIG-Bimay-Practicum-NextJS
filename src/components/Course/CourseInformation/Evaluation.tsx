@@ -1,6 +1,6 @@
 export default function Evaluation({theoryEvaluation, labEvaluation}){
     return(
-        <div className="pb-5 border-b border-gray-200">
+        <div className="pb-6 border-b border-gray-200">
             <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4 text-center">
                 Evaluation Component
             </h3>
@@ -21,7 +21,7 @@ export default function Evaluation({theoryEvaluation, labEvaluation}){
                                         {
                                             theoryEvaluation.map((data, idx) => (
                                                 <tr key={idx}>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-sm  text-center text-black">
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm  text-center text-gray-900">
                                                         {data.Activity}
                                                     </td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm  text-center text-black">
@@ -50,6 +50,8 @@ export default function Evaluation({theoryEvaluation, labEvaluation}){
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-200">
                                         {
+                                            labEvaluation.length != 0 
+                                            ?
                                             labEvaluation.map((data, idx) => (
                                                 <tr key={idx}>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm  text-center text-black ">
@@ -60,6 +62,12 @@ export default function Evaluation({theoryEvaluation, labEvaluation}){
                                                     </td>
                                                 </tr>
                                             ))
+                                            :
+                                            <tr>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm  text-center text-black font-medium">
+                                                    - Empty -
+                                                </td>
+                                            </tr>
                                         }
                                     </tbody>
                                 </table>

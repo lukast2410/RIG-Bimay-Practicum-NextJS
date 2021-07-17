@@ -4,7 +4,7 @@ import LoadingProgressBar from '../Course/LoadingProgressBar'
 import UploadedAnswer from './UploadedAnswer'
 import { v1 as uuidv1 } from 'uuid'
 import { useContext, useState } from 'react'
-import { ModalContext } from '../../contexts/ModelContext'
+import { ModalContext } from '../../contexts/ModalContext'
 import { UserContext } from '../../contexts/UserContext'
 import Modal from '../Course/Modal'
 

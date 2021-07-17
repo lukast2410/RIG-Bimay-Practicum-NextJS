@@ -1,3 +1,5 @@
+import Image from 'next/image'
+
 export default function Identity({ user, isStudent }) {
 	return (
 		<div
@@ -8,10 +10,12 @@ export default function Identity({ user, isStudent }) {
 			<div className={`flex flex-col items-center ${isStudent ? 'sm:flex-row sm:space-x-5' : ''}`}>
 				<div className='flex-shrink-0'>
 					<div className='relative'>
-						<img
-							className='h-36 w-36 object-cover object-top rounded-full'
-							src={`${process.env.NEXT_PUBLIC_LABORATORY_URL}Account/GetThumbnail?id=${user?.Data.PictureId}`}
-							alt={user?.Data.Name}
+						<Image
+						src={`${process.env.NEXT_PUBLIC_LABORATORY_URL}Account/GetThumbnail?id=${user?.Data.PictureId}`}
+						width={144}
+						height={144}
+						loading="eager"
+						className="object-cover object-top rounded-full"
 						/>
 						<span className='absolute inset-0 shadow-inner rounded-full' aria-hidden='true' />
 					</div>

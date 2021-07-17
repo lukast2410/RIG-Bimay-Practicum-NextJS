@@ -1,6 +1,6 @@
 export default function LearningOutcome({learningOutcome}){
     return (
-        <div className="bg-white shadow-md overflow-hidden sm:rounded-lg rounded-md">
+        <div className="bg-white shadow-md overflow-hidden sm:rounded-lg rounded-md xl:mr-6">
             <div className="px-4 py-5 sm:px-6 bg-binus-blue">
                 <h3 className="text-lg leading-6 font-medium text-white">
                     Learning Outcome
@@ -15,7 +15,7 @@ export default function LearningOutcome({learningOutcome}){
                                 {`LO${idx + 1}`}
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {data.Value}
+                                {data.Value.charAt(0).toUpperCase() + data.Value.slice(1)}
                             </dd>
                         </div>
                         ))

@@ -10,6 +10,7 @@ import { SocketContext } from '../contexts/SocketContext'
 import { BellIcon, XIcon } from '@heroicons/react/solid'
 import { Transition } from '@headlessui/react'
 import { Notification } from '../classes/Notification'
+import Image from 'next/image'
 
 export default function Header() {
 	const router = useRouter()
@@ -26,24 +27,24 @@ export default function Header() {
 	useEffect(() => {
 		let mounted = false
 		let connected = false
-		if(mounted) return
+		if (mounted) return
 
-		if(user){
+		if (user) {
 			socket.removeAllListeners('connect')
 			socket.removeAllListeners('sendMessage')
 
 			socket.on('connect', () => {
-					socket.emit('userConnected', { id: userSocketId })
-					connected = true
-					console.log('connected user: ' + userSocketId + " socket: " + socket.id)
+				socket.emit('userConnected', { id: userSocketId })
+				connected = true
+				console.log('connected user: ' + userSocketId + ' socket: ' + socket.id)
 			})
 
-			if(!connected){
+			if (!connected) {
 				socket.emit('userConnected', { id: userSocketId })
 				console.log('emit user: ' + userSocketId)
 			}
 
-			if(user.Notifications){
+			if (user.Notifications) {
 				socket.on('sendMessage', (data: Notification) => {
 					setNotif(data)
 					setShow(true)
@@ -100,7 +101,7 @@ export default function Header() {
 			})
 
 			function triggerAnimation() {
-				var finalWidth = $('.drop').hasClass('visible') ? 17 : 15
+				var finalWidth = $('.drop').hasClass('visible') ? 17 : 16
 				$('.drop').css('width', '19em')
 				setTimeout(function () {
 					$('.drop').css('width', finalWidth + 'em')
@@ -171,10 +172,17 @@ export default function Header() {
 				</div>
 				<div className={`flex justify-between px-4 mr-auto ml-auto pb-5 max-w-screen-2xl`}>
 					<div className={`flex`}>
-						<img src='https://academic-slc.apps.binus.ac.id/assets/ribbon.png' alt='Not Found' />
+						{/* <Image
+							src={`/assets/ribbon.png`}
+							width={40}
+							height={130}
+							loading='eager'
+							className='object-cover object-top'
+						/> */}
+						<img src='/assets/ribbon.png' alt='Not Found' />
 						<Link href='/'>
 							<a href='/' className={`ml-2`}>
-								<img src='https://academic-slc.apps.binus.ac.id/assets/logo.png' alt='Not Found' />
+								<img src='/assets/binus.png' alt='Not Found' />
 							</a>
 						</Link>
 					</div>
@@ -188,7 +196,7 @@ export default function Header() {
 						<div className='mt-3 relative h-9'>
 							<div className={`absolute right-0 top-0 z-20`}>
 								<button
-									className={`drop max-h-80 overflow-auto focus:outline-none focus:text-left border border-gray-300 focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-binus-blue`}
+									className={`drop max-h-80 overflow-auto scroll-binus-blue focus:outline-none focus:text-left border border-gray-300 focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-binus-blue`}
 								>
 									<div className={`option active placeholder`} data-value={currentSemesterIndex}>
 										{currentSemester?.Description}
@@ -220,7 +228,7 @@ export default function Header() {
 					<style jsx>
 						{`
 							.drop {
-								width: 15rem;
+								width: 16rem;
 								color: #212529;
 								position: relative;
 								-webkit-transition: width 0.3s;

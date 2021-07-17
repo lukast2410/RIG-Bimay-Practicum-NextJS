@@ -1,4 +1,4 @@
-/* This example requires Tailwind CSS v2.0+ */
+
 import Link from 'next/link';
 import DividerWithMessage from '../../home/DividerWithMessage';
 
@@ -21,19 +21,9 @@ export default function AnswerDescriptionLists({submittedAnswers}) {
 
   return (
     <div className="mt-4 xl:hidden pb-2">
-      <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4 ">
-           Submitted Answer
-      </h3>
       {
-        submittedAnswers.length == 0 ?
-        (
-        <div className='py-4 px-5 rounded-md bg-red-50'>
-            <DividerWithMessage message='There is no submitted answer' bg='red-50' size='lg' mt='' color='red-800'/>
-        </div>
-        )
-        :
         submittedAnswers.map((answer, idx) => (
-          <div className="bg-white shadow overflow-hidden sm:rounded-lg mb-4 rounded-md">
+          <div className="bg-white shadow overflow-hidden sm:rounded-lg mb-4 rounded-md" key={idx}>
             <div className="px-3 py-3 sm:px-6 bg-binus-blue">
               <h3 className="text-lg leading-6 font-medium text-white">{answer.Type}-{answer.Number}</h3>
             </div>

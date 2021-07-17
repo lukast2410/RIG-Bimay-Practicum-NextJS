@@ -11,7 +11,7 @@ import AstExtraClasses from '../components/home/AstExtraClasses'
 import axios from 'axios'
 import PracticumSchedule from '../components/home/PracticumSchedule'
 import ExamSchedule from '../components/home/ExamSchedule'
-import { ModalProvider } from '../contexts/ModelContext'
+import { ModalProvider } from '../contexts/ModalContext'
 
 export default function Home({ user, procedures, events, extra, practicum, exam }) {
 	const [userData, setUserData] = useContext(UserContext)
@@ -176,10 +176,12 @@ export const getServerSideProps = withSession(async function ({ req, res }) {
 			}),
 	])
 
+	const softwareCourse = courses.filter((course) => course.Laboratory === "Software")
+
 	const user = {
 		...userData,
 		Semesters: smt,
-		Courses: courses,
+		Courses: softwareCourse,
 	}
 
 	return {

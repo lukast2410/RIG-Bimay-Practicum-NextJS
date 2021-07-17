@@ -19,8 +19,8 @@ export default function Navbar() {
 	const isStudent = user?.Data.Role != 'Software Teaching Assistant'
 	const socket = useContext(SocketContext)
 
-	const handleSignOut = async (e) => {
-		e.preventDefault()
+  const handleSignOut = async (e) => {
+    e.preventDefault();
 
 		await axios.post(`/api/logout`)
 		socket.emit('userSignout', { id: user.Data.UserName })
