@@ -13,6 +13,7 @@ import CourseBreadcrumbs from "../../../components/Course/CourseInformation/Brea
 import NextNProgress from "nextjs-progressbar";
 import DividerWithMessage from "../../../components/home/DividerWithMessage";
 import ReactHtmlParser from 'react-html-parser';
+import { ModalProvider } from "../../../contexts/ModalContext";
 
 export default function Group({
   user,
@@ -51,7 +52,7 @@ export default function Group({
   return (
     <Layout title={courseDetail.CourseOutlineDetail.CourseName}>
       <NextNProgress options={{ easing: "ease", speed: 500 }} />
-      <div className="max-w-screen-2xl mx-auto sm:px-6 lg:px-8 px-2 mt-5">
+      <div className="max-w-screen-2xl mx-auto sm:px-6 lg:px-8 px-4 mt-5">
         <div className="course-description mb-3 text-center sm:text-left">
           <div className="flex justify-center sm:justify-start">
             <CourseBreadcrumbs
@@ -70,7 +71,7 @@ export default function Group({
             />
           </div>
           <div className="flex-none">
-            <ClassDescription subject={subject} onlineTask={courseDetail.OnlineTasks}/>
+            <ClassDescription subject={subject} studentGroupDetail={courseDetail.StudentGroupDetail}/>
           </div>
         </div>
         <div className="course-tab mt-6">
@@ -145,25 +146,27 @@ export default function Group({
             </div>
           </div>
         </div>
-        <div className="group-forming mt-6 pb-6">
-          {courseDetail.StudentGroupDetail.Group != null ? (
-            <GroupForming
-              groupProject={groupProject}
-              studentGroupDetail={courseDetail.StudentGroupDetail}
-              groupConfirmation={groupConfirmation}
-            />
-          ) : (
-            <div className="py-4 px-5 rounded-md bg-red-50">
-              <DividerWithMessage
-                message={`You don't have any group forming`}
-                bg="red-50"
-                size="lg"
-                mt=""
-                color="red-800"
+        <ModalProvider>
+          <div className="group-forming mt-6 pb-6">
+            {courseDetail.StudentGroupDetail.Group != null ? (
+              <GroupForming
+                groupProject={groupProject}
+                studentGroupDetail={courseDetail.StudentGroupDetail}
+                groupConfirmation={groupConfirmation}
               />
-            </div>
-          )}
-        </div>
+            ) : (
+              <div className="py-4 px-5 rounded-md bg-red-50">
+                <DividerWithMessage
+                  message={`You don't have any group forming`}
+                  bg="red-50"
+                  size="lg"
+                  mt=""
+                  color="red-800"
+                />
+              </div>
+            )}
+          </div>
+        </ModalProvider>
       </div>
     </Layout>
   );

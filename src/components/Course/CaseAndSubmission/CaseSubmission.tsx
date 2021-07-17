@@ -15,6 +15,7 @@ export default function CaseSubmissionComponent({
   onlineTasks,
   classTransactionId,
   courseCode,
+  studentGroupDetail,
 }) {
   const [userData, setUserData] = useContext(UserContext);
   const [counter, setCounter] = useState(1);
@@ -162,7 +163,6 @@ export default function CaseSubmissionComponent({
     let totalCount = Math.ceil(file.size / range);
 
     while (true) {
-
       if (maxBytes >= file.size) maxBytes = file.size;
 
       const fileBlob = file.slice(minBytes, maxBytes);
@@ -170,9 +170,7 @@ export default function CaseSubmissionComponent({
       const response = await axios
         .put(uploadUrl, fileBlob, {
           headers: {
-            "Content-Range": `bytes ${minBytes}-${maxBytes - 1}/${
-              file.size
-            }`,
+            "Content-Range": `bytes ${minBytes}-${maxBytes - 1}/${file.size}`,
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
@@ -190,12 +188,9 @@ export default function CaseSubmissionComponent({
         maxBytes = minBytes + range;
       }
 
-      console.log(counter)
-      console.log(totalCount)
-
-      if (count < totalCount){
+      if (count < totalCount) {
         count++;
-        setCounter(count)
+        setCounter(count);
       }
 
       if (response["id"] !== undefined) {
@@ -214,12 +209,9 @@ export default function CaseSubmissionComponent({
     }
   };
 
-  return (
-    <div>
-      <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4 ">
-        Case & Submission
-      </h3>
-      {onlineTasks.length == 0 ? (
+  const renderOnlineTasks = () => {
+    if (studentGroupDetail.Group == null) {
+      return (
         <div className="py-4 px-5 rounded-md bg-red-50">
           <DividerWithMessage
             message="There is no available Online Task for this subject."
@@ -229,142 +221,154 @@ export default function CaseSubmissionComponent({
             color="red-800"
           />
         </div>
-      ) : (
-        <div>
-          <LoadingProgressBar
-            loadingProgressBar={loadingProgressBar}
-            setLoadingProgressBar={setLoadingProgressBar}
-            uploadPercentage={uploadPercentage}
-            counter={counter}
-            totalCounter={totalCounter}
-          />
-          <SubmissionDescriptionLists
-            onlineTasks={onlineTasks}
-            classTransactionId={classTransactionId}
-            uploadAnswer={uploadAnswer}
-            loading={isLoading}
-            setLoading={setLoading}
-          />
-          <div className="xl:block hidden">
-            <div className="flex flex-col">
-              <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-                <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-                  <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-                    <table className="min-w-full divide-y divide-gray-200">
-                      <thead className="bg-binus-blue">
-                        <tr>
+      );
+    } else if (studentGroupDetail.Group.Id == null) {
+      return (
+        <Note message="To download project case, you must form a group first." />
+      );
+    }
+
+    return (
+      <div>
+        <LoadingProgressBar
+          loadingProgressBar={loadingProgressBar}
+          setLoadingProgressBar={setLoadingProgressBar}
+          uploadPercentage={uploadPercentage}
+          counter={counter}
+          totalCounter={totalCounter}
+        />
+        <SubmissionDescriptionLists
+          onlineTasks={onlineTasks}
+          classTransactionId={classTransactionId}
+          uploadAnswer={uploadAnswer}
+          loading={isLoading}
+          setLoading={setLoading}
+        />
+        <div className="xl:block hidden">
+          <div className="flex flex-col">
+            <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+              <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-binus-blue">
+                      <tr>
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+                        >
+                          Type
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+                        >
+                          Deadline
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+                        >
+                          Hash Code
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+                        >
+                          File Size
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+                        >
+                          Uploaded Time
+                        </th>
+                        <th
+                          scope="col"
+                          className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+                        >
+                          Case
+                        </th>
+                        {onlineTasks[0].CanUpload && (
                           <th
                             scope="col"
                             className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
                           >
-                            Type
+                            Action
                           </th>
-                          <th
-                            scope="col"
-                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
-                          >
-                            Deadline
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
-                          >
-                            Hash Code
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
-                          >
-                            File Size
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
-                          >
-                            Uploaded Time
-                          </th>
-                          <th
-                            scope="col"
-                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
-                          >
-                            Case
-                          </th>
-                          {onlineTasks[0].CanUpload && (
-                            <th
-                              scope="col"
-                              className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+                        )}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {onlineTasks.map((task, idx) => (
+                        <tr
+                          key={idx}
+                          className={idx % 2 === 0 ? "bg-white" : "bg-gray-100"}
+                        >
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {task.Type}-{task.Number}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {task.Deadline}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {task.Hash}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {task.Size}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {task.UploadTime}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-purple-600">
+                            <Link
+                              href={`https://bluejack.binus.ac.id/binusmayalab/Laboratory/GetTaskFile/${task.SemesterId}/${task.CourseOutlineId}/${classTransactionId}/Project/1`}
                             >
-                              Action
-                            </th>
+                              <button
+                                type="button"
+                                className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-binus-blue bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                              >
+                                Download
+                              </button>
+                            </Link>
+                          </td>
+                          {task.CanUpload && (
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-purple-600">
+                              <label htmlFor="upload">
+                                <div className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-binus-blue bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cursor-pointer">
+                                  {isLoading && (
+                                    <Loading color="text-binus-blue" />
+                                  )}
+                                  Upload
+                                </div>
+                              </label>
+                              <input
+                                type="file"
+                                name="upload"
+                                id="upload"
+                                className="hidden"
+                                onChange={uploadAnswer}
+                              />
+                            </td>
                           )}
                         </tr>
-                      </thead>
-                      <tbody>
-                        {onlineTasks.map((task, idx) => (
-                          <tr
-                            key={idx}
-                            className={
-                              idx % 2 === 0 ? "bg-white" : "bg-gray-100"
-                            }
-                          >
-                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                              {task.Type}-{task.Number}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                              {task.Deadline}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                              {task.Hash}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                              {task.Size}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                              {task.UploadTime}
-                            </td>
-                            <td className="px-6 py-4 whitespace-nowrap text-sm text-purple-600">
-                              <Link
-                                href={`https://bluejack.binus.ac.id/binusmayalab/Laboratory/GetTaskFile/${task.SemesterId}/${task.CourseOutlineId}/${classTransactionId}/Project/1`}
-                              >
-                                <button
-                                  type="button"
-                                  className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-binus-blue bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                                >
-                                  Download
-                                </button>
-                              </Link>
-                            </td>
-                            {task.CanUpload && (
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-purple-600">
-                                <label htmlFor="upload">
-                                  <div className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-binus-blue bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cursor-pointer">
-                                    {isLoading && (
-                                      <Loading color="text-binus-blue" />
-                                    )}
-                                    Upload
-                                  </div>
-                                </label>
-                                <input
-                                  type="file"
-                                  name="upload"
-                                  id="upload"
-                                  className="hidden"
-                                  onChange={uploadAnswer}
-                                />
-                              </td>
-                            )}
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
               </div>
             </div>
           </div>
-          <Note message="To download project case, you must form a group first." />
         </div>
-      )}
+      </div>
+    );
+  };
+
+  return (
+    <div>
+      <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4 ">
+        Case & Submission
+      </h3>
+      {renderOnlineTasks()}
       <Modal />
     </div>
   );

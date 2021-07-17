@@ -71,7 +71,7 @@ export default function SubmittedAnswer({ submittedAnswers }) {
   };
 
   return (
-    <div className="mt-2 pb-4">
+    <div className="mt-4 pb-4">
       <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4 ">
         Submitted Answer
       </h3>

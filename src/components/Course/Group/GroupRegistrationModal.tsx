@@ -13,6 +13,7 @@ export default function GroupRegistrationModal({setOpen, openRegistrationModal, 
   const url = 'https://laboratory.binus.ac.id/lapi/api/Binusmaya/SaveGroupConfirmation'
   const [isLoading, setLoading] = useState(false);
   const [modal, setModal] = useContext(ModalContext);
+ 
 
   const createGroup = async () => {
 
@@ -61,7 +62,7 @@ export default function GroupRegistrationModal({setOpen, openRegistrationModal, 
         open={openRegistrationModal}
         onClose={setOpenRegistrationModal}
       >
-        <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div className="flex items-center justify-center min-h-screen text-center sm:block sm:p-0">
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"
@@ -87,7 +88,7 @@ export default function GroupRegistrationModal({setOpen, openRegistrationModal, 
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
+            <div className="inline-block align-bottom bg-white rounded-lg p-8 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
               <div>
                 <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100">
                     <ExclamationIcon className="h-6 w-6 text-yellow-400" aria-hidden="true" />

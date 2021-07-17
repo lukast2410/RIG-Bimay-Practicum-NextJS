@@ -63,7 +63,7 @@ export default function SessionAndMaterials({ user, subject, courseDetail }) {
             />
           </div>
           <div className="flex-none">
-            <ClassDescription subject={subject} onlineTask={courseDetail.OnlineTasks} />
+            <ClassDescription subject={subject} studentGroupDetail={courseDetail.StudentGroupDetail} />
           </div>
         </div>
         <div className="course-tab mt-6">

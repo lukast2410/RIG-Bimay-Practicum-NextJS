@@ -1,5 +1,5 @@
 /* This example requires Tailwind CSS v2.0+ */
-import { Fragment, useContext, useState } from "react";
+import { Fragment, useContext, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationIcon } from "@heroicons/react/outline";
 import { ModalContext } from "../../contexts/ModalContext";
@@ -9,6 +9,18 @@ import { useRouter } from "next/router";
 export default function Modal() {
   const [modal, setModal] = useContext(ModalContext);
   const router = useRouter();
+  const reference = useRef(null);
+
+  const close = () => {
+    setModal({
+      show: false,
+      message: modal.message,
+      error: modal.error,
+    });
+
+    if(modal.error == false && modal.message === 'Successfully uploaded your answer!') 
+      router.replace(router.asPath);
+  }
 
   return (
     <Transition.Root show={modal.show} as={Fragment} >
@@ -16,8 +28,9 @@ export default function Modal() {
         as="div"
         static
         className="fixed z-10 inset-0 overflow-y-auto"
+        initialFocus={reference}
         open={modal.show}
-        onClose={setModal}
+        onClose={close}
       >
         <div className="flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
           <Transition.Child
@@ -48,7 +61,7 @@ export default function Modal() {
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
+            <div className="inline-block align-bottom bg-white rounded-lg p-8 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-sm sm:w-full sm:p-6">
               <div>
                 {modal.error == true ? (
                   <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
@@ -77,19 +90,11 @@ export default function Modal() {
                   </div>
                 </div>
               </div>
-              <div className="mt-5 sm:mt-6">
+              <div className="mt-5 sm:mt-6" ref={reference}>
                 <button
                   type="button"
                   className="inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-binus-blue sm:text-sm"
-                  onClick={() => {
-                    setModal({
-                      show: false,
-                      message: modal.message,
-                      error: modal.error,
-                    });
-
-                    if(modal.error == false) router.replace(router.asPath);
-                  }}
+                  onClick={close}
                 >
                   Go back
                 </button>

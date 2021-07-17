@@ -64,7 +64,7 @@ export default function CaseSubmission({ user, subject, courseDetail }) {
             />
           </div>
           <div className="flex-none">
-            <ClassDescription subject={subject} onlineTask={courseDetail.OnlineTasks}/>
+            <ClassDescription subject={subject} studentGroupDetail={courseDetail.StudentGroupDetail}/>
           </div>
         </div>
         <div className="course-tab mt-6">
@@ -145,6 +145,7 @@ export default function CaseSubmission({ user, subject, courseDetail }) {
               onlineTasks={courseDetail.OnlineTasks}
               classTransactionId={subject.ClassTransactionId}
               courseCode={courseDetail.CourseOutlineDetail.CourseCode}
+              studentGroupDetail={courseDetail.StudentGroupDetail}
             />
             <SubmittedAnswer submittedAnswers={courseDetail.SubmitedAnswers} />
           </div>

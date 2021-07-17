@@ -1,11 +1,12 @@
 import axios from "axios";
 import { useContext, useState } from "react";
-import {ModalProvider } from "../../../contexts/ModalContext";
+import { ModalContext } from "../../../contexts/ModalContext";
 import { UserContext } from "../../../contexts/UserContext";
 import Loading from "../Loading";
+import Modal from "../Modal";
 import Note from "../Note";
-import NotificationAlert from "../NotificationAlert";
 import GroupRegistration from "./GroupRegistration";
+import { useRouter } from "next/router";
 
 export default function GroupForming({
   groupProject,
@@ -17,10 +18,8 @@ export default function GroupForming({
   const [checkGroup, setCheckGroup] = useState(groupConfirmation);
   const [isAccLoading, setAccLoading] = useState(false);
   const [isDeclineLoading, setDeclineLoading] = useState(false);
-  const [show, setShow] = useState({
-    isShow: false,
-    message: "",
-  });
+  const [modal, setModal] = useContext(ModalContext);
+  const router = useRouter();
 
   const getGroupProject = async () => {
     const getGroupProjectUrl =
@@ -71,16 +70,11 @@ export default function GroupForming({
   };
 
   const setNotification = (message) => {
-    setShow({
-      isShow: true,
-      message,
+    setModal({
+      show: true,
+      message: message,
+      error: false,
     });
-    setTimeout(() => {
-      setShow({
-        isShow: false,
-        message,
-      });
-    }, 3000);
   };
 
   const checkGroupConfirmation = async () => {
@@ -97,15 +91,51 @@ export default function GroupForming({
     setCheckGroup(responseData);
   };
 
+  const renderCheckGroupConfirmation = () => {
+    if (!checkGroup) {
+      return (
+        <div className="mt-4 xl:mt-2 flex items-center flex-col sm:flex-row">
+          <Note message="If the formed group does not match the one you selected, please press the reject button." />
+          <div className="mt-4 flex sm:mt-0 justify-between w-2/5 justify-between sm:justify-start sm:ml-4">
+            <button
+              type="button"
+              className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-white bg-binus-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-0 sm:ml-0 transform hover:scale-110 transition ease-out duration-300"
+              onClick={() => finalizeConfirmation(true)}
+            >
+              {isAccLoading ? <Loading color="text-white" /> : <></>}
+              Accept
+            </button>
+            <button
+              type="button"
+              className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-1 sm:ml-3 transform hover:scale-110 transition ease-out duration-300"
+              onClick={() => finalizeConfirmation(false)}
+            >
+              {isDeclineLoading ? <Loading color="text-white" /> : <></>}
+              Decline
+            </button>
+          </div>
+        </div>
+      );
+    }
+
+    if(!studentGroupDetail.Group.Id){
+      return (
+        <div className="mt-4 xl:mt-2">
+          <Note message="Please wait for all students accept the confirmation." />
+        </div>
+      )
+    }
+  };
+
   return (
-    <ModalProvider>
-      <NotificationAlert show={show} setShow={setShow} />
+    <div>
+      <Modal />
       <div className="rounded-md pb-4">
         {group.Students && (
           <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4 ">
             {studentGroupDetail.Group.GroupNumber == ""
               ? "Group Forming Confirmation"
-              : `Group Froming - Group ${studentGroupDetail.Group.GroupNumber}`}
+              : `Group Forming - Group ${studentGroupDetail.Group.GroupNumber}`}
           </h3>
         )}
         {group.Students == null && studentGroupDetail.Group.Id == null ? (
@@ -139,17 +169,14 @@ export default function GroupForming({
                         >
                           Name
                         </th>
-                        {
-                          !studentGroupDetail.Group.Id &&
-                          (
-                            <th
-                              scope="col"
-                              className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
-                            >
-                              Status
-                            </th>
-                          )
-                        }   
+                        {!studentGroupDetail.Group.Id && (
+                          <th
+                            scope="col"
+                            className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+                          >
+                            Status
+                          </th>
+                        )}
                       </tr>
                     </thead>
                     <tbody>
@@ -187,7 +214,7 @@ export default function GroupForming({
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                 {student.StudentNumber}
                               </td>
-                              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                              <td className="px-6 py-4 text-sm text-gray-900">
                                 {student.Name}
                               </td>
                               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -202,41 +229,13 @@ export default function GroupForming({
                 </div>
               </div>
             </div>
-            {!checkGroup && (
-              <div className="mt-4 flex items-center flex-col sm:flex-row">
-                <Note message="If the group created does not match the one you selected, please press the reject button." />
-                <div className="mt-4 flex sm:mt-0 justify-between w-2/5 justify-between sm:justify-start">
-                  <button
-                    type="button"
-                    className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-white bg-binus-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-0 sm:ml-0 transform hover:scale-110 transition ease-out duration-300"
-                    onClick={() => finalizeConfirmation(true)}
-                  >
-                    {isAccLoading ? (
-                      <Loading color="text-white" />
-                    ) : (
-                      <></>
-                    )}
-                    Accept
-                  </button>
-                  <button
-                    type="button"
-                    className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-1 sm:ml-3 transform hover:scale-110 transition ease-out duration-300"
-                    onClick={() => finalizeConfirmation(false)}
-                  >
-                    {isDeclineLoading ? (
-                      <Loading color="text-white"/>
-                    ) : (
-                      <></>
-                    )}
-                    Decline
-                  </button>
-                </div>
-              </div>
-            )}
+            {renderCheckGroupConfirmation()}
             {studentGroupDetail.Group.Id != null ? (
               <div className="mt-4 font-medium text-sm">
-                <div className="flex justify-between">
-                  <p className="mb-2">Group ID : {studentGroupDetail.Group.Id}</p>
+                <div className="flex justify-between flex-col md:flex-row">
+                  <p className="mb-2">
+                    Group ID : {studentGroupDetail.Group.Id}
+                  </p>
                   <p className="mb-2">{studentGroupDetail.Group.Status}</p>
                 </div>
                 <Note message={"default"} />
@@ -247,6 +246,6 @@ export default function GroupForming({
           </div>
         )}
       </div>
-    </ModalProvider>
+    </div>
   );
 }

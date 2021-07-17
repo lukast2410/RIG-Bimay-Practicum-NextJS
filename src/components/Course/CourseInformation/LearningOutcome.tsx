@@ -15,7 +15,7 @@ export default function LearningOutcome({learningOutcome}){
                                 {`LO${idx + 1}`}
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                                {data.Value}
+                                {data.Value.charAt(0).toUpperCase() + data.Value.slice(1)}
                             </dd>
                         </div>
                         ))

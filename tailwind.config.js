@@ -10,7 +10,7 @@ module.exports = {
       },
       maxWidth: {
         'screen-2xl': '1460px',
-        '1/4': '15rem',
+        '1/4': '20rem',
         '1/2': '50%',
         '3/4': '75%',
       },

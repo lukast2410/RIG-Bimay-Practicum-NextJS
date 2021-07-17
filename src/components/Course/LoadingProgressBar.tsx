@@ -82,11 +82,14 @@ export default function LoadingProgressBar({
                       </span>
                     </div>
                   </div>
-                  <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-blue-200">
+                  <div className="overflow-hidden h-2 text-xs flex rounded bg-blue-200">
                     <div
                       style={{ width: `${uploadPercentage}%` }}
                       className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-500 transition-all ease-out duration-1000"
                     ></div>
+                  </div>
+                  <div className="">
+                    <i className="text-sm text-gray-500">*Note: 10MB per batch</i>
                   </div>
                 </div>
               </div>

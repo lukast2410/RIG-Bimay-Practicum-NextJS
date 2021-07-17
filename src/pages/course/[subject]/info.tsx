@@ -60,7 +60,7 @@ export default function Subject({ user, subject, courseDetail }) {
 					<LearningOutcome learningOutcome={courseDetail.CourseOutlineDetail.LearningOutcome} />
 				</div>
 				<div className="flex-none">
-					<ClassDescription subject={subject} onlineTask={courseDetail.OnlineTasks}/>
+					<ClassDescription subject={subject} studentGroupDetail={courseDetail.StudentGroupDetail}/>
 				</div>
 				
 			</div>

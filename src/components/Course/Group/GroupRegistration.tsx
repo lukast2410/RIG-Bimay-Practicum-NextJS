@@ -123,7 +123,6 @@ export default function GroupRegistration({studentGroupDetail, getGroupProject})
         </div>
 
         <GroupAgreement  open={open} setOpen={setOpen} studentsData={studentsData} classTransactionId={studentGroupDetail.Group.ClassTransactionId} getGroupProject={getGroupProject}  />
-        <Modal/>
       </div>
     )
   }
