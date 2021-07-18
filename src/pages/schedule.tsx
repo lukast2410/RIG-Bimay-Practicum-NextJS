@@ -3,7 +3,7 @@ import Layout from "../components/Layout";
 import withSession from "../lib/session";
 import { UserContext } from "../contexts/UserContext";
 import axios from "axios";
-import ScheduleTable from "../components/schedule/scheduleTable";
+import ScheduleTable from "../components/schedule/ScheduleTable";
 import ScheduleList from "../components/schedule/ScheduleList";
 
 export default function Schedule({ user, schedule }) {
