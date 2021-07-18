@@ -5,7 +5,7 @@ import { UserContext } from "../../../contexts/UserContext";
 import Loading from "../Loading";
 import Modal from "../Modal";
 import Note from "../Note";
-import GroupRegistration from ".";
+import GroupRegistration from "./GroupRegistration";
 import { useRouter } from "next/router";
 
 export default function GroupForming({
