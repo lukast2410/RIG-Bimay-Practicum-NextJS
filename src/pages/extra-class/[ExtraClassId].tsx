@@ -285,7 +285,7 @@ export const getServerSideProps = withSession(async function ({ req, res, query 
 				permanent: false,
 			},
 		}
-	}
+	} 
 
 	const token = userData?.Token.token
 	const extraClassId = query.ExtraClassId
@@ -368,26 +368,25 @@ export const getServerSideProps = withSession(async function ({ req, res, query 
 			})
 			.then((res) => res.data.data)
 			.catch((err) => null),
-		axios
-			.get(
-				`${process.env.NEXT_PUBLIC_EXTRA_URL}Notification/UserNotification/Limit?start=0&max=5`,
-					{
-						headers: {
-							authorization: 'Bearer ' + token,
-						},
-						data: {
-							SemesterId: userData.SemesterId,
-							StudentId: userData.Data.UserName
-						}
-					}
-			)
+			axios
+			.get(`${process.env.NEXT_PUBLIC_EXTRA_URL}Notification/UserNotification/Limit?start=0&max=5`, {
+				headers: {
+					authorization: 'Bearer ' + token,
+				},
+				data: {
+					SemesterId: userData.SemesterId,
+					StudentId: userData.Data.UserName,
+				},
+			})
 			.then((res) => res.data),
 	])
+
+	const softwareCourse = courses.filter((course) => course.Laboratory === 'Software')
 
 	const user = {
 		...userData,
 		Semesters: smt,
-		Courses: courses,
+		Courses: softwareCourse,
 		Notifications: notif.data,
 	}
 

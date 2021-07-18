@@ -27,7 +27,7 @@ export default function Modal() {
       <Dialog
         as="div"
         static
-        className="fixed z-10 inset-0 overflow-y-auto"
+        className="fixed z-30 inset-0 overflow-y-auto"
         initialFocus={reference}
         open={modal.show}
         onClose={close}

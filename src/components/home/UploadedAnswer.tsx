@@ -7,10 +7,9 @@ import { formatDate, formatNumber } from '../../pages/api/helper'
 
 export default function UploadedAnswer({ data }) {
 	const [userData, setUserData] = useContext(UserContext)
-	const uploadDate = data.Data.UploadDate ? new Date(data.Data.UploadDate) : null
-	const answerStatus = data.Data.Status
-	const uploadData = data.Data
-	const modifiedDate = new Date(uploadData.Files[0].DateModified)
+	const uploadDate = data.UploadDate ? new Date(data.UploadDate) : null
+	const answerStatus = data.Status
+	const modifiedDate = new Date(data.Files[0].DateModified)
 	const modified = `${formatDate(modifiedDate)} ${formatNumber(modifiedDate.getHours())}:${formatNumber(
 		modifiedDate.getMinutes()
 	)}:${formatNumber(modifiedDate.getSeconds())}`
@@ -91,7 +90,7 @@ export default function UploadedAnswer({ data }) {
 											File Name
 										</th>
 										<td className='py-2 px-2 whitespace-nowrap overflow-ellipsis overflow-hidden text-sm font-medium text-black '>
-											{uploadData.Files[0].FileName}
+											{data.Files[0].FileName}
 										</td>
 									</tr>
 									<tr className='table-row sm:hidden'>
@@ -113,18 +112,18 @@ export default function UploadedAnswer({ data }) {
 											Size
 										</th>
 										<td className='py-2 px-2 whitespace-nowrap overflow-ellipsis overflow-hidden text-sm font-medium text-black '>
-											{uploadData.Size}
+											{data.Size}
 										</td>
 									</tr>
 									<tr className='hidden sm:table-row'>
 										<td className='py-2 px-1.5 whitespace-nowrap overflow-ellipsis overflow-hidden text-sm font-medium text-black'>
-											{uploadData.Files[0].FileName}
+											{data.Files[0].FileName}
 										</td>
 										<td className='py-2 px-1.5 whitespace-nowrap overflow-ellipsis overflow-hidden text-center text-sm font-medium text-black'>
 											{modified}
 										</td>
 										<td className='py-2 px-1.5 whitespace-nowrap overflow-ellipsis overflow-hidden text-center text-sm font-medium text-black'>
-											{uploadData.Size} bytes
+											{data.Size} bytes
 										</td>
 									</tr>
 								</tbody>
@@ -132,17 +131,17 @@ export default function UploadedAnswer({ data }) {
 							<div className='flex items-start justify-between mt-2'>
 								<div>
 									<p className='mb-1 text-left font-bold text-gray-900 text-left'>
-										File Size: {uploadData.Size} byte(s)
+										File Size: {data.Size} byte(s)
 									</p>
 									<p className='text-left font-bold text-gray-900 text-left'>
-										Total File: {uploadData.Count} file(s)
+										Total File: {data.Count} file(s)
 									</p>
 								</div>
 								<div className='mr-1 ml-2 mt-0.5'>
 									<button
 										type='button'
 										className='inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-binus-blue hover:bg-binus-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-binus-blue'
-										onClick={() => getDownloadUrl(data.Data.Source)}
+										onClick={() => getDownloadUrl(data.Source)}
 									>
 										Download your answer here
 									</button>

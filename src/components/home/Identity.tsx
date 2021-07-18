@@ -16,6 +16,7 @@ export default function Identity({ user, isStudent }) {
 						height={144}
 						loading="eager"
 						className="object-cover object-top rounded-full"
+						alt={user.Data.Name}
 						/>
 						<span className='absolute inset-0 shadow-inner rounded-full' aria-hidden='true' />
 					</div>

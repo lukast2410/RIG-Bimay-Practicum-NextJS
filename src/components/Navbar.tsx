@@ -19,11 +19,13 @@ export default function Navbar() {
 	const isStudent = user?.Data.Role != 'Software Teaching Assistant'
 	const socket = useContext(SocketContext)
 
-  const handleSignOut = async (e) => {
-    e.preventDefault();
+	const handleSignOut = async (e) => {
+		e.preventDefault()
 
+		const id = isStudent ? user.Data.UserName : user.Data.Name
+		console.log(id)
 		await axios.post(`/api/logout`)
-		socket.emit('userSignout', { id: user.Data.UserName })
+		socket.emit('userSignout', { id: id })
 		router.push('/auth/login')
 	}
 
@@ -54,7 +56,9 @@ export default function Navbar() {
 														? 'border-binus-blue border-b-2 text-gray-900'
 														: 'text-gray-500 hover:border-gray-300'
 												} relative font-bold hover:text-binus-blue inline-flex items-center px-1 pt-1 border-b-2 border-transparent cursor-pointer`}
-												onMouseEnter={() => setHover(true)}
+												onMouseEnter={() => {
+													if (courses && courses.length > 0) setHover(true)
+												}}
 												onMouseLeave={() => setHover(false)}
 											>
 												<Popover className='relative'>
@@ -128,10 +132,10 @@ export default function Navbar() {
 										<MenuIcon className='block h-6 w-6' aria-hidden='true' />
 									)}
 								</Disclosure.Button>
-								<NotificationMenu/>
+								<NotificationMenu />
 							</div>
 							<div className='hidden sm:ml-4 sm:flex sm:items-center'>
-								<NotificationMenu/>
+								<NotificationMenu />
 								<div
 									className={`font-bold text-gray-500 hover:text-binus-blue cursor-pointer ml-4 `}
 									onClick={handleSignOut}

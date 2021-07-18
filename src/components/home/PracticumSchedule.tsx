@@ -28,7 +28,7 @@ export default function PracticumSchedule({ practicum }) {
 						<div className='py-3 px-4 md:py-5 md:px-6 text-center'>
 							<dt className='text-medium sm:text-lg font-bold text-gray-600'>Room</dt>
 							<dd className='sm:mt-1'>
-								<div className='sm:text-lg font-semibold text-black'>
+								<div className='sm:text-lg font-semibold text-black break-all'>
 									{practicum.AttendancePlace}
 								</div>
 							</dd>

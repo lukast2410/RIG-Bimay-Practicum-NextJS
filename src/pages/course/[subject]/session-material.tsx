@@ -159,14 +159,22 @@ export const getServerSideProps = withSession(async function ({
   query,
 }) {
   const userData = req.session.get("user");
-  if (!userData || Date.now() >= new Date(userData.Token.expires).getTime()) {
-    return {
-      redirect: {
-        destination: "/auth/login",
-        permanent: false,
-      },
-    };
-  }
+  if (!userData || !userData.Token || Date.now() >= new Date(userData.Token.expires).getTime()) {
+		req.session.destroy()
+		return {
+			redirect: {
+				destination: '/auth/login',
+				permanent: false,
+			},
+		}
+	} else if (userData.Data.Role == 'Software Teaching Assistant'){
+		return {
+			redirect: {
+				destination: '/',
+				permanent: false,
+			},
+		}
+	}
   const token = userData?.Token.token;
 
   const courses = await axios
@@ -193,7 +201,7 @@ export const getServerSideProps = withSession(async function ({
   }
 
   const url = `${process.env.NEXT_PUBLIC_LABORATORY_URL}Binusmaya/GetScheduleDetail`;
-  const [smt, courseDetail] = await Promise.all([
+  const [smt, courseDetail, notif] = await Promise.all([
     axios
       .get(process.env.NEXT_PUBLIC_LABORATORY_URL + "Binusmaya/GetSemester", {
         headers: {
@@ -213,17 +221,27 @@ export const getServerSideProps = withSession(async function ({
         },
       })
       .then((response) => response.data),
-  ]);
+      axios
+			.get(`${process.env.NEXT_PUBLIC_EXTRA_URL}Notification/UserNotification/Limit?start=0&max=5`, {
+				headers: {
+					authorization: 'Bearer ' + token,
+				},
+				data: {
+					SemesterId: userData.SemesterId,
+					StudentId: userData.Data.UserName,
+				},
+			})
+			.then((res) => res.data),
+	])
 
-  const softwareCourse = courses.filter(
-    (course) => course.Laboratory === "Software"
-  );
+	const softwareCourse = courses.filter((course) => course.Laboratory === 'Software')
 
-  const user = {
-    ...userData,
-    Semesters: smt,
-    Courses: softwareCourse,
-  };
+	const user = {
+		...userData,
+		Semesters: smt,
+		Courses: softwareCourse,
+		Notifications: notif.data,
+	}
 
   return {
     props: {

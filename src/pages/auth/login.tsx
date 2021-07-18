@@ -3,14 +3,11 @@ import Particle from 'react-particles-js'
 import axios from 'axios'
 import useUser from '../../lib/useUser'
 import styles from '../../../styles/pages/Login.module.scss'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faUser, faLock } from '@fortawesome/free-solid-svg-icons'
-import { XIcon, XCircleIcon } from '@heroicons/react/solid'
-import { useContext, useEffect, useState } from 'react'
+import { XIcon, XCircleIcon, LockClosedIcon, UserIcon, UserCircleIcon } from '@heroicons/react/solid'
+import { useState } from 'react'
 import { EncryptToBase64 } from '../api/aes'
 import router from 'next/router'
 import withSession from '../../lib/session'
-import { SocketContext } from '../../contexts/SocketContext'
 
 export default function Login() {
 	const { mutateUser } = useUser({
@@ -24,10 +21,23 @@ export default function Login() {
 		e.preventDefault()
 
 		setLogin(true)
+		const sub = await navigator.serviceWorker.getRegistration().then(reg => {
+			if(reg){
+				return reg.pushManager.getSubscription().then(sub => {
+					if(sub){
+						return sub.toJSON()
+					}
+					return null
+				})
+			}
+			return null
+		})
+		console.log(sub)
 		let body = {
 			username: e.target.username.value,
 			password: e.target.password.value,
-			role: 'Student'
+			role: 'Student',
+			subscription: sub
 		}
 
 		const numbers = /^[0-9]+$/
@@ -70,7 +80,7 @@ export default function Login() {
 				<form
 					onSubmit={handleLogin}
 					name='formLogin'
-					className={`rounded-xl lg:bg-grey-700 ${styles.formLogin}`}
+					className={`rounded-lg lg:bg-grey-700 ${styles.formLogin}`}
 					id='form-login'
 					autoComplete='off'
 				>
@@ -109,7 +119,7 @@ export default function Login() {
 								autoFocus={true}
 								className={`rounded-md ${styles.inputComponent}`}
 							/>
-							<FontAwesomeIcon icon={faUser} className={styles.fa} />
+							<UserCircleIcon className={`${styles.fa} h-5 w-5`}/>
 						</div>
 
 						<div className={`${styles.inputControl}`}>
@@ -120,7 +130,7 @@ export default function Login() {
 								required
 								className={`rounded-md ${styles.inputComponent}`}
 							/>
-							<FontAwesomeIcon icon={faLock} className={styles.fa} />
+							<LockClosedIcon className={`${styles.fa} h-5 w-5`}/>
 						</div>
 
 						<button

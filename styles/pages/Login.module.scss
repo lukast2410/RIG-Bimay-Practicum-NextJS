@@ -36,15 +36,16 @@ $binus-blue-hover: #0096c9;
     width: 35px;
     height: 108px;
     position: absolute;
-    background: url("https://academic-slc.apps.binus.ac.id/assets/ribbon.png");
+    background: url("/assets/ribbon.png");
     z-index: 1;
 }
 
 .logoBinus{
     width: 120px;
     height: 100px;
-    background: url("https://academic-slc.apps.binus.ac.id/assets/logo.svg") center no-repeat;
-    background-size: auto;
+    background: url("/assets/binus.png") center no-repeat;
+    background-size: contain;
+    background-position: top;
     display: block;
     margin-left: 15px;
 }
@@ -83,7 +84,7 @@ $binus-blue-hover: #0096c9;
     left: 0;
     color: #bbb;
     position: absolute;
-    margin: 9px 10px;
+    margin: 10px;
     font-size: 15pt;
     transition: color 0.1s ease-out;
 }

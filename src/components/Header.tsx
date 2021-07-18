@@ -101,8 +101,8 @@ export default function Header() {
 			})
 
 			function triggerAnimation() {
-				var finalWidth = $('.drop').hasClass('visible') ? 17 : 16
-				$('.drop').css('width', '19em')
+				var finalWidth = $('.drop').hasClass('visible') ? 16.5 : 15.5
+				$('.drop').css('width', '17.5em')
 				setTimeout(function () {
 					$('.drop').css('width', finalWidth + 'em')
 				}, 400)
@@ -228,7 +228,8 @@ export default function Header() {
 					<style jsx>
 						{`
 							.drop {
-								width: 16rem;
+								width: 15.5rem;
+								min-width: max-content;
 								color: #212529;
 								position: relative;
 								-webkit-transition: width 0.3s;
@@ -249,6 +250,7 @@ export default function Header() {
 								padding: 0.375rem 2rem 0.375rem 0.75rem;
 								cursor: pointer;
 								background-color: #fff;
+								text-align: left;
 							}
 
 							.drop .option:not(.placeholder) {

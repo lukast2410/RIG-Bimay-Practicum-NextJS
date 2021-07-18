@@ -7,12 +7,11 @@ import { useContext, useState } from 'react'
 import { ModalContext } from '../../contexts/ModalContext'
 import { UserContext } from '../../contexts/UserContext'
 import Modal from '../Course/Modal'
-import ExamConfirmation from './ExamConfirmation'
 
-export default function ExamSchedule({ exam }) {
-	const typeExam = exam.Type
-	const data = exam.Exams[0]
-	const status = data.Status
+export default function QuizSchedule({ quiz }) {
+	const typeExam = quiz.Type
+	const data = quiz.Data[0]
+	const status = data.Present
 	const endTimeDate = new Date(data.EndTime)
 	const beginTimeDate = new Date(data.BeginTime)
 	const endTime = `${formatNumber(endTimeDate.getHours())}:${formatNumber(endTimeDate.getMinutes())}:${formatNumber(endTimeDate.getSeconds())}`
@@ -22,7 +21,7 @@ export default function ExamSchedule({ exam }) {
 			id: '01',
 			name: 'Download Case',
 			description: ['You can download your exam case here.'],
-			href: `https://laboratory.binus.ac.id/lab/User/Case/${exam.Files[0]}`,
+			href: `https://laboratory.binus.ac.id/lab/User/Case/${data?.File}`,
 			status: 'link',
 		},
 		{
@@ -61,8 +60,14 @@ export default function ExamSchedule({ exam }) {
 	const [uploadPercentage, setUploadPercentage] = useState(0)
 	const [loadingProgressBar, setLoadingProgressBar] = useState(false)
 
-	const uploadData = exam.Data[0]
+	const uploadDate = data.Data.UploadDate ? new Date(data.Data.UploadDate) : null
+	const answerStatus = data.Data.Status
+	const uploadData = data.Data
 	const course = userData?.Courses.find((x) => x.Subject == uploadData.CourseName)
+	const modifiedDate = new Date(uploadData.Files[0].DateModified)
+	const modified = `${formatDate(modifiedDate)} ${formatNumber(modifiedDate.getHours())}:${formatNumber(
+		modifiedDate.getMinutes()
+	)}:${formatNumber(modifiedDate.getSeconds())}`
 
 	const semester = userData?.Semesters.find((s) => s.SemesterId === userData.SemesterId)
 	const semesterName = semester?.Description.replace('/', '-')
@@ -103,7 +108,7 @@ export default function ExamSchedule({ exam }) {
 
 		const path = `/lab/${semesterName}/${type}/${
 			uploadData.CourseName.split('-')[0]
-		}/${course.Class.replace(' ', '')}/${userData.Data.UserName}`
+		}/${uploadData.ClassName.replace(' ', '')}/${userData.Data.UserName}`
 
 		const file = event.target.files[0]
 		const fileName = file.name.split('.')[0]
@@ -155,18 +160,15 @@ export default function ExamSchedule({ exam }) {
 
 		const uploadPayload = {
 			Type: type,
-			Number: 1,
+			Number: uploadData.AssignmentNumber,
 			Url,
 			Hash: hash,
 			FileName: resFileName,
 			Size: size,
 			DateModified: lastModifiedDateTime,
 			UploadTime: currentTime,
-			ClassTransactionId: data.examTransactionId,
+			ClassTransactionId: course.ClassTransactionId,
 		}
-
-		console.log(uploadUrl)
-		console.log(uploadPayload)
 
 		const result = await axios
 			.post(uploadUrl, uploadPayload, {
@@ -274,7 +276,7 @@ export default function ExamSchedule({ exam }) {
 					<div className='py-3 px-4 md:py-5 md:px-6 text-center'>
 						<dt className='text-medium sm:text-lg font-bold text-gray-600'>Subject</dt>
 						<dd className='sm:mt-1'>
-							<div className='sm:text-lg font-semibold text-black'>{uploadData.CourseName}</div>
+							<div className='sm:text-lg font-semibold text-black'>{data.Data.CourseName}</div>
 						</dd>
 					</div>
 					<dl className='grid grid-cols-2 divide-x divide-gray-500'>
@@ -318,61 +320,29 @@ export default function ExamSchedule({ exam }) {
 				</dl>
 			</div>
 
-			{exam?.Confirms[0] ? (
-				<div className='mt-6 grid grid-cols-1 divide-y-2 divide-gray-500 lg:grid-cols-2 lg:divide-x-2 lg:divide-y-0'>
-					<div
-						className={`pb-4 sm:px-3 sm:pt-2 lg:pl-3 lg:pr-6 lg:py-0 ${
-							uploadData.UploadDate ? '' : 'col-span-2'
-						}`}
-					>
-						<h3 className='text-xl leading-3 font-bold text-gray-900 mb-5 md:text-2xl md:leading-6'>{typeExam}</h3>
-						<nav aria-label='Progress'>
-							<ol className='overflow-hidden'>
-								{steps.map((step, stepIdx) => (
-									<li
-										key={stepIdx}
-										className={classNames(stepIdx !== steps.length - 1 ? 'pb-6' : '', 'relative')}
-									>
-										{stepIdx !== steps.length - 1 ? (
-											<div
-												className='-ml-px absolute mt-0.5 top-4 left-4 w-0.5 h-full bg-blue-500 sm:left-5'
-												aria-hidden='true'
-											/>
-										) : null}
-										{step.status == 'file' ? (
-											<div className={`relative flex items-start group`}>
-												<label htmlFor='upload' className='flex cursor-pointer'>
-													<span className='z-0 h-8 flex items-center sm:h-10' aria-hidden='true'>
-														<span className='text-sm relative z-10 w-8 h-8 flex items-center justify-center bg-white border-2 border-blue-500 text-blue-500 font-medium rounded-full group-hover:text-blue-700 group-hover:border-blue-700 sm:w-10 sm:h-10'>
-															{step.id}
-														</span>
-													</span>
-													<span className='text-xs ml-2 min-w-0 flex flex-col sm:ml-4 sm:text-sm'>
-														<span className='font-bold tracking-wide uppercase text-gray-600 group-hover:text-black'>
-															{step.name}
-														</span>
-														{step.description.map((desc) => (
-															<span key={desc} className='text-gray-500 font-medium group-hover:text-black'>
-																{desc}
-															</span>
-														))}
-													</span>
-												</label>
-												<input
-													type='file'
-													name='upload'
-													id='upload'
-													className='hidden'
-													onChange={uploadAnswer}
-												/>
-											</div>
-										) : (
-											<a
-												href={step.href}
-												className={`${
-													step.status != 'info' ? '' : 'cursor-default pointer-events-none'
-												} relative flex items-start group`}
-											>
+			<div className='mt-5 grid grid-cols-1 divide-y-2 divide-gray-500 lg:grid-cols-2 lg:divide-x-2 lg:divide-y-0'>
+				<div
+					className={`pb-4 sm:px-3 sm:pt-2 lg:pl-3 lg:pr-6 lg:py-0 ${
+						data.Data.UploadDate ? '' : 'col-span-2'
+					}`}
+				>
+					<h3 className='text-xl leading-3 font-bold text-gray-900 mb-5 md:text-2xl md:leading-6'>{typeExam}</h3>
+					<nav aria-label='Progress'>
+						<ol className='overflow-hidden'>
+							{steps.map((step, stepIdx) => (
+								<li
+									key={stepIdx}
+									className={classNames(stepIdx !== steps.length - 1 ? 'pb-6' : '', 'relative')}
+								>
+									{stepIdx !== steps.length - 1 ? (
+										<div
+											className='-ml-px absolute mt-0.5 top-4 left-4 w-0.5 h-full bg-blue-500 sm:left-5'
+											aria-hidden='true'
+										/>
+									) : null}
+									{step.status == 'file' ? (
+										<div className={`relative flex items-start group`}>
+											<label htmlFor='upload' className='flex cursor-pointer'>
 												<span className='z-0 h-8 flex items-center sm:h-10' aria-hidden='true'>
 													<span className='text-sm relative z-10 w-8 h-8 flex items-center justify-center bg-white border-2 border-blue-500 text-blue-500 font-medium rounded-full group-hover:text-blue-700 group-hover:border-blue-700 sm:w-10 sm:h-10'>
 														{step.id}
@@ -388,19 +358,47 @@ export default function ExamSchedule({ exam }) {
 														</span>
 													))}
 												</span>
-											</a>
-										)}
-									</li>
-								))}
-							</ol>
-						</nav>
-					</div>
-
-					{uploadData.UploadDate && <UploadedAnswer data={data} />}
+											</label>
+											<input
+												type='file'
+												name='upload'
+												id='upload'
+												className='hidden'
+												onChange={uploadAnswer}
+											/>
+										</div>
+									) : (
+										<a
+											href={step.href}
+											className={`${
+												step.status != 'info' ? '' : 'cursor-default pointer-events-none'
+											} relative flex items-start group`}
+										>
+											<span className='z-0 h-8 flex items-center sm:h-10' aria-hidden='true'>
+												<span className='text-sm relative z-10 w-8 h-8 flex items-center justify-center bg-white border-2 border-blue-500 text-blue-500 font-medium rounded-full group-hover:text-blue-700 group-hover:border-blue-700 sm:w-10 sm:h-10'>
+													{step.id}
+												</span>
+											</span>
+											<span className='text-xs ml-2 min-w-0 flex flex-col sm:ml-4 sm:text-sm'>
+												<span className='font-bold tracking-wide uppercase text-gray-600 group-hover:text-black'>
+													{step.name}
+												</span>
+												{step.description.map((desc) => (
+													<span key={desc} className='text-gray-500 font-medium group-hover:text-black'>
+														{desc}
+													</span>
+												))}
+											</span>
+										</a>
+									)}
+								</li>
+							))}
+						</ol>
+					</nav>
 				</div>
-			) : (
-				<ExamConfirmation/>
-			)}
+
+				{data.Data.UploadDate && <UploadedAnswer data={data.Data} />}
+			</div>
 		</div>
 	)
 }

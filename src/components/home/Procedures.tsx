@@ -4,7 +4,7 @@ import { DocumentTextIcon } from '@heroicons/react/outline'
 
 export default function Procedures({procedures}) {
 	return (
-		<div className='max-w-screen-2xl mx-auto px-4 my-4 sm:px-6 sm:my-4 lg:px-8 lg:my-6'>
+		<div className='max-w-screen-2xl mx-auto px-4 mt-4 sm:px-6 sm:mt-6 lg:px-8 lg:mt-8'>
 			<div className='rounded-lg bg-white shadow overflow-hidden'>
 				<div className='bg-gray-200 font-bold sm:text-lg px-4 py-2'>
 					<FontAwesomeIcon icon={faClipboardList} className='h-4 w-4 sm:h-5 sm:w-5 mr-2' />

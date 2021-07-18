@@ -24,27 +24,35 @@ export default function ExtraClass({ user, today, upcoming, previous }) {
 
 	const handleNotification = async () => {
 		if (Notification.permission == 'granted') {
-			console.log(navigator.onLine)
-			await navigator.serviceWorker.getRegistration().then((reg) => {
-				const options = {
-					body: 'Here is a notification body!',
-					icon: '/assets/logo-binus.png', 
-					vibrate: [100, 50, 100],
-					data: {
-						dateOfArrival: Date.now(),
-						primaryKey: 1,
-						link: '/extra-class'
-					},
-				}
-				reg.showNotification('Hello', options)
-			})
+			const notif = {
+				NotificationId: 'sadkansdlksan',
+				Title: 'Hello from Ast',
+				Content: 'Halo testinggggg',
+				ContentId: 'extraclass1',
+				Type: 'ExtraClass',
+				LastUpdate: "2021-10-20",
+				details: [
+					{
+						NotificationId: 'sadkansdlksan',
+						StudentId: '2301859820',
+						StudentName: 'Lukas',
+						IsRead: false
+					}
+				]
+			}
+			const pushUrl = `${process.env.NEXT_PUBLIC_EXTRA_URL}Push`
+			const result = await axios.post(pushUrl, notif, {
+				headers: {
+					authorization: 'Bearer ' + user.Token.token,
+				},
+			}).then(res => res.data)
 		}
 	}
 
 	const handleUnregister = async () => {
 		if (Notification.permission == 'granted') {
 			await navigator.serviceWorker.getRegistration().then((reg) => {
-				reg.unregister()
+				if(reg) reg.unregister()
 			})
 		}
 	}
@@ -54,20 +62,6 @@ export default function ExtraClass({ user, today, upcoming, previous }) {
 			<div className='max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8'>
 				<div className='flex justify-between py-4'>
 					<h2 className='text-xl font-bold text-gray-900'>Extra Class</h2>
-					<button
-						type='button'
-						className='inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-						onClick={handleNotification}
-					>
-						Notif
-					</button>
-					<button
-						type='button'
-						className='inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500'
-						onClick={handleUnregister}
-					>
-						Unregister
-					</button>
 					{!isStudent && (
 						<Link href='/extra-class/add'>
 							<a className='inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-blue-700'>
@@ -297,11 +291,12 @@ export const getServerSideProps = withSession(async function ({ req, res }) {
 			})
 			.then((res) => res.data),
 	])
+	const softwareCourse = courses.filter((course) => course.Laboratory === 'Software')
 
 	const user = {
 		...userData,
 		Semesters: smt,
-		Courses: courses,
+		Courses: softwareCourse,
 		Notifications: notif.data,
 	}
 
