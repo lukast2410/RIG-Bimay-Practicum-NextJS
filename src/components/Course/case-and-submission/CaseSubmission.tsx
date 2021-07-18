@@ -8,7 +8,7 @@ import { v1 as uuidv1 } from "uuid";
 import Loading from "../Loading";
 import { ModalContext } from "../../../contexts/ModalContext";
 import Modal from "../Modal";
-import SubmissionDescriptionLists from "../../../components/Course/CaseAndSubmission/SubmissionDescriptionLists";
+import SubmissionDescriptionLists from "./SubmissionDescriptionLists";
 import LoadingProgressBar from "../LoadingProgressBar";
 
 export default function CaseSubmissionComponent({
@@ -325,7 +325,7 @@ export default function CaseSubmissionComponent({
                             >
                               <button
                                 type="button"
-                                className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-binus-blue bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                                className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-binus-blue bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-binus-blue"
                               >
                                 Download
                               </button>
@@ -334,7 +334,7 @@ export default function CaseSubmissionComponent({
                           {task.CanUpload && (
                             <td className="px-6 py-4 whitespace-nowrap text-sm text-purple-600">
                               <label htmlFor="upload">
-                                <div className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-binus-blue bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 cursor-pointer">
+                                <div className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-binus-blue bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-binus-blue cursor-pointer">
                                   {isLoading && (
                                     <Loading color="text-binus-blue" />
                                   )}

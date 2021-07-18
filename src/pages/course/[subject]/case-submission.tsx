@@ -4,13 +4,12 @@ import Layout from "../../../components/Layout";
 import { UserContext } from "../../../contexts/UserContext";
 import withSession from "../../../lib/session";
 import Link from "next/link";
-import ClassDescription from "../../../components/Course/CourseInformation/ClassDescription";
-import LearningOutcome from "../../../components/Course/CourseInformation/LearningOutcome";
-import CaseSubmissionComponent from "../../../components/Course/CaseAndSubmission/CaseSubmission";
-import SubmittedAnswer from "../../../components/Course/CaseAndSubmission/SubmittedAnswer";
+import ClassDescription from "../../../components/Course/course-information/ClassDescription";
+import LearningOutcome from "../../../components/Course/course-information/LearningOutcome";
+import CaseSubmissionComponent from "../../../components/Course/case-and-submission/CaseSubmission";
+import SubmittedAnswer from "../../../components/Course/case-and-submission/SubmittedAnswer";
 import axios from "axios";
-import CourseBreadcrumbs from "../../../components/Course/CourseInformation/Breadcrumbs";
-import NextNProgress from "nextjs-progressbar";
+import CourseBreadcrumbs from "../../../components/Course/course-information/Breadcrumbs";
 import ReactHtmlParser from 'react-html-parser';
 import { ModalProvider } from "../../../contexts/ModalContext";
 
@@ -44,7 +43,6 @@ export default function CaseSubmission({ user, subject, courseDetail }) {
 
   return (
     <Layout title={courseDetail.CourseOutlineDetail.CourseName}>
-      <NextNProgress options={{ easing: "ease", speed: 500 }} />
       <div className="max-w-screen-2xl mx-auto sm:px-6 lg:px-8 mt-5 px-4">
         <div className="course-description mb-3 text-center sm:text-left">
           <div className="flex justify-center sm:justify-start">
