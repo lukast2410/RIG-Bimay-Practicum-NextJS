@@ -12,7 +12,7 @@ export default function AnswerDescriptionLists({
   const [isLoading, setLoading] = useState([]);
   const [userData, setUserData] = useContext(UserContext);
   const oneDriveTokenUrl =
-    "https://laboratory.binus.ac.id/lapi/api/Account/GetOneDriveToken";
+    `${process.env.NEXT_PUBLIC_LABORATORY_URL}Account/GetOneDriveToken`;
 
   const setInitialLoading = () => {
     const initialLoadings = [];

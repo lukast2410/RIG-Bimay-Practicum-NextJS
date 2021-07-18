@@ -13,7 +13,7 @@ export default function UploadedAnswer({ data }) {
 	const modified = `${formatDate(modifiedDate)} ${formatNumber(modifiedDate.getHours())}:${formatNumber(
 		modifiedDate.getMinutes()
 	)}:${formatNumber(modifiedDate.getSeconds())}`
-	const oneDriveTokenUrl = 'https://laboratory.binus.ac.id/lapi/api/Account/GetOneDriveToken'
+	const oneDriveTokenUrl = `${process.env.NEXT_PUBLIC_LABORATORY_URL}Account/GetOneDriveToken`
 
 	const getDownloadUrl = async (source) => {
 		// setLoading(true)

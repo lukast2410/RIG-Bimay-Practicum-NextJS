@@ -24,7 +24,7 @@ export default function GroupForming({
 
   const getGroupProject = async () => {
     const getGroupProjectUrl =
-      "https://laboratory.binus.ac.id/lapi/api/Binusmaya/GetGroupConfirmation?classTransactionId=";
+      `${process.env.NEXT_PUBLIC_LABORATORY_URL}Binusmaya/GetGroupConfirmation?classTransactionId=`;
     const newGroupProject = await axios
       .get(
         `${getGroupProjectUrl}${studentGroupDetail.Group.ClassTransactionId}`,
@@ -43,7 +43,7 @@ export default function GroupForming({
   const finalizeConfirmation = async (isAccept) => {
     isAccept == true ? setAccLoading(true) : setDeclineLoading(true);
 
-    const confirmationUrl = `https://laboratory.binus.ac.id/lapi/api/Binusmaya/FinalizeGroupConfirmation?isAccept=${isAccept}`;
+    const confirmationUrl = `${process.env.NEXT_PUBLIC_LABORATORY_URL}Binusmaya/FinalizeGroupConfirmation?isAccept=${isAccept}`;
     const payload = {
       ClassTransactionId: studentGroupDetail.Group.ClassTransactionId,
       GroupNumber: group.GroupNumber,
@@ -79,7 +79,7 @@ export default function GroupForming({
   };
 
   const checkGroupConfirmation = async () => {
-    const checkGroupUrl = `https://laboratory.binus.ac.id/lapi/api/Binusmaya/CheckGroupConfirmation?classTransactionId=${studentGroupDetail.Group.ClassTransactionId}`;
+    const checkGroupUrl = `${process.env.NEXT_PUBLIC_LABORATORY_URL}Binusmaya/CheckGroupConfirmation?classTransactionId=${studentGroupDetail.Group.ClassTransactionId}`;
 
     const responseData = await axios
       .get(checkGroupUrl, {

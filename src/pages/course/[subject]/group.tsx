@@ -6,7 +6,7 @@ import withSession from "../../../lib/session";
 import Link from "next/link";
 import ClassDescription from "../../../components/Course/course-information/ClassDescription";
 import LearningOutcome from "../../../components/Course/course-information/LearningOutcome";
-import GroupForming from "../../../components/Course/Group/GroupForming";
+import GroupForming from "../../../components/Course/group/GroupForming";
 import axios from "axios";
 import CourseBreadcrumbs from "../../../components/Course/course-information/Breadcrumbs";
 import DividerWithMessage from "../../../components/home/DividerWithMessage";

@@ -32,10 +32,10 @@ export default function CaseSubmissionComponent({
   const semesterName = semester?.Description.replace("/", "-");
 
   const getCurrentTimeUrl =
-    "https://laboratory.binus.ac.id/lapi/api/general/time";
+    `${process.env.NEXT_PUBLIC_LABORATORY_URL}general/time`;
   const oneDriveTokenUrl =
-    "https://laboratory.binus.ac.id/lapi/api/Account/GetOneDriveToken";
-  const uploadUrl = "https://laboratory.binus.ac.id/lapi/api/binusmaya/file";
+    `${process.env.NEXT_PUBLIC_LABORATORY_URL}Account/GetOneDriveToken`;
+  const uploadUrl = `${process.env.NEXT_PUBLIC_LABORATORY_URL}binusmaya/file`;
 
   const uploadAnswer = async (event) => {
     setLoading(true);

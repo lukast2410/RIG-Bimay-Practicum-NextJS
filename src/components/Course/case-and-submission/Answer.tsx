@@ -8,7 +8,7 @@ export default function Answer({ answer, idx, getFormattedDate}) {
   const [isLoading, setLoading] = useState(false);
   const [userData, setUserData] = useContext(UserContext);
   const oneDriveTokenUrl =
-    "https://laboratory.binus.ac.id/lapi/api/Account/GetOneDriveToken";
+    `${process.env.NEXT_PUBLIC_LABORATORY_URL}Account/GetOneDriveToken`;
 
 
   const getDownloadUrl = async (source) => {

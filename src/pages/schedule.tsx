@@ -8,6 +8,7 @@ import ScheduleList from "../components/schedule/ScheduleList";
 
 export default function Schedule({ user, schedule }) {
     const [userData, setUserData] = useContext(UserContext);
+    
     useEffect(() => setUserData(user), [user]);
 
     if (!user || !user.isLoggedIn) {
@@ -38,13 +39,28 @@ export const getServerSideProps = withSession(async function ({ req, res }) {
     }
     const token = userData?.Token.token;
 
-    const courses = await axios
+    const getCurrentTimeUrl =
+    `${process.env.NEXT_PUBLIC_LABORATORY_URL}general/time`;
+
+    const [courses, smt, time] = await Promise.all([
+        axios
         .get(process.env.NEXT_PUBLIC_LABORATORY_URL + "Binusmaya/GetSchedule?SemesterId=" + userData.SemesterId, {
             headers: {
                 authorization: "Bearer " + token,
             },
         })
-        .then((res) => res.data);
+        .then((res) => res.data),
+        axios
+        .get(process.env.NEXT_PUBLIC_LABORATORY_URL + "Binusmaya/GetSemester", {
+            headers: {
+                authorization: "Bearer " + token,
+            },
+        })
+        .then((res) => res.data),
+        axios
+        .get(getCurrentTimeUrl)
+        .then((res) => res.data)
+    ]) 
 
     const url = `${process.env.NEXT_PUBLIC_LABORATORY_URL}Binusmaya/GetScheduleDetail`;
     const courseDetail: any = await Promise.all(
@@ -66,13 +82,6 @@ export const getServerSideProps = withSession(async function ({ req, res }) {
 
     const softwareCourse = courses.filter((course) => course.Laboratory === "Software");
 
-    const smt = await axios
-        .get(process.env.NEXT_PUBLIC_LABORATORY_URL + "Binusmaya/GetSemester", {
-            headers: {
-                authorization: "Bearer " + token,
-            },
-        })
-        .then((res) => res.data);
 
     interface items {
         CourseName?: string;
@@ -168,14 +177,12 @@ export const getServerSideProps = withSession(async function ({ req, res }) {
 
     function filterSchedule(): void {
         schedule = schedule.filter((item) => {
-            const currDate = new Date();
+            const currDate = new Date(time);
             const itemDate = new Date(item.Date);
             const itemTime = item.Time.substring(0, 5).split(":");
 
-            currDate.setHours(currDate.getHours());
-
-            var parsedHour: number = +itemTime[0];
-            var parsedMinute: number = +itemTime[1];
+            var parsedHour: number = + itemTime[0];
+            var parsedMinute: number = + itemTime[1];
             itemDate.setHours(parsedHour, parsedMinute + 120, 0, 0);
             return itemDate.getTime() > currDate.getTime();
         });

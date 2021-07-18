@@ -19,7 +19,7 @@ export default function GroupRegistration({studentGroupDetail, getGroupProject})
 
       setLoading(true);
 
-      let url = "https://laboratory.binus.ac.id/lapi/api/Binusmaya/GetBinusian?";
+      let url = `${process.env.NEXT_PUBLIC_LABORATORY_URL}Binusmaya/GetBinusian?`;
       let studentsElement = document.querySelectorAll(".studentTxt");
 
       for(let i = 0; i < studentsElement.length; i++){

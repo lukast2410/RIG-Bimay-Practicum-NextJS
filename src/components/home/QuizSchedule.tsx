@@ -72,9 +72,9 @@ export default function QuizSchedule({ quiz }) {
 	const semester = userData?.Semesters.find((s) => s.SemesterId === userData.SemesterId)
 	const semesterName = semester?.Description.replace('/', '-')
 
-	const getCurrentTimeUrl = 'https://laboratory.binus.ac.id/lapi/api/general/time'
-	const oneDriveTokenUrl = 'https://laboratory.binus.ac.id/lapi/api/Account/GetOneDriveToken'
-	const uploadUrl = 'https://laboratory.binus.ac.id/lapi/api/binusmaya/file'
+	const getCurrentTimeUrl = `${process.env.NEXT_PUBLIC_LABORATORY_URL}general/time`
+	const oneDriveTokenUrl = `${process.env.NEXT_PUBLIC_LABORATORY_URL}Account/GetOneDriveToken`
+	const uploadUrl = `${process.env.NEXT_PUBLIC_LABORATORY_URL}binusmaya/file`
 
 	const uploadAnswer = async (event) => {
 		setLoading(true)

@@ -10,7 +10,7 @@ export default function GroupRegistrationModal({setOpen, openRegistrationModal, 
 
   const submitButtonRef = useRef()
   const [userData, setUserData] = useContext(UserContext);
-  const url = 'https://laboratory.binus.ac.id/lapi/api/Binusmaya/SaveGroupConfirmation'
+  const url = `${process.env.NEXT_PUBLIC_LABORATORY_URL}Binusmaya/SaveGroupConfirmation`
   const [isLoading, setLoading] = useState(false);
   const [modal, setModal] = useContext(ModalContext);
  
