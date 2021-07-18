@@ -1,9 +1,7 @@
 import React, { Fragment, useContext, useEffect, useState } from 'react'
 import { Disclosure, Popover, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/solid'
-import { BellIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons'
+import { LogoutIcon, MenuIcon, XIcon } from '@heroicons/react/outline'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import { UserContext } from '../contexts/UserContext'
@@ -136,11 +134,11 @@ export default function Navbar() {
 							<div className='hidden sm:ml-4 sm:flex sm:items-center'>
 								<NotificationMenu />
 								<div
-									className={`font-bold text-gray-500 hover:text-binus-blue cursor-pointer ml-4 `}
+									className={`flex items-center font-bold text-gray-500 hover:text-binus-blue cursor-pointer ml-4`}
 									onClick={handleSignOut}
 								>
 									Sign Out
-									<FontAwesomeIcon icon={faSignOutAlt} className={`ml-2`} />
+									<LogoutIcon className={`ml-2 h-5 w-5`} />
 								</div>
 							</div>
 						</div>
@@ -184,7 +182,7 @@ export default function Navbar() {
 								</a>
 							</Link>
 						</div>
-						{!isStudent ? null : (
+						{!isStudent || (!courses || courses.length == 0) ? null : (
 							<div className={`border-gray-300 pt-2 pb-2 border-t space-y-1`}>
 								<div className='text-gray-700 block text-center pt-1 text-base font-bold'>Courses</div>
 								{courses?.map((item, idx) => (

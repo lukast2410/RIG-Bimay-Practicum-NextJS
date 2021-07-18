@@ -17,7 +17,7 @@ export default function ExtraClassHeader({ extra, isOwner, setOpen }) {
 		<header className='bg-gray-100 py-8'>
 			<div className='max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 xl:flex xl:items-center xl:justify-between'>
 				<div className='flex-1 min-w-0'>
-					<h1 className='flex items-start flex-col sm:flex-row sm:items-center mt-2 text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate'>
+					<h1 className='flex items-start flex-col sm:flex-row sm:items-center mt-2 text-2xl font-bold leading-7 sm:leading-10 text-gray-900 sm:text-3xl sm:truncate'>
 						<p className='text-blue-800'>{course[0]}&nbsp;</p>
 						<p className='text-blue-600'>{course[1]}</p>
 					</h1>

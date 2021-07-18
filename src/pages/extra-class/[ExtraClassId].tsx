@@ -30,6 +30,7 @@ export default function ExtraClassDetail({ user, extra }) {
 	const absentNotStarted = startAbsent == null
 	const absentValid = startAbsent != null && Date.now() <= endAbsent.getTime()
 	const student = extra.details.find((x) => x.StudentId == user.Data.UserName)
+	const status = student?.Status ? student.Status : 'Absent'
 	const [open, setOpen] = useState(false)
 	const [isLoading, setLoading] = useState(false)
 	const [openConfirmation, setOpenConfirmation] = useState(false)
@@ -102,10 +103,10 @@ export default function ExtraClassDetail({ user, extra }) {
 								<dt className='text-sm font-medium text-gray-500'>Status</dt>
 								<dd
 									className={`mt-1 text-sm ${
-										student?.Status == 'Present' ? 'text-green-600' : 'text-red-700'
+										status == 'Present' ? 'text-green-600' : 'text-red-700'
 									} font-bold sm:mt-0 sm:col-span-2`}
 								>
-									{student?.Status}
+									{status}
 								</dd>
 							</div>
 						)}
