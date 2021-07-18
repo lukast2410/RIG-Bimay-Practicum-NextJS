@@ -165,9 +165,6 @@ export default function ExamSchedule({ exam }) {
 			ClassTransactionId: data.examTransactionId,
 		}
 
-		console.log(uploadUrl)
-		console.log(uploadPayload)
-
 		const result = await axios
 			.post(uploadUrl, uploadPayload, {
 				headers: {
@@ -175,8 +172,6 @@ export default function ExamSchedule({ exam }) {
 				},
 			})
 			.then((res) => res.data)
-
-		console.log(result)
 
 		const requestData = {
 			fileItemId: result.Task.FileId,
@@ -193,8 +188,6 @@ export default function ExamSchedule({ exam }) {
 				authorization: userData.Token.token
 			}
 		}).then(res => res.data)
-
-		console.log(test)
 
 		setLoading(false)
 		setLoadingProgressBar(false)
@@ -234,9 +227,6 @@ export default function ExamSchedule({ exam }) {
 				minBytes = maxBytes
 				maxBytes = minBytes + range
 			}
-
-			console.log(counter)
-			console.log(totalCount)
 
 			if (count < totalCount) {
 				count++

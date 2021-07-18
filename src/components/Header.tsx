@@ -36,12 +36,10 @@ export default function Header() {
 			socket.on('connect', () => {
 				socket.emit('userConnected', { id: userSocketId })
 				connected = true
-				console.log('connected user: ' + userSocketId + ' socket: ' + socket.id)
 			})
 
 			if (!connected) {
 				socket.emit('userConnected', { id: userSocketId })
-				console.log('emit user: ' + userSocketId)
 			}
 
 			if (user.Notifications) {

@@ -11,7 +11,7 @@ export default function GroupAgreement({
   getGroupProject,
 }) {
   const [openRegistrationModal, setOpenRegistrationModal] = useState(false);
-  const cancelButtonRef = useRef();
+  const nextButtonRef = useRef();
   const [error, setError] = useState(false);
   const termsAndRegulations = [
     `1. 
@@ -45,7 +45,7 @@ export default function GroupAgreement({
         as="div"
         static
         className="fixed z-10 inset-0 overflow-y-auto"
-        initialFocus={cancelButtonRef}
+        initialFocus={nextButtonRef}
         open={open}
         onClose={setOpen}
       >
@@ -125,7 +125,7 @@ export default function GroupAgreement({
                     className="h-4 w-4 text-binus-blue focus:ring-binus-blue border-gray-300 rounded"
                   />
                   <label
-                    htmlFor=""
+                    htmlFor="remember_me"
                     className="ml-2 block text-sm text-gray-900"
                   >
                     I Agree to Terms and Regulations
@@ -153,14 +153,14 @@ export default function GroupAgreement({
                   type="button"
                   className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-blue-600 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-600 sm:col-start-2 sm:text-sm"
                   onClick={createGroup}
+                  ref={nextButtonRef}
                 >
                   Next
                 </button>
                 <button
                   type="button"
-                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-binus-blue sm:mt-0 sm:col-start-1 sm:text-sm"
+                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:col-start-1 sm:text-sm"
                   onClick={() => setOpen(false)}
-                  ref={cancelButtonRef}
                 >
                   Cancel
                 </button>

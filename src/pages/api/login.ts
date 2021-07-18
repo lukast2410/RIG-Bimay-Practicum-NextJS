@@ -12,7 +12,6 @@ export default withSession(async (req, res) => {
 	try {
 		let user = {}
 		if (role == 'Student') {
-			console.log('student')
 			const data = await axios
 				.post(loginUrl, {
 					username: username,
@@ -47,7 +46,6 @@ export default withSession(async (req, res) => {
 					)
 					.then((res) => res.data),
 			])
-			console.log(sub)
 
 			user = {
 				isLoggedIn: true,
@@ -80,8 +78,6 @@ export default withSession(async (req, res) => {
 				}
 			)
 			.then((res) => res.data)
-			console.log('haiiii')
-			console.log(sub)
 
 			const name = data.User.Name
 			data.User.Name = data.User.UserName

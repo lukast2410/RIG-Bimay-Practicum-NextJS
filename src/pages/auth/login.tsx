@@ -32,7 +32,6 @@ export default function Login() {
 			}
 			return null
 		})
-		console.log(sub)
 		let body = {
 			username: e.target.username.value,
 			password: e.target.password.value,
@@ -51,7 +50,6 @@ export default function Login() {
 			} catch (error) {
 				setFailed(true)
 				setLogin(false)
-				console.log('Error happened: ' + error)
 			}
 		} else if (initial.test(body.username) || astCode.test(body.username)) {
 			body.role = 'Assistant'
@@ -62,7 +60,6 @@ export default function Login() {
 			} catch (error) {
 				setFailed(true)
 				setLogin(false)
-				console.log('Error happened: ' + error)
 			}
 		} else {
 			setFailed(true)

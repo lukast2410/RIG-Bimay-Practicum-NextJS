@@ -70,7 +70,6 @@ export default function ExtraClass({ user, listCourse, extra, classes }) {
 			})
 			.then((res) => res.data)
 
-		console.log(result)
 		if (result && result.PushNotification) {
 			socket.emit('broadcastExtraClass', result.data)
 		}

@@ -17,7 +17,6 @@ export default function ExtraClassDetail({ user, extra }) {
 	useEffect(() => {
 		setUserData(user)
 	}, [user])
-	console.log(extra)
 
 	if (!user || !user.isLoggedIn) {
 		return <h1>Loading...</h1>
@@ -65,7 +64,6 @@ export default function ExtraClassDetail({ user, extra }) {
 			})
 			.then((res) => res.data)
 
-		console.log(result)
 		setSaving(false)
 		setOpenConfirmation(false)
 		router.replace(router.asPath)
@@ -87,7 +85,6 @@ export default function ExtraClassDetail({ user, extra }) {
 					},
 				})
 				.then((res) => res.data)
-			console.log(result)
 
 			setSaving(false)
 		}

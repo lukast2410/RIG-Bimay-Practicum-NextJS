@@ -178,8 +178,6 @@ export default function QuizSchedule({ quiz }) {
 			})
 			.then((res) => res.data)
 
-		console.log(result)
-
 		const requestData = {
 			fileItemId: result.Task.FileId,
 			source: Url
@@ -195,8 +193,6 @@ export default function QuizSchedule({ quiz }) {
 				authorization: userData.Token.token
 			}
 		}).then(res => res.data)
-
-		console.log(test)
 
 		setLoading(false)
 		setLoadingProgressBar(false)
@@ -236,9 +232,6 @@ export default function QuizSchedule({ quiz }) {
 				minBytes = maxBytes
 				maxBytes = minBytes + range
 			}
-
-			console.log(counter)
-			console.log(totalCount)
 
 			if (count < totalCount) {
 				count++

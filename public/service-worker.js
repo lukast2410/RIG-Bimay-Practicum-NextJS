@@ -10,17 +10,13 @@ const urlB64ToUint8Array = base64String => {
 }
 
 self.addEventListener('activate', async (e) => {
-  console.log(e)
   // This will be called only once when the service worker is activated.
-  console.log('service worker activated!')
   try {
     const applicationServerKey = 'BJKekXcDQgJ_y0kO7Wb2oYMWLodN-79U9d3ydfgTlOmxwkGB7IPU9tuObaQRfhSGuLAa9sIFt1mFhkVggjQBOKY'
     const options = { applicationServerKey, userVisibleOnly: true }
     const result = await self.registration.pushManager.subscribe(options)
     const subscription = result.toJSON()
-    console.log(subscription)
   } catch (error) {
-    console.log(error)
   }
 })
 
@@ -53,12 +49,8 @@ self.addEventListener('notificationclick', function(e) {
 });
 
 self.addEventListener('push', (event) => {
-  console.log(event.data)
   if (event.data) {
-    console.log('Push event!! ', event.data.text())
     showLocalNotification(JSON.parse(event.data.text()), self.registration)
-  } else {
-    console.log('Push event but no data')
   }
 })
 

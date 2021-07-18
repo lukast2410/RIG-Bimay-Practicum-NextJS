@@ -1,16 +1,15 @@
 import Router from "next/router";
 import { useContext, useEffect, useRef, useState } from "react";
 import Layout from "../../../components/Layout";
-import SessionMaterial from "../../../components/Course/SessionMaterials/SessionMaterial";
+import SessionMaterial from "../../../components/Course/session-materials/SessionMaterial";
 import { UserContext } from "../../../contexts/UserContext";
 import withSession from "../../../lib/session";
 import Link from "next/link";
-import ClassDescription from "../../../components/Course/CourseInformation/ClassDescription";
-import LearningOutcome from "../../../components/Course/CourseInformation/LearningOutcome";
+import ClassDescription from "../../../components/Course/course-information/ClassDescription";
+import LearningOutcome from "../../../components/Course/course-information/LearningOutcome";
 import axios from "axios";
-import CourseBreadcrumbs from "../../../components/Course/CourseInformation/Breadcrumbs";
-import NextNProgress from "nextjs-progressbar";
-import SessionMaterialDisclosure from "../../../components/Course/SessionMaterials/SessionMaterialDisclosure";
+import CourseBreadcrumbs from "../../../components/Course/course-information/Breadcrumbs";
+import SessionMaterialDisclosure from "../../../components/Course/session-materials/SessionMaterialDisclosure";
 import ReactHtmlParser from 'react-html-parser';
 
 export default function SessionAndMaterials({ user, subject, courseDetail }) {
@@ -43,7 +42,6 @@ export default function SessionAndMaterials({ user, subject, courseDetail }) {
 
   return (
     <Layout title={courseDetail.CourseOutlineDetail.CourseName}>
-      <NextNProgress options={{ easing: "ease", speed: 500 }} />
       <div className="max-w-screen-2xl mx-auto sm:px-6 lg:px-8 mt-5 px-4">
         <div className="course-description mb-3 text-center sm:text-left">
           <div className="flex justify-center sm:justify-start">

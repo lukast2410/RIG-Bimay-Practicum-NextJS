@@ -89,7 +89,6 @@ export default function ExtraClass({ user, listCourse, classes }) {
 		}
 
 		setBodyData(body)
-		console.log(body)
 		setOpenConfirmation(true)
 	}
 
@@ -105,7 +104,6 @@ export default function ExtraClass({ user, listCourse, classes }) {
 			})
 			.then((res) => res.data)
 
-		console.log(header)
 		setSaving(false)
 		setOpenConfirmation(false)
 		socket.emit('broadcastExtraClass', header.Notification)

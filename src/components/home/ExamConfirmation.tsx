@@ -19,7 +19,6 @@ export default function ExamConfirmation() {
         authorization: `Bearer ${user.Token.token}`
       }
     }).then(res => res.data)
-    console.log(result)
     router.push(router.asPath)
   }
 

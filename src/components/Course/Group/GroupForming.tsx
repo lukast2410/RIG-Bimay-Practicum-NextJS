@@ -13,6 +13,7 @@ export default function GroupForming({
   studentGroupDetail,
   groupConfirmation,
 }) {
+  
   const [userData, setUserData] = useContext(UserContext);
   const [group, setGroup] = useState(groupProject);
   const [checkGroup, setCheckGroup] = useState(groupConfirmation);
@@ -94,12 +95,12 @@ export default function GroupForming({
   const renderCheckGroupConfirmation = () => {
     if (!checkGroup) {
       return (
-        <div className="mt-4 xl:mt-2 flex items-center flex-col sm:flex-row">
+        <div className="mt-4 xl:mt-2 flex items-center flex-col sm:flex-row md:justify-between">
           <Note message="If the formed group does not match the one you selected, please press the reject button." />
-          <div className="mt-4 flex sm:mt-0 justify-between w-2/5 justify-between sm:justify-start sm:ml-4">
+          <div className="mt-4 flex sm:mt-0 justify-between justify-between sm:justify-start sm:ml-4">
             <button
               type="button"
-              className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-white bg-binus-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-0 sm:ml-0 transform hover:scale-110 transition ease-out duration-300"
+              className="inline-flex items-center px-4 py-2 mx-2 sm:mx-0 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-white bg-binus-blue focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-binus-blue sm:order-0 sm:ml-0 transform hover:scale-110 transition ease-out duration-300"
               onClick={() => finalizeConfirmation(true)}
             >
               {isAccLoading ? <Loading color="text-white" /> : <></>}
@@ -107,7 +108,7 @@ export default function GroupForming({
             </button>
             <button
               type="button"
-              className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:order-1 sm:ml-3 transform hover:scale-110 transition ease-out duration-300"
+              className="inline-flex items-center px-4 py-2 mx-2 sm:mx-0 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600 sm:order-1 sm:ml-3 transform hover:scale-110 transition ease-out duration-300"
               onClick={() => finalizeConfirmation(false)}
             >
               {isDeclineLoading ? <Loading color="text-white" /> : <></>}
@@ -118,12 +119,12 @@ export default function GroupForming({
       );
     }
 
-    if(!studentGroupDetail.Group.Id){
+    if (!studentGroupDetail.Group.Id) {
       return (
         <div className="mt-4 xl:mt-2">
           <Note message="Please wait for all students accept the confirmation." />
         </div>
-      )
+      );
     }
   };
 

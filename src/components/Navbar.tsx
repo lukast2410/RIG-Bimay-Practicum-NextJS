@@ -23,7 +23,6 @@ export default function Navbar() {
 		e.preventDefault()
 
 		const id = isStudent ? user.Data.UserName : user.Data.Name
-		console.log(id)
 		await axios.post(`/api/logout`)
 		socket.emit('userSignout', { id: id })
 		router.push('/auth/login')

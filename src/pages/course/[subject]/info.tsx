@@ -1,16 +1,17 @@
-import Router from 'next/router'
-import { useContext, useEffect, useRef, useState } from 'react'
-import Layout from '../../../components/Layout'
-import { UserContext } from '../../../contexts/UserContext'
-import withSession from '../../../lib/session'
-import Link from 'next/link'
-import LearningOutcome from '../../../components/Course/CourseInformation/LearningOutcome'
-import ClassDescription from '../../../components/Course/CourseInformation/ClassDescription'
-import Evaluation from '../../../components/Course/CourseInformation/Evaluation'
-import axios from 'axios'
-import CourseBreadcrumbs from '../../../components/Course/CourseInformation/Breadcrumbs'
-import NextNProgress from 'nextjs-progressbar'
-import ReactHtmlParser from 'react-html-parser'
+import Router from "next/router";
+import { useContext, useEffect, useRef, useState } from "react";
+import Layout from "../../../components/Layout";
+import { UserContext } from "../../../contexts/UserContext";
+import withSession from "../../../lib/session";
+import Link from 'next/link';
+import LearningOutcome from "../../../components/Course/course-information/LearningOutcome";
+import ClassDescription from "../../../components/Course/course-information/ClassDescription";
+import Evaluation from "../../../components/Course/course-information/Evaluation";
+import axios from "axios";
+import CourseBreadcrumbs from "../../../components/Course/course-information/Breadcrumbs";
+import ReactHtmlParser from 'react-html-parser';
+
+
 
 export default function Subject({ user, subject, courseDetail }) {
 	const [userData, setUserData] = useContext(UserContext)
@@ -43,15 +44,21 @@ export default function Subject({ user, subject, courseDetail }) {
 	}
 
 	return (
-		<Layout title={courseDetail.CourseOutlineDetail.CourseName}>
-			<div className='max-w-screen-2xl mx-auto sm:px-6 lg:px-8 mt-5 px-4'>
-				<NextNProgress options={{ easing: 'ease', speed: 500 }} />
-				<div className='course-description mb-3 text-center sm:text-left'>
-					<div className='flex justify-center sm:justify-start'>
-						<CourseBreadcrumbs courseOutlineDetail={courseDetail.CourseOutlineDetail} />
-					</div>
-					<h1 className='text-3xl font-bold mb-4 mt-4'>{courseDetail.CourseOutlineDetail.CourseName}</h1>
-					<div>{ReactHtmlParser(courseDetail.CourseOutlineDetail.CourseDescription)}</div>
+	<Layout title={courseDetail.CourseOutlineDetail.CourseName}>
+		<div className="max-w-screen-2xl mx-auto sm:px-6 lg:px-8 mt-5 px-4">
+			<div className="course-description mb-3 text-center sm:text-left">
+				<div className="flex justify-center sm:justify-start">
+					<CourseBreadcrumbs courseOutlineDetail={courseDetail.CourseOutlineDetail}/>
+				</div>
+				<h1 className="text-3xl font-bold mb-4 mt-4">{courseDetail.CourseOutlineDetail.CourseName}</h1>
+				<div>{ReactHtmlParser(courseDetail.CourseOutlineDetail.CourseDescription)}</div>
+			</div>
+			<div className="course-content flex flex-col justify-between xl:flex-row">
+				<div className="w-full mb-4 xl:w-3/5 xl:mb-0">
+					<LearningOutcome learningOutcome={courseDetail.CourseOutlineDetail.LearningOutcome} />
+				</div>
+				<div className="flex-none">
+					<ClassDescription subject={subject} studentGroupDetail={courseDetail.StudentGroupDetail}/>
 				</div>
 				<div className='course-content flex flex-col justify-between xl:flex-row'>
 					<div className='w-full mb-4 xl:w-3/5 xl:mb-0'>
@@ -140,7 +147,8 @@ export default function Subject({ user, subject, courseDetail }) {
 					/>
 				</div>
 			</div>
-		</Layout>
+		</div>
+	</Layout>
 	)
 }
 
