@@ -10,6 +10,7 @@ import { ModalContext } from "../../../contexts/ModalContext";
 import Modal from "../Modal";
 import SubmissionDescriptionLists from "./SubmissionDescriptionLists";
 import LoadingProgressBar from "../LoadingProgressBar";
+import { XCircleIcon } from "@heroicons/react/solid";
 
 export default function CaseSubmissionComponent({
   onlineTasks,
@@ -212,14 +213,23 @@ export default function CaseSubmissionComponent({
   const renderOnlineTasks = () => {
     if (studentGroupDetail.Group == null) {
       return (
-        <div className="py-4 px-5 rounded-md bg-red-50">
-          <DividerWithMessage
-            message="There is no available Online Task for this subject."
-            bg="red-50"
-            size="lg"
-            mt=""
-            color="red-800"
-          />
+        <div className="rounded-md bg-red-50 p-4">
+          <div className="flex">
+            <div className="flex-shrink-0">
+              <XCircleIcon
+                className="h-5 w-5 text-red-400"
+                aria-hidden="true"
+              />
+            </div>
+            <div className="ml-3">
+              <h3 className="text-sm font-medium text-red-800">Alert</h3>
+              <div className="mt-2 text-sm text-red-700">
+                <ul className="space-y-1">
+                  <li>There is no available Online Task for this subject.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
       );
     } else if (studentGroupDetail.Group.Id == null) {
@@ -311,13 +321,13 @@ export default function CaseSubmissionComponent({
                             {task.Deadline}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {task.Hash}
+                            {task.Hash == null ? "-" : task.Hash}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {task.Size}
+                            {task.Size == null ? "-" : task.Size}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {task.UploadTime}
+                            {task.UploadTime == null ? "-" : task.UploadTime}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-purple-600">
                             <Link
@@ -365,7 +375,7 @@ export default function CaseSubmissionComponent({
 
   return (
     <div>
-      <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4 ">
+      <h3 className="text-lg leading-6 font-medium text-gray-900 mb-4">
         Case & Submission
       </h3>
       {renderOnlineTasks()}

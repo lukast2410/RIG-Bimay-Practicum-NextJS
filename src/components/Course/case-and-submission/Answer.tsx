@@ -3,47 +3,13 @@ import { useContext, useState } from "react";
 import { UserContext } from "../../../contexts/UserContext";
 import Loading from "../Loading";
 
-export default function Answer({ answer, idx}) {
+export default function Answer({ answer, idx, getFormattedDate}) {
 
   const [isLoading, setLoading] = useState(false);
   const [userData, setUserData] = useContext(UserContext);
   const oneDriveTokenUrl =
     "https://laboratory.binus.ac.id/lapi/api/Account/GetOneDriveToken";
 
-  const getFormattedDate = (date) => {
-    const months = [
-      "January",
-      "February",
-      "March",
-      "April",
-      "Mei",
-      "June",
-      "July",
-      "August",
-      "September",
-      "October",
-      "November",
-      "December",
-    ];
-    const d = new Date(date);
-    let minutes;
-    let seconds;
-    let hours;
-
-    d.getHours().toString().length == 1
-      ? (hours = "0" + d.getHours())
-      : (hours = d.getHours());
-    d.getMinutes().toString().length == 1
-      ? (minutes = "0" + d.getMinutes())
-      : (minutes = d.getMinutes());
-    d.getSeconds().toString().length == 1
-      ? (seconds = "0" + d.getSeconds())
-      : (seconds = d.getSeconds());
-
-    return `${d.getDate()} ${
-      months[d.getMonth()]
-    } ${d.getFullYear()}, ${hours}:${minutes}:${seconds}`;
-  };
 
   const getDownloadUrl = async (source) => {
     setLoading(true);

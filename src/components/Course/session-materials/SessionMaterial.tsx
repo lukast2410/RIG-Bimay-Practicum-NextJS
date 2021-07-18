@@ -85,7 +85,7 @@ export default function SessionMaterial({sessionDetail, classTransactionId}) {
                           :
                           (
                             <Link href={`https://bluejack.binus.ac.id/binusmayalab/Laboratory/GetCase/${classTransactionId}/${material.Session}/${material.CaseId}`}>
-                              <button type="button" className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-binus-blue bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                              <button type="button" className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-binus-blue bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-binus-blue">
                                 Download Case
                               </button>
                             </Link>
