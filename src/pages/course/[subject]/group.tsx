@@ -12,6 +12,7 @@ import CourseBreadcrumbs from "../../../components/Course/course-information/Bre
 import DividerWithMessage from "../../../components/home/DividerWithMessage";
 import ReactHtmlParser from "react-html-parser";
 import { ModalProvider } from "../../../contexts/ModalContext";
+import Alert from "../../../components/Course/Alert";
 
 export default function Group({
   user,
@@ -159,15 +160,7 @@ export default function Group({
                 groupConfirmation={groupConfirmation}
               />
             ) : (
-              <div className="py-4 px-5 rounded-md bg-red-50">
-                <DividerWithMessage
-                  message={`You don't have any group forming`}
-                  bg="red-50"
-                  size="lg"
-                  mt=""
-                  color="red-800"
-                />
-              </div>
+              <Alert message="You don't have any group forming" />
             )}
           </div>
         </ModalProvider>

@@ -1,10 +1,4 @@
-import { XCircleIcon } from "@heroicons/react/solid";
-import axios from "axios";
-import Link from "next/link";
-import { useContext, useState } from "react";
-import { UserContext } from "../../../contexts/UserContext";
-import DividerWithMessage from "../../home/DividerWithMessage";
-import Loading from "../Loading";
+import Alert from "../Alert";
 import Answer from "./Answer";
 import AnswerDescriptionLists from "./AnswerDescriptionLists";
 
@@ -50,26 +44,7 @@ export default function SubmittedAnswer({ submittedAnswers }) {
         Submitted Answer
       </h3>
       {submittedAnswers.length == 0 ? (
-        <div className="rounded-md bg-red-50 p-4">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <XCircleIcon
-                className="h-5 w-5 text-red-400"
-                aria-hidden="true"
-              />
-            </div>
-            <div className="ml-3">
-              <h3 className="text-sm font-medium text-red-800">
-                Alert
-              </h3>
-              <div className="mt-2 text-sm text-red-700">
-                <ul className="space-y-1">
-                  <li>There is no submitted answer for this subject</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Alert message="There is no submitted answer for this subject." />
       ) : (
         <div>
           <AnswerDescriptionLists
@@ -111,18 +86,6 @@ export default function SubmittedAnswer({ submittedAnswers }) {
                           scope="col"
                           className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
                         >
-                          Finalized By
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
-                        >
-                          Finalized Date
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
-                        >
                           Hash Code
                         </th>
                         <th
@@ -145,6 +108,7 @@ export default function SubmittedAnswer({ submittedAnswers }) {
                           answer={answer}
                           idx={idx}
                           getFormattedDate={getFormattedDate}
+                          key={idx} 
                         />
                       ))}
                     </tbody>

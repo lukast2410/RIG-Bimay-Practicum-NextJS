@@ -2,7 +2,6 @@ import axios from "axios";
 import Link from "next/link";
 import { useContext, useState } from "react";
 import { UserContext } from "../../../contexts/UserContext";
-import DividerWithMessage from "../../home/DividerWithMessage";
 import Note from "../Note";
 import { v1 as uuidv1 } from "uuid";
 import Loading from "../Loading";
@@ -10,7 +9,7 @@ import { ModalContext } from "../../../contexts/ModalContext";
 import Modal from "../Modal";
 import SubmissionDescriptionLists from "./SubmissionDescriptionLists";
 import LoadingProgressBar from "../LoadingProgressBar";
-import { XCircleIcon } from "@heroicons/react/solid";
+import Alert from "../Alert";
 
 export default function CaseSubmissionComponent({
   onlineTasks,
@@ -224,24 +223,7 @@ export default function CaseSubmissionComponent({
   const renderOnlineTasks = () => {
     if (studentGroupDetail.Group == null) {
       return (
-        <div className="rounded-md bg-red-50 p-4">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <XCircleIcon
-                className="h-5 w-5 text-red-400"
-                aria-hidden="true"
-              />
-            </div>
-            <div className="ml-3">
-              <h3 className="text-sm font-medium text-red-800">Alert</h3>
-              <div className="mt-2 text-sm text-red-700">
-                <ul className="space-y-1">
-                  <li>There is no available Online Task for this subject.</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
+        <Alert message="There is no available Online Task for this subject." />
       );
     } else if (studentGroupDetail.Group.Id == null) {
       return (

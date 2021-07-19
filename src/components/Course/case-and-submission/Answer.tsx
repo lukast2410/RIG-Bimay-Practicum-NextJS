@@ -30,13 +30,13 @@ export default function Answer({ answer, idx, getFormattedDate}) {
       })
       .then((res) => res.data);
 
-    setLoading(false);
     window.location.href = fileFromUrl["@microsoft.graph.downloadUrl"];
+    setLoading(false);
   };
 
 
   return (
-    <tr key={idx} className={idx % 2 === 0 ? "bg-white" : "bg-gray-100"}>
+    <tr className={idx % 2 === 0 ? "bg-white" : "bg-gray-100"}>
       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
         {answer.Type}-{answer.Number}
       </td>
@@ -46,14 +46,6 @@ export default function Answer({ answer, idx, getFormattedDate}) {
       <td className="px-6 py-4 text-sm text-gray-900">{answer.Uploader}</td>
       <td className="px-6 py-4 text-sm text-gray-900 ">
         {getFormattedDate(answer.UploadDate)}
-      </td>
-      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-        {answer.FinalizedBy == null ? "-" : answer.FinalizedBy}
-      </td>
-      <td className="px-6 py-4 text-sm text-gray-900">
-        {answer.FinalizedDate == null
-          ? "-"
-          : getFormattedDate(answer.FinalizedDate)}
       </td>
       <td className="px-6 py-4 text-sm text-gray-900">{answer.Hash}</td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
