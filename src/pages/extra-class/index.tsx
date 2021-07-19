@@ -20,43 +20,6 @@ export default function ExtraClass({ user, today, upcoming, previous }) {
 		return <h1>Loading...</h1>
 	}
 
-	const handleNotification = async () => {
-		if (Notification.permission == 'granted') {
-			const notif = {
-				NotificationId: 'sadkansdlksan',
-				Title: 'Hello from Ast',
-				Content: 'Halo testinggggg',
-				ContentId: 'extraclass1',
-				Type: 'ExtraClass',
-				LastUpdate: '2021-10-20',
-				details: [
-					{
-						NotificationId: 'sadkansdlksan',
-						StudentId: '2301859820',
-						StudentName: 'Lukas',
-						IsRead: false,
-					},
-				],
-			}
-			const pushUrl = `${process.env.NEXT_PUBLIC_EXTRA_URL}Push`
-			const result = await axios
-				.post(pushUrl, notif, {
-					headers: {
-						authorization: 'Bearer ' + user.Token.token,
-					},
-				})
-				.then((res) => res.data)
-		}
-	}
-
-	const handleUnregister = async () => {
-		if (Notification.permission == 'granted') {
-			await navigator.serviceWorker.getRegistration().then((reg) => {
-				if (reg) reg.unregister()
-			})
-		}
-	}
-
 	return (
 		<Layout title='Extra Class'>
 			<div className='max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8'>

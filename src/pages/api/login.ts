@@ -45,7 +45,7 @@ export default withSession(async (req, res) => {
 					}
 				)
 				.then((res) => res.data)
-				.catch(err => console.error(err))
+				.catch(err => null)
 
 			user = {
 				isLoggedIn: true,
@@ -78,7 +78,7 @@ export default withSession(async (req, res) => {
 					}
 				)
 				.then((res) => res.data)
-				.catch((err) => console.error(err))
+				.catch((err) => null)
 
 			const name = data.User.Name
 			data.User.Name = data.User.UserName
