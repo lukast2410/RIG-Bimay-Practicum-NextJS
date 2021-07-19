@@ -6,7 +6,7 @@ import axios from "axios";
 import ScheduleTable from "../components/schedule/ScheduleTable";
 import ScheduleList from "../components/schedule/ScheduleList";
 
-export default function Schedule({ user, schedule }) {
+export default function Schedule({ user, schedule, time }) {
     const [userData, setUserData] = useContext(UserContext);
 
     useEffect(() => setUserData(user), [user]);
@@ -15,8 +15,14 @@ export default function Schedule({ user, schedule }) {
         return <h1>Loading...</h1>;
     }
 
+    const [serverTime, setServerTime] = useContext(time);
+
     return (
         <Layout title="Schedule">
+            <div>
+                {serverTime}
+                {time}
+            </div>
             <div className="hidden sm:block">
                 <ScheduleTable schedule={schedule} />
             </div>
@@ -172,8 +178,6 @@ export const getServerSideProps = withSession(async function ({ req, res }) {
     function filterSchedule(): void {
         schedule = schedule.filter((item) => {
             const currDate = new Date(time);
-            console.log(time);
-            console.log("//" + time);
             const itemDate = new Date(item.Date);
             const itemTime = item.Time.substring(0, 5).split(":");
 
@@ -193,12 +197,13 @@ export const getServerSideProps = withSession(async function ({ req, res }) {
         Courses: softwareCourse,
     };
 
-    schedule = [];
+    // schedule = [];
 
     return {
         props: {
             user,
             schedule,
+            time,
         },
     };
 });
