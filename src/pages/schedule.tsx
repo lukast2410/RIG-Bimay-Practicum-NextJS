@@ -24,12 +24,9 @@ export default function Schedule({ user, schedule, time }) {
             var parsedHour: number = +itemTime[0];
             var parsedMinute: number = +itemTime[1];
             itemDate.setHours(parsedHour, parsedMinute + 120, 0, 0);
-            currDate.setHours(currDate.getHours() + 3, currDate.getMinutes() - 9, 0, 0)
-            console.log(currDate + " // " + (itemDate.getTime() > currDate.getTime()));
             return itemDate.getTime() > currDate.getTime();
         });
     }
-
     filterSchedule();
 
     return (
