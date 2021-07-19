@@ -21,17 +21,22 @@ export default function Login() {
 		e.preventDefault()
 
 		setLogin(true)
-		const sub = await navigator.serviceWorker.getRegistration().then(reg => {
+		const sub = await navigator.serviceWorker.getRegistration().then(async (reg) => {
 			if(reg){
-				return reg.pushManager.getSubscription().then(sub => {
+				return await reg.pushManager.getSubscription().then(async (sub) => {
 					if(sub){
 						return sub.toJSON()
+					}else{
+						const applicationServerKey = 'BJKekXcDQgJ_y0kO7Wb2oYMWLodN-79U9d3ydfgTlOmxwkGB7IPU9tuObaQRfhSGuLAa9sIFt1mFhkVggjQBOKY'
+						const options = { applicationServerKey, userVisibleOnly: true }
+						const subscription = await reg.pushManager.subscribe(options)
+						return subscription.toJSON()
 					}
-					return null
 				})
 			}
 			return null
 		})
+		console.log(sub)
 		let body = {
 			username: e.target.username.value,
 			password: e.target.password.value,

@@ -23,7 +23,6 @@
     "**/*.ts",
     "**/*.tsx", 
     "next.config.js", 
-    "public/service-worker.js",
   ],
   "exclude": [
     "node_modules"

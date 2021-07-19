@@ -44,7 +44,7 @@ export default withSession(async (req, res) => {
 						},
 					}
 				)
-				.then((res) => res.data)
+				.then((res) => console.log(res.data))
 				.catch(err => null)
 
 			user = {
@@ -78,7 +78,7 @@ export default withSession(async (req, res) => {
 						},
 					}
 				)
-				.then((res) => res.data)
+				.then((res) => console.log(res.data))
 				.catch((err) => null)
 
 			const name = data.User.Name

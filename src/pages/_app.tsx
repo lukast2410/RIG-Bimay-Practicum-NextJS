@@ -17,8 +17,8 @@ function MyApp({ Component, pageProps }) {
 		navigator.permissions.query({ name: 'notifications' }).then((permission) => {
 			permission.onchange = () => {
 				if (permission.state == 'granted') {
-					navigator.serviceWorker.register('/service-worker.js')
-					if(router.asPath != '/auth/login'){
+					navigator.serviceWorker.register('/sw.js')
+					if (router.asPath != '/auth/login') {
 						setOpen(true)
 					}
 				}
@@ -29,14 +29,16 @@ function MyApp({ Component, pageProps }) {
 			Notification.requestPermission((res) => {})
 		} else if (Notification.permission == 'denied') {
 			unregisterServiceWorker()
-		}else if(Notification.permission == 'granted'){
-			navigator.serviceWorker.register('/service-worker.js')
+		} else if (Notification.permission == 'granted') {
+			navigator.serviceWorker.register('/sw.js')
 		}
 	}, [])
 
 	const unregisterServiceWorker = async () => {
-		await navigator.serviceWorker.getRegistration().then((reg) => {
-			if (reg) reg.unregister()
+		await navigator.serviceWorker.getRegistrations().then(async function (registrations) {
+			for (let registration of registrations) {
+				await registration.unregister()
+			}
 		})
 	}
 
@@ -46,7 +48,7 @@ function MyApp({ Component, pageProps }) {
 				<Head>
 					<meta name='viewport' content='width=device-width, initial-scale=1.0' />
 				</Head>
-				<UpdateSuccess open={open} setOpen={setOpen}/>
+				<UpdateSuccess open={open} setOpen={setOpen} />
 				<Component {...pageProps} />
 			</UserProvider>
 		</SocketProvider>
