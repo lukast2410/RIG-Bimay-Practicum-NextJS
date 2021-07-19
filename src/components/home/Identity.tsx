@@ -32,7 +32,7 @@ export default function Identity({ user, isStudent }) {
 					) : (
 						<>
 							<h2 className='text-lg font-medium text-gray-900'>{user?.Data.UserName}</h2>
-							<p className='text-base font-medium text-gray-600'>{user?.Data.Role}</p>
+							<p className='text-base font-medium text-gray-600'>{user?.Data.Role.includes('#') ? user?.Data.Role.split('#')[0] : user?.Data.Role}</p>
 						</>
 					)}
 				</div>

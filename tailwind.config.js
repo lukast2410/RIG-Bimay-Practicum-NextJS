@@ -5,7 +5,7 @@ module.exports = {
     extend: {
       colors: {
         'binus-blue': '#00a9e2',
-        'binus-blue-100': 'rgba(0, 169, 226, 0.15)',
+        'binus-blue-100': '#0093c4',
         'grey': '#ced4da'
       },
       maxWidth: {

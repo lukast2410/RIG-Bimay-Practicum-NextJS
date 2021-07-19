@@ -23,7 +23,7 @@ export default function ClassDescription({ subject, studentGroupDetail }) {
               <Link href={`/course/${subject.Subject}/session-material`}>
               <a
                   href="#"
-                  className="font-medium text-binus-blue hover:text-indigo-500"
+                  className="font-medium text-binus-blue hover:text-binus-blue-100"
               >
                   Check the schedule here <span aria-hidden="true">&rarr;</span>
               </a>
@@ -42,7 +42,7 @@ export default function ClassDescription({ subject, studentGroupDetail }) {
               <Link href={`/course/${subject.Subject}/group`}>
               <a
                   href="#"
-                  className="font-medium text-binus-blue hover:text-indigo-500"
+                  className="font-medium text-binus-blue hover:text-binus-blue-100"
               >
                   Learn about group forming <span aria-hidden="true">&rarr;</span>
               </a>
@@ -61,7 +61,7 @@ export default function ClassDescription({ subject, studentGroupDetail }) {
             <Link href={`/course/${subject.Subject}/case-submission`}>
             <a
                 href="#"
-                className="font-medium text-binus-blue hover:text-indigo-500"
+                className="font-medium text-binus-blue hover:text-binus-blue-100"
             >
                 Learn about case and submission <span aria-hidden="true">&rarr;</span>
             </a>

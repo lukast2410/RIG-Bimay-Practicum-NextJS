@@ -109,7 +109,7 @@ export const getServerSideProps = withSession(async function ({ req, res, query 
 
 	const token = userData?.Token.token
 
-	if (userData.Data.Role == 'Software Teaching Assistant') {
+	if (userData.Data.Role.includes('Software Teaching Assistant')) {
 		const [smt, notif, listNotif] = await Promise.all([
 			axios.get(process.env.NEXT_PUBLIC_LABORATORY_URL + 'Schedule/GetSemesters').then((res) => res.data),
 			axios

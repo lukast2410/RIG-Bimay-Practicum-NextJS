@@ -312,7 +312,7 @@ export const getServerSideProps = withSession(async function ({ req, res }) {
 				permanent: false,
 			},
 		}
-	} else if (userData.Data.Role == 'Software Teaching Assistant') {
+	} else if (userData.Data.Role.includes('Software Teaching Assistant')) {
 		const token = userData?.Token.token
 		const [smt, listCourse, notif] = await Promise.all([
 			axios.get(process.env.NEXT_PUBLIC_LABORATORY_URL + 'Schedule/GetSemesters').then((res) => res.data),

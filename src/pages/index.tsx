@@ -61,10 +61,11 @@ export default function Home({ user, procedures, recent, extra, practicum, exam 
 							)}
 						</div>
 					</ModalProvider>
-					{/* Procedure & rules */}
-					<Procedures procedures={procedures} />
 
 					<RecentExtraClass classes={recent}/>
+					
+					{/* Procedure & rules */}
+					<Procedures procedures={procedures} />
 				</>
 			)}
 		</Layout>
@@ -85,7 +86,7 @@ export const getServerSideProps = withSession(async function ({ req, res }) {
 	}
 	const token = userData?.Token.token
 
-	if (userData.Data.Role == 'Software Teaching Assistant') {
+	if (userData.Data.Role.includes('Software Teaching Assistant')) {
 		const [smt, extra, notif] = await Promise.all([
 			axios.get(process.env.NEXT_PUBLIC_LABORATORY_URL + 'Schedule/GetSemesters').then((res) => {
 				return res.data

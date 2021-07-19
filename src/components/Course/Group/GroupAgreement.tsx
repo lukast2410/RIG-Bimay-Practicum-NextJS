@@ -98,7 +98,7 @@ export default function GroupAgreement({
                       <ul className="-my-5 divide-y divide-gray-200 text-left">
                         {termsAndRegulations.map((term, idx) => (
                           <li className="py-5" key={idx}>
-                            <div className="relative focus-within:ring-2 focus-within:ring-indigo-500">
+                            <div className="relative">
                               <h3 className="text-sm font-semibold text-gray-800">
                                 <span
                                   className="absolute inset-0"

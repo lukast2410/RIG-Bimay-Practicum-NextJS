@@ -329,7 +329,7 @@ export const getServerSideProps = withSession(async function ({ req, res, query 
 				permanent: false,
 			},
 		}
-	} else if (userData.Data.Role == 'Software Teaching Assistant') {
+	} else if (userData.Data.Role.includes('Software Teaching Assistant')) {
 		const token = userData?.Token.token
 		const extraClassId = query.ExtraClassId
 		const [smt, listCourse, extra, notif] = await Promise.all([

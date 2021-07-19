@@ -67,7 +67,7 @@ export default function Subject({ user, subject, courseDetail }) {
 						<select
 							id='tabs'
 							name='tabs'
-							className='block w-full focus:ring-indigo-500 focus:border-indigo-500 border-gray-300 rounded-md'
+							className='block w-full focus:ring-blue-500 focus:border-blue-500 border-gray-300 rounded-md'
 							onChange={addRedirectTabs}
 							value={optionValue}
 						>
@@ -152,7 +152,7 @@ export const getServerSideProps = withSession(async function ({ req, res, query 
 				permanent: false,
 			},
 		}
-	} else if (userData.Data.Role == 'Software Teaching Assistant') {
+	} else if (userData.Data.Role.includes('Software Teaching Assistant')) {
 		return {
 			redirect: {
 				destination: '/',

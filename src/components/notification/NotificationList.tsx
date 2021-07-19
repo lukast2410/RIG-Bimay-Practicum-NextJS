@@ -9,7 +9,7 @@ import { formatDate } from '../../pages/api/helper'
 export default function NotificationList({ notif }) {
 	const [user, setUser] = useContext(UserContext)
 	const isRead = notif.details[0].IsRead
-	const link = notif.Type == 'ExtraClass' ? `/extra-class/${notif.ContentId}` : `/group`
+	const link = notif.Type == 'ExtraClass' ? `/extra-class/${notif.ContentId}` : `/course/${notif.ContentId}/group`
 	const handleNotification = async () => {
 		if (!isRead) {
 			const body = {

@@ -80,7 +80,7 @@ export default function RandomQuotes() {
 
 						<div className='relative lg:ml-10'>
 							<svg
-								className='absolute top-0 left-0 transform -translate-x-8 -translate-y-24 h-36 w-36 text-indigo-200 opacity-50'
+								className='absolute top-0 left-0 transform -translate-x-8 -translate-y-24 h-36 w-36 text-blue-200 opacity-50'
 								stroke='currentColor'
 								fill='none'
 								viewBox='0 0 144 144'

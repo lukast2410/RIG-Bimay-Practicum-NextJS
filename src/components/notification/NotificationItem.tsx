@@ -8,7 +8,7 @@ import { UserContext } from '../../contexts/UserContext'
 export default function NotificationItem({ notif }) {
   const [user, setUser] = useContext(UserContext)
 	const isRead = notif.details[0].IsRead
-	const link = notif.Type == 'ExtraClass' ? `/extra-class/${notif.ContentId}` : `/group`
+	const link = notif.Type == 'ExtraClass' ? `/extra-class/${notif.ContentId}` : `/course/${notif.ContentId}/group`
 	const handleNotification = async () => {
 		if (!isRead) {
 			const body = {
