@@ -10,7 +10,6 @@ module.exports = withPWA({
         register: true,
         skipWaiting: true,
         disable: prod ? false : true,
-        sw: '/service-worker.js'
     },
     images: {
         domains: ['laboratory.binus.ac.id'],

@@ -6,7 +6,7 @@ import { io } from 'socket.io-client'
 import { useEffect, useState } from 'react'
 import UpdateSuccess from '../components/UpdateSuccess'
 import { useRouter } from 'next/router'
-
+// https://binusmaya-practicum.herokuapp.com
 const socketServer = io('https://binusmaya-practicum.herokuapp.com', { transports: ['websocket'] })
 
 function MyApp({ Component, pageProps }) {
@@ -17,7 +17,7 @@ function MyApp({ Component, pageProps }) {
 		navigator.permissions.query({ name: 'notifications' }).then((permission) => {
 			permission.onchange = () => {
 				if (permission.state == 'granted') {
-					navigator.serviceWorker.register('/service-worker.js')
+					navigator.serviceWorker.register('/sw.js')
 					if (router.asPath != '/auth/login') {
 						setOpen(true)
 					}
@@ -30,7 +30,7 @@ function MyApp({ Component, pageProps }) {
 		} else if (Notification.permission == 'denied') {
 			unregisterServiceWorker()
 		} else if (Notification.permission == 'granted') {
-			navigator.serviceWorker.register('/service-worker.js')
+			navigator.serviceWorker.register('/sw.js')
 		}
 	}, [])
 
