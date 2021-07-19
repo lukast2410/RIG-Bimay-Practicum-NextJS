@@ -10,7 +10,7 @@ import GroupForming from "../../../components/Course/Group/GroupForming";
 import axios from "axios";
 import CourseBreadcrumbs from "../../../components/Course/course-information/Breadcrumbs";
 import DividerWithMessage from "../../../components/home/DividerWithMessage";
-import ReactHtmlParser from 'react-html-parser';
+import ReactHtmlParser from "react-html-parser";
 import { ModalProvider } from "../../../contexts/ModalContext";
 
 export default function Group({
@@ -59,7 +59,11 @@ export default function Group({
           <h1 className="text-3xl font-bold mb-4 mt-4">
             {courseDetail.CourseOutlineDetail.CourseName}
           </h1>
-          <div>{ReactHtmlParser(courseDetail.CourseOutlineDetail.CourseDescription)}</div>
+          <div>
+            {ReactHtmlParser(
+              courseDetail.CourseOutlineDetail.CourseDescription
+            )}
+          </div>
         </div>
         <div className="course-content flex flex-col justify-between xl:flex-row">
           <div className="w-full mb-4 xl:w-3/5 xl:mb-0">
@@ -68,7 +72,10 @@ export default function Group({
             />
           </div>
           <div className="flex-none">
-            <ClassDescription subject={subject} studentGroupDetail={courseDetail.StudentGroupDetail}/>
+            <ClassDescription
+              subject={subject}
+              studentGroupDetail={courseDetail.StudentGroupDetail}
+            />
           </div>
         </div>
         <div className="course-tab mt-6">
@@ -175,22 +182,26 @@ export const getServerSideProps = withSession(async function ({
   query,
 }) {
   const userData = req.session.get("user");
-  if (!userData || !userData.Token || Date.now() >= new Date(userData.Token.expires).getTime()) {
-		req.session.destroy()
-		return {
-			redirect: {
-				destination: '/auth/login',
-				permanent: false,
-			},
-		}
-	} else if (userData.Data.Role == 'Software Teaching Assistant'){
-		return {
-			redirect: {
-				destination: '/',
-				permanent: false,
-			},
-		}
-	}
+  if (
+    !userData ||
+    !userData.Token ||
+    Date.now() >= new Date(userData.Token.expires).getTime()
+  ) {
+    req.session.destroy();
+    return {
+      redirect: {
+        destination: "/auth/login",
+        permanent: false,
+      },
+    };
+  } else if (userData.Data.Role == "Software Teaching Assistant") {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
   const token = userData?.Token.token;
 
   const courses = await axios
@@ -255,27 +266,32 @@ export const getServerSideProps = withSession(async function ({
           },
         })
         .then((res) => res.data),
-        axios
-        .get(`${process.env.NEXT_PUBLIC_EXTRA_URL}Notification/UserNotification/Limit?start=0&max=5`, {
-          headers: {
-            authorization: 'Bearer ' + token,
-          },
-          data: {
-            SemesterId: userData.SemesterId,
-            StudentId: userData.Data.UserName,
-          },
-        })
+      axios
+        .get(
+          `${process.env.NEXT_PUBLIC_EXTRA_URL}Notification/UserNotification/Limit?start=0&max=5`,
+          {
+            headers: {
+              authorization: "Bearer " + token,
+            },
+            data: {
+              SemesterId: userData.SemesterId,
+              StudentId: userData.Data.UserName,
+            },
+          }
+        )
         .then((res) => res.data),
-    ])
-  
-    const softwareCourse = courses.filter((course) => course.Laboratory === 'Software')
-  
-    const user = {
-      ...userData,
-      Semesters: smt,
-      Courses: softwareCourse,
-      Notifications: notif.data,
-    }
+    ]);
+
+  const softwareCourse = courses.filter(
+    (course) => course.Laboratory === "Software"
+  );
+
+  const user = {
+    ...userData,
+    Semesters: smt,
+    Courses: softwareCourse,
+    Notifications: notif.data,
+  };
   return {
     props: {
       user,

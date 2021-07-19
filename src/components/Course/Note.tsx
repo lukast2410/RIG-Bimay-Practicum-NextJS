@@ -1,6 +1,6 @@
 export default function Note({message}) {
   return (
-    <div className="rounded-md bg-yellow-50 p-4 xl:mt-4 z-0">
+    <div className="rounded-md bg-yellow-50 p-4 xl:mt-4 z-0 w-full">
       <div className="flex">
         <div className="flex-shrink-0">
           <svg

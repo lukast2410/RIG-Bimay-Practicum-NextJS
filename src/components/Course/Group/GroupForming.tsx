@@ -11,7 +11,7 @@ import { useRouter } from "next/router";
 export default function GroupForming({
   groupProject,
   studentGroupDetail,
-  groupConfirmation,
+  groupConfirmation
 }) {
   
   const [userData, setUserData] = useContext(UserContext);
@@ -22,10 +22,13 @@ export default function GroupForming({
   const [modal, setModal] = useContext(ModalContext);
   const router = useRouter();
 
-  const getGroupProject = async () => {
-    const getGroupProjectUrl =
-      `${process.env.NEXT_PUBLIC_LABORATORY_URL}Binusmaya/GetGroupConfirmation?classTransactionId=`;
-    const newGroupProject = await axios
+  const getGroupProjectUrl =
+  `${process.env.NEXT_PUBLIC_LABORATORY_URL}Binusmaya/GetGroupConfirmation?classTransactionId=`;
+  const checkGroupUrl = `${process.env.NEXT_PUBLIC_LABORATORY_URL}Binusmaya/CheckGroupConfirmation?classTransactionId=${studentGroupDetail.Group.ClassTransactionId}`;
+
+  const getGroupProject = async (isAccept) => {
+    const [newGroupProject, newCheckGroup] = await Promise.all([
+      axios
       .get(
         `${getGroupProjectUrl}${studentGroupDetail.Group.ClassTransactionId}`,
         {
@@ -33,11 +36,19 @@ export default function GroupForming({
             authorization: `Bearer ${userData.Token.token}`,
           },
         }
-      )
-      .then((response) => response.data);
+      ).then(res => res.data),
+      axios
+      .get(checkGroupUrl, {
+        headers: {
+          authorization: `Bearer ${userData.Token.token}`,
+        },
+      }).then(res => res.data),
+    ]) 
 
-    checkGroupConfirmation();
     setGroup(newGroupProject);
+    setCheckGroup(newCheckGroup);
+    if(isAccept)
+      router.replace(router.asPath);
   };
 
   const finalizeConfirmation = async (isAccept) => {
@@ -56,18 +67,17 @@ export default function GroupForming({
         headers: {
           authorization: `Bearer ${userData.Token.token}`,
         },
-      })
-      .then((res) => res.data);
+      });
 
     if (isAccept) {
       setAccLoading(false);
       setNotification("Successfully accepted the group!");
+      getGroupProject(true);
     } else {
       setDeclineLoading(false);
       setNotification("Successfully rejected the group!");
+      getGroupProject(false);
     }
-
-    getGroupProject();
   };
 
   const setNotification = (message) => {
@@ -78,22 +88,8 @@ export default function GroupForming({
     });
   };
 
-  const checkGroupConfirmation = async () => {
-    const checkGroupUrl = `${process.env.NEXT_PUBLIC_LABORATORY_URL}Binusmaya/CheckGroupConfirmation?classTransactionId=${studentGroupDetail.Group.ClassTransactionId}`;
-
-    const responseData = await axios
-      .get(checkGroupUrl, {
-        headers: {
-          authorization: `Bearer ${userData.Token.token}`,
-        },
-      })
-      .then((res) => res.data);
-
-    setCheckGroup(responseData);
-  };
-
   const renderCheckGroupConfirmation = () => {
-    if (!checkGroup) {
+    if (!checkGroup && studentGroupDetail.Group.Id == null) {
       return (
         <div className="mt-4 xl:mt-2 flex items-center flex-col sm:flex-row md:justify-between">
           <Note message="If the formed group does not match the one you selected, please press the reject button." />
@@ -122,7 +118,7 @@ export default function GroupForming({
     if (!studentGroupDetail.Group.Id) {
       return (
         <div className="mt-4 xl:mt-2">
-          <Note message="Please wait for all students accept the confirmation." />
+          <Note message="Please wait for all students to accept the confirmation." />
         </div>
       );
     }

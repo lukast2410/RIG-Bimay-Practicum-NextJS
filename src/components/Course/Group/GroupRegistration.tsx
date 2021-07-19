@@ -79,7 +79,7 @@ export default function GroupRegistration({studentGroupDetail, getGroupProject})
                           autoComplete=""
                           value={student.StudentNumber}
                           disabled
-                          className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-binus-blue focus:border-binus-blue sm:text-sm bg-gray-100 studentTxt"
+                          className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-binus-blue focus:border-binus-blue sm:text-sm bg-gray-100 studentTxt cursor-not-allowed"
                         />
                       )
 

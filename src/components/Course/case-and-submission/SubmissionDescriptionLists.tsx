@@ -35,13 +35,13 @@ export default function SubmissionDescriptionLists({
               <div className="py-2 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                 <dt className="text-sm font-medium text-gray-500">Hash Code</dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {task.Hash == null ? '-' : task.Hash}
+                {task.Hash == "" ? '-' : task.Hash}
                 </dd>
               </div>
               <div className="py-2 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                 <dt className="text-sm font-medium text-gray-500">File Size</dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {task.Size == null ? '-' : task.Size}
+                {task.Size == "" ? '-' : task.Size}
                 </dd>
               </div>
               <div className="py-2 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -49,7 +49,7 @@ export default function SubmissionDescriptionLists({
                   Uploaded Time
                 </dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {task.UploadTime == null ? '-' : task.UploadTime}
+                {task.UploadTime == "" ? '-' : task.UploadTime}
                 </dd>
               </div>
               <div className="py-2 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">

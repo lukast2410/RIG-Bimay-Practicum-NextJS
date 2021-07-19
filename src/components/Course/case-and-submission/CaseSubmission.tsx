@@ -133,7 +133,7 @@ export default function CaseSubmissionComponent({
       ClassTransactionId: classTransactionId,
     };
 
-    await axios
+    const uploadResponse = await axios
       .post(uploadUrl, uploadPayload, {
         headers: {
           authorization: `Bearer ${userData.Token.token}`,
@@ -145,11 +145,22 @@ export default function CaseSubmissionComponent({
     setLoadingProgressBar(false);
     setUploadPercentage(0);
 
-    setModal({
-      show: true,
-      message: "Successfully uploaded your answer!",
-      error: false,
-    });
+    
+    if(uploadResponse.Status === false){
+      setModal({
+        show: true,
+        message: `Failed to upload the answer! Please ask your assistant`,
+        error: true,
+      });
+    }
+    else {
+      setModal({
+        show: true,
+        message: "Successfully uploaded your answer!",
+        error: false,
+      });
+    }
+
   };
 
   const uploadBytes = async (
@@ -321,13 +332,13 @@ export default function CaseSubmissionComponent({
                             {task.Deadline}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {task.Hash == null ? "-" : task.Hash}
+                            {task.Hash == "" ? "-" : task.Hash}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {task.Size == null ? "-" : task.Size}
+                            {task.Size == "" ? "-" : task.Size}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {task.UploadTime == null ? "-" : task.UploadTime}
+                            {task.UploadTime == "" ? "-" : task.UploadTime}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-purple-600">
                             <Link

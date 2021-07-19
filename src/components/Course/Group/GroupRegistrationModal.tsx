@@ -46,7 +46,7 @@ export default function GroupRegistrationModal({setOpen, openRegistrationModal, 
       setModal({show: true, message: responseData.Message, error: true})
     }
     else {
-        getGroupProject();
+        getGroupProject(false);
     }
 
   }
