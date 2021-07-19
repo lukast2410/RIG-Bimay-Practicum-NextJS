@@ -14,8 +14,6 @@ export default function Schedule({ user, schedule, time }) {
     if (!user || !user.isLoggedIn) {
         return <h1>Loading...</h1>;
     }
-    console.log(time)
-    console.log(time + " a")
 
     return (
         <Layout title="Schedule">

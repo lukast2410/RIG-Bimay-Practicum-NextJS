@@ -10,7 +10,6 @@ import { SocketContext } from '../contexts/SocketContext'
 import { BellIcon, XIcon } from '@heroicons/react/solid'
 import { Transition } from '@headlessui/react'
 import { Notification } from '../classes/Notification'
-import Image from 'next/image'
 
 export default function Header() {
 	const router = useRouter()
@@ -21,7 +20,7 @@ export default function Header() {
 	const currentSemesterIndex = smt?.findIndex((x) => x.SemesterId == user?.SemesterId)
 	const currentSemester = smt?.find((x) => x.SemesterId == user?.SemesterId)
 	const socket = useContext(SocketContext)
-	const isStudent = user?.Data.Role != 'Software Teaching Assistant'
+	const isStudent = !user?.Data.Role.includes('Software Teaching Assistant')
 	const userSocketId = isStudent ? user?.Data.UserName : user?.Data.Name
 
 	useEffect(() => {
@@ -55,6 +54,17 @@ export default function Header() {
 			mounted = true
 		}
 	}, [user])
+
+	const getNotificationRedirect = () => {
+		if(notif?.Type == ''){
+			return '/'
+		}else if(notif?.Type == 'Group'){
+			return `/course/${notif.ContentId}/group`
+		}else if(notif?.Type == 'ExtraClass'){
+			return `/extra-class/${notif.ContentId}`
+		}
+		return '/'
+	}
 
 	useEffect(() => {
 		$(document).ready(function () {
@@ -144,8 +154,8 @@ export default function Header() {
 											<BellIcon className='h-6 w-6 text-white mt-0.5' aria-hidden='true' />
 										</div>
 										<div className='ml-3 w-0 flex-1'>
-											<Link href={`/extra-class/${notif?.ContentId}`}>
-												<a>
+											<Link href={getNotificationRedirect()}>
+												<a onClick={() => setShow(false)}>
 													<p className='text-sm font-bold text-white'>{notif?.Title}</p>
 													<p className='text-sm text-gray-100'>{notif?.Content}</p>
 												</a>

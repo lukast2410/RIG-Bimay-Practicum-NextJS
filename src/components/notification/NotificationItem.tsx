@@ -15,13 +15,17 @@ export default function NotificationItem({ notif }) {
 				NotificationId: notif.NotificationId,
 				StudentId: notif.details[0].StudentId,
 			}
-			const result = await axios.post(process.env.NEXT_PUBLIC_EXTRA_URL + 'NotificationDetail/Read', body, {
+			await axios.post(process.env.NEXT_PUBLIC_EXTRA_URL + 'NotificationDetail/Read', body, {
 				headers: {
 					authorization: 'Bearer ' + user.Token.token,
 				},
-			}).then(res => res.data)
+			}).then(res => router.push(link)).catch(err => {
+				alert('connection failed')
+				return
+			})
+		}else {
+			router.push(link)
 		}
-		router.push(link)
 	}
 
 	return (

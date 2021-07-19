@@ -12,7 +12,7 @@ export default function NotificationMenu() {
 	const [user, setUser] = useContext(UserContext)
 	const notification = user?.Notifications
 	const findRead = notification?.find((x) => x.details[0].IsRead == false)
-	const isStudent = user?.Data.Role != 'Software Teaching Assistant'
+	const isStudent = !user?.Data.Role.includes('Software Teaching Assistant')
 	const [isLoading, setLoading] = useState(false)
 
 	const handleMarkAllRead = async () => {

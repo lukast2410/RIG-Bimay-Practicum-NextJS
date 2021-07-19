@@ -1,14 +1,12 @@
 import axios from 'axios'
-import { Fragment, useContext, useEffect, useState } from 'react'
+import { useContext, useEffect } from 'react'
 import Layout from '../../components/Layout'
-import DividerWithMessage from '../../components/home/DividerWithMessage'
 import ExtraClassGrid from '../../components/extraclass/ExtraClassGrid'
 import { UserContext } from '../../contexts/UserContext'
 import withSession from '../../lib/session'
 import { PlusCircleIcon, ChevronDownIcon, XIcon, BellIcon } from '@heroicons/react/solid'
 import { Disclosure, Transition } from '@headlessui/react'
 import Link from 'next/link'
-import { SocketContext } from '../../contexts/SocketContext'
 
 export default function ExtraClass({ user, today, upcoming, previous }) {
 	const [userData, setUserData] = useContext(UserContext)
@@ -16,7 +14,7 @@ export default function ExtraClass({ user, today, upcoming, previous }) {
 		setUserData(user)
 	}, [user])
 
-	const isStudent = user?.Data.Role != 'Software Teaching Assistant'
+	const isStudent = !user?.Data.Role.includes('Software Teaching Assistant')
 
 	if (!user || !user.isLoggedIn) {
 		return <h1>Loading...</h1>
@@ -30,29 +28,31 @@ export default function ExtraClass({ user, today, upcoming, previous }) {
 				Content: 'Halo testinggggg',
 				ContentId: 'extraclass1',
 				Type: 'ExtraClass',
-				LastUpdate: "2021-10-20",
+				LastUpdate: '2021-10-20',
 				details: [
 					{
 						NotificationId: 'sadkansdlksan',
 						StudentId: '2301859820',
 						StudentName: 'Lukas',
-						IsRead: false
-					}
-				]
+						IsRead: false,
+					},
+				],
 			}
 			const pushUrl = `${process.env.NEXT_PUBLIC_EXTRA_URL}Push`
-			const result = await axios.post(pushUrl, notif, {
-				headers: {
-					authorization: 'Bearer ' + user.Token.token,
-				},
-			}).then(res => res.data)
+			const result = await axios
+				.post(pushUrl, notif, {
+					headers: {
+						authorization: 'Bearer ' + user.Token.token,
+					},
+				})
+				.then((res) => res.data)
 		}
 	}
 
 	const handleUnregister = async () => {
 		if (Notification.permission == 'granted') {
 			await navigator.serviceWorker.getRegistration().then((reg) => {
-				if(reg) reg.unregister()
+				if (reg) reg.unregister()
 			})
 		}
 	}
@@ -60,30 +60,29 @@ export default function ExtraClass({ user, today, upcoming, previous }) {
 	return (
 		<Layout title='Extra Class'>
 			<div className='max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8'>
-				<div className='flex justify-between py-4'>
-					<h2 className='text-xl font-bold text-gray-900'>Extra Class</h2>
-					{!isStudent && (
+				{!isStudent && (
+					<div className='flex justify-between pt-4'>
+						<h2 className='text-xl font-bold text-gray-900'>Extra Class</h2>
 						<Link href='/extra-class/add'>
 							<a className='inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-blue-700'>
 								Add New Extra Class
 								<PlusCircleIcon className='ml-2 -mr-0.5 h-4 w-4' aria-hidden='true' />
 							</a>
 						</Link>
-					)}
-				</div>
-				<div className='w-full pb-6'>
+					</div>
+				)}
+				{today.length == 0 && upcoming.length == 0 && previous.length == 0 && (
+					<div className='w-full bg-blue-200 text-center rounded-lg px-4 py-10 mt-4'>
+						<h1 className='text-blue-800 text-sm sm:text-2xl font-bold'>
+							There are no extra class available yet
+						</h1>
+						<p className='text-blue-700 text-xs sm:text-base font-medium'>
+							Please wait until your assistant add a new extra class
+						</p>
+					</div>
+				)}
+				<div className='w-full pb-6 pt-4'>
 					<div className='w-full p-2 bg-white rounded-2xl border border-gray-300'>
-						{today.length == 0 && upcoming.length == 0 && previous.length == 0 && (
-							<div className='py-4 px-5 rounded-md bg-red-50'>
-								<DividerWithMessage
-									message='There is no extra class'
-									bg='red-50'
-									size='lg'
-									mt=''
-									color='red-800'
-								/>
-							</div>
-						)}
 						{today.length > 0 && (
 							<Disclosure as='div' className={`${upcoming.length > 0 || previous.length > 0 ? 'mb-2' : ''}`}>
 								{({ open }) => (

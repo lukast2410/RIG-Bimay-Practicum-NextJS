@@ -21,31 +21,31 @@ export default withSession(async (req, res) => {
 					return res.data
 				})
 
-			const [smt, sub] = await Promise.all([
-				axios
-					.get(getSemesterUrl, {
+			const smt = await axios
+				.get(getSemesterUrl, {
+					headers: {
+						authorization: 'Bearer ' + data.Token.token,
+					},
+				})
+				.then((res) => {
+					return res.data
+				})
+
+			axios
+				.post(
+					subscribeUrl,
+					{
+						StudentId: data.User.UserName,
+						Subscription: subscription,
+					},
+					{
 						headers: {
 							authorization: 'Bearer ' + data.Token.token,
 						},
-					})
-					.then((res) => {
-						return res.data
-					}),
-				axios
-					.post(
-						subscribeUrl,
-						{
-							StudentId: data.User.UserName,
-							Subscription: subscription,
-						},
-						{
-							headers: {
-								authorization: 'Bearer ' + data.Token.token,
-							},
-						}
-					)
-					.then((res) => res.data),
-			])
+					}
+				)
+				.then((res) => res.data)
+				.catch(err => console.error(err))
 
 			user = {
 				isLoggedIn: true,
@@ -64,20 +64,21 @@ export default withSession(async (req, res) => {
 				axios.get(getAllSemesterUrl).then((res) => res.data),
 			])
 
-			const sub = await axios
-			.post(
-				subscribeUrl,
-				{
-					StudentId: data.User.UserName,
-					Subscription: subscription,
-				},
-				{
-					headers: {
-						authorization: 'Bearer ' + data.Token.access_token,
+			axios
+				.post(
+					subscribeUrl,
+					{
+						StudentId: data.User.UserName,
+						Subscription: subscription,
 					},
-				}
-			)
-			.then((res) => res.data)
+					{
+						headers: {
+							authorization: 'Bearer ' + data.Token.access_token,
+						},
+					}
+				)
+				.then((res) => res.data)
+				.catch((err) => console.error(err))
 
 			const name = data.User.Name
 			data.User.Name = data.User.UserName

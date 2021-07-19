@@ -16,7 +16,7 @@ export default function UpdateSuccess({ open, setOpen }) {
   const handleSignOut = async (e) => {
     e.preventDefault();
 
-    const isStudent = user?.Data.Role != 'Software Teaching Assistant'
+		const isStudent = !user?.Data.Role.includes('Software Teaching Assistant')
 		const id = isStudent ? user.Data.UserName : user.Data.Name
 		await axios.post(`/api/logout`)
 		socket.emit('userSignout', { id: id })

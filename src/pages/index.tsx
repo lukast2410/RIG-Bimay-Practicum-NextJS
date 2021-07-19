@@ -25,7 +25,7 @@ export default function Home({ user, procedures, recent, extra, practicum, exam 
 		return <h1>Loading...</h1>
 	}
 
-	const isStudent = user?.Data.Role != 'Software Teaching Assistant'
+	const isStudent = !user?.Data.Role.includes('Software Teaching Assistant')
 
 	return (
 		<Layout title='Binusmaya Practicum'>

@@ -9,7 +9,7 @@ import DetailsData from '../../components/extraclass/DetailsData'
 import withSession from '../../lib/session'
 import router from 'next/router'
 import { PrinterIcon, RefreshIcon } from '@heroicons/react/solid'
-import { formatDate } from '../api/helper'
+import { formatDate, formatNumber } from '../api/helper'
 import { handlePrintReport } from '../api/print-report'
 
 export default function ExtraClassDetail({ user, extra }) {
@@ -22,19 +22,21 @@ export default function ExtraClassDetail({ user, extra }) {
 		return <h1>Loading...</h1>
 	}
 
-	const isStudent = user?.Data.Role != 'Software Teaching Assistant'
-	const isOwner = !isStudent && (extra.Assistant1 == user.Data.Name || extra.Assistant2 == user.Data.Name)
-	const startAbsent = extra.StartAbsent == null ? null : new Date(extra.StartAbsent)
-	const endAbsent = extra.StartAbsent == null ? null : new Date(extra.StartAbsent)
-	endAbsent?.setMinutes(endAbsent?.getMinutes() + 30)
-	const absentNotStarted = startAbsent == null
-	const absentValid = startAbsent != null && Date.now() <= endAbsent.getTime()
-	const student = extra.details.find((x) => x.StudentId == user.Data.UserName)
-	const status = student?.Status ? student.Status : 'Absent'
 	const [open, setOpen] = useState(false)
 	const [isLoading, setLoading] = useState(false)
 	const [openConfirmation, setOpenConfirmation] = useState(false)
 	const [isSaving, setSaving] = useState(false)
+	const [startAbsent, setStartAbsent] = useState(
+		extra.StartAbsent == null ? null : new Date(extra.StartAbsent)
+	)
+	const isStudent = !user?.Data.Role.includes('Software Teaching Assistant')
+	const isOwner = !isStudent && (extra.Assistant1 == user.Data.Name || extra.Assistant2 == user.Data.Name)
+	const endAbsent = !startAbsent ? null : new Date(startAbsent)
+	endAbsent?.setMinutes(endAbsent?.getMinutes() + 30)
+	const absentNotStarted = startAbsent == null
+	const absentValid = startAbsent != null && Date.now() <= endAbsent?.getTime()
+	const student = extra.details.find((x) => x.StudentId == user.Data.UserName)
+	const [status, setStatus] = useState(student?.Status ? student.Status : 'Absent')
 
 	const handleDelete = async () => {
 		setLoading(true)
@@ -67,7 +69,7 @@ export default function ExtraClassDetail({ user, extra }) {
 
 		setSaving(false)
 		setOpenConfirmation(false)
-		router.replace(router.asPath)
+		if(result) setStartAbsent(new Date(result.StartAbsent))
 	}
 
 	const handleAbsentStudent = async () => {
@@ -75,7 +77,7 @@ export default function ExtraClassDetail({ user, extra }) {
 			const body = {
 				ExtraClassId: extra.ExtraClassId,
 				StudentId: user.Data.UserName,
-				StudentName: user.Data.Name,
+				StudentName: user.Data.Name.toUpperCase(),
 			}
 
 			setSaving(true)
@@ -87,6 +89,7 @@ export default function ExtraClassDetail({ user, extra }) {
 				})
 				.then((res) => res.data)
 
+			if(result) setStatus('Present')
 			setSaving(false)
 		}
 		router.replace(router.asPath)
@@ -169,9 +172,9 @@ export default function ExtraClassDetail({ user, extra }) {
 								<div className='flex items-end justify-center flex-col sm:flex-row sm:justify-end sm:items-center'>
 									<p className='font-medium text-gray-600'>
 										Absent Started at{' '}
-										{startAbsent?.getHours() +
+										{formatNumber(startAbsent.getHours()) +
 											':' +
-											startAbsent?.getMinutes() +
+											formatNumber(startAbsent.getMinutes()) +
 											', ' +
 											formatDate(startAbsent)}
 									</p>
@@ -197,7 +200,7 @@ export default function ExtraClassDetail({ user, extra }) {
 							)}
 						</div>
 					)}
-					{isStudent && absentValid && student?.Status != 'Present' && (
+					{isStudent && absentValid && status != 'Present' && (
 						<div className='py-5 border-t border-gray-200 flex justify-end mt-5'>
 							<button
 								type='submit'
@@ -283,7 +286,7 @@ export const getServerSideProps = withSession(async function ({ req, res, query 
 				permanent: false,
 			},
 		}
-	} 
+	}
 
 	const token = userData?.Token.token
 	const extraClassId = query.ExtraClassId
@@ -300,18 +303,15 @@ export const getServerSideProps = withSession(async function ({ req, res, query 
 				.then((res) => res.data.data)
 				.catch((err) => null),
 			axios
-				.get(
-					`${process.env.NEXT_PUBLIC_EXTRA_URL}Notification/UserNotification/Limit?start=0&max=5`,
-					{
-						headers: {
-							authorization: 'Bearer ' + token,
-						},
-						data: {
-							SemesterId: userData.SemesterId,
-							StudentId: userData.Data.Name
-						}
-					}
-				)
+				.get(`${process.env.NEXT_PUBLIC_EXTRA_URL}Notification/UserNotification/Limit?start=0&max=5`, {
+					headers: {
+						authorization: 'Bearer ' + token,
+					},
+					data: {
+						SemesterId: userData.SemesterId,
+						StudentId: userData.Data.Name,
+					},
+				})
 				.then((res) => res.data),
 		])
 
@@ -366,7 +366,7 @@ export const getServerSideProps = withSession(async function ({ req, res, query 
 			})
 			.then((res) => res.data.data)
 			.catch((err) => null),
-			axios
+		axios
 			.get(`${process.env.NEXT_PUBLIC_EXTRA_URL}Notification/UserNotification/Limit?start=0&max=5`, {
 				headers: {
 					authorization: 'Bearer ' + token,

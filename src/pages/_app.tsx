@@ -6,8 +6,8 @@ import { io } from 'socket.io-client'
 import { useEffect, useState } from 'react'
 import UpdateSuccess from '../components/UpdateSuccess'
 import { useRouter } from 'next/router'
-
-const socketServer = io('https://binusmaya-practicum.herokuapp.com', { transports: ['websocket'] })
+// https://binusmaya-practicum.herokuapp.com
+const socketServer = io('http://localhost:3100', { transports: ['websocket'] })
 
 function MyApp({ Component, pageProps }) {
 	const [open, setOpen] = useState(false)

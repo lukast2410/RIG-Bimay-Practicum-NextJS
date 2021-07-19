@@ -26,7 +26,7 @@ export default function GroupRegistration({studentGroupDetail, getGroupProject})
         let studentNIM = studentsElement[i] as HTMLInputElement;
         if(studentNIM.value == "" || studentNIM.value == undefined)
           continue;
-         
+        
         url += `binusian[]=${studentNIM.value}&`
       }
 

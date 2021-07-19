@@ -1,9 +1,30 @@
 import { RefreshIcon } from '@heroicons/react/solid'
+import axios from 'axios'
 import router from 'next/router'
+import { useContext, useState } from 'react'
+import { UserContext } from '../../contexts/UserContext'
 import DividerWithMessage from '../home/DividerWithMessage'
 import AttendanceList from './AttendanceList'
 
 export default function DetailsData({ extra }) {
+	const [userData, setUserData] = useContext(UserContext)
+	const [extraclass, setExtraClass] = useState(extra)
+	const [isLoading, setLoading] = useState(false)
+
+	const handleRefresh = async () => {
+		setLoading(true)
+		const result = await axios
+			.get(`${process.env.NEXT_PUBLIC_EXTRA_URL}ExtraClassHeader/${userData.SemesterId}/${extraclass.ExtraClassId}`, {
+				headers: {
+					authorization: 'Bearer ' + userData.Token.token,
+				},
+			})
+			.then((res) => res.data.data)
+		
+		setLoading(false)
+		if(result) setExtraClass(result)
+	}
+
 	return (
 		<div id='attendance'>
 			{extra.details.length > 0 ? (
@@ -14,9 +35,9 @@ export default function DetailsData({ extra }) {
 							<button
 								type='button'
 								className='inline-flex items-center px-2.5 py-1.5 border border-transparent text-xs font-medium rounded shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
-								onClick={() => router.replace(router.asPath)}
+								onClick={handleRefresh}
 							>
-								<RefreshIcon className='-ml-1 mr-2 h-4 w-4' aria-hidden='true' />
+								<RefreshIcon className={`${isLoading ? 'animate-spin' : ''} -ml-1 mr-2 h-4 w-4`} aria-hidden='true' />
 								Refresh
 							</button>
 						</div>
@@ -60,7 +81,7 @@ export default function DetailsData({ extra }) {
 												</tr>
 											</thead>
 											<tbody className='bg-white divide-y divide-gray-200'>
-												{extra.details.map((x, idx) => (
+												{extraclass.details.map((x, idx) => (
 													<tr key={idx}>
 														<td className='px-6 py-4 whitespace-nowrap'>
 															<div className='flex items-center justify-center'>

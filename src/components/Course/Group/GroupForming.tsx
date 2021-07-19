@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ModalContext } from "../../../contexts/ModalContext";
 import { UserContext } from "../../../contexts/UserContext";
 import Loading from "../Loading";
@@ -16,6 +16,11 @@ export default function GroupForming({
   
   const [userData, setUserData] = useContext(UserContext);
   const [group, setGroup] = useState(groupProject);
+  useEffect(() => {
+    setGroup(groupProject)
+    setCheckGroup(groupConfirmation)
+  }, [groupProject, groupConfirmation])
+
   const [checkGroup, setCheckGroup] = useState(groupConfirmation);
   const [isAccLoading, setAccLoading] = useState(false);
   const [isDeclineLoading, setDeclineLoading] = useState(false);
@@ -51,6 +56,21 @@ export default function GroupForming({
       router.replace(router.asPath);
   };
 
+  const deleteGroupNotification = async () => {
+    const course = userData.Courses.find(x => x.ClassTransactionId == studentGroupDetail.Group.ClassTransactionId)
+      await axios.delete(`${process.env.NEXT_PUBLIC_EXTRA_URL}Notification/Group`, {
+        headers: {
+          authorization: `Bearer ${userData.Token.token}`
+        },
+        data: {
+          StudentId: userData.Data.UserName,
+          SemesterId: userData.SemesterId,
+          Course: course.Subject,
+          Type: 'Group'
+        }
+      }).then(res => res.data).catch(err => console.clear())
+  }
+
   const finalizeConfirmation = async (isAccept) => {
     isAccept == true ? setAccLoading(true) : setDeclineLoading(true);
 
@@ -77,6 +97,7 @@ export default function GroupForming({
       setDeclineLoading(false);
       setNotification("Successfully rejected the group!");
       getGroupProject(false);
+      deleteGroupNotification();
     }
   };
 

@@ -14,7 +14,7 @@ export default function Navbar() {
 	const router = useRouter()
 	const courses: any[] = user?.Courses
 	const [hover, setHover] = useState(false)
-	const isStudent = user?.Data.Role != 'Software Teaching Assistant'
+	const isStudent = !user?.Data.Role.includes('Software Teaching Assistant')
 	const socket = useContext(SocketContext)
 
 	const handleSignOut = async (e) => {

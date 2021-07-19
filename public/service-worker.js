@@ -41,8 +41,8 @@ self.addEventListener('notificationclick', function(e) {
     if (clients.openWindow){
       if(notification.data.type == 'ExtraClass'){
         return clients.openWindow('/extra-class/' + notification.data.link);
-      }else{
-        return clients.openWindow('/');
+      }else if(notification.data.type == 'Group'){
+        return clients.openWindow('/course/' + notification.data.link + '/group');
       }
     }
   }))

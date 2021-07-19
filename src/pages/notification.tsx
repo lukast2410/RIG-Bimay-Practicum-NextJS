@@ -20,8 +20,9 @@ export default function ExtraClass({ user, listNotif }) {
 	}
 
 	const endPage = Math.ceil(listNotif.count / 10.0)
-	const isStudent = user?.Data.Role != 'Software Teaching Assistant'
+	const isStudent = !user?.Data.Role.includes('Software Teaching Assistant')
 	const [isLoading, setLoading] = useState(false)
+	const [notifications, setNotifications] = useState(listNotif.data)
 
 	const handleMarkAllRead = async () => {
 		const userId = isStudent ? user?.Data.UserName : user?.Data.Name
@@ -29,7 +30,7 @@ export default function ExtraClass({ user, listNotif }) {
 			StudentId: userId,
 		}
 
-    setLoading(true)
+		setLoading(true)
 		const result = await axios
 			.post(process.env.NEXT_PUBLIC_EXTRA_URL + 'NotificationDetail/MarkAllRead', body, {
 				headers: {
@@ -37,43 +38,55 @@ export default function ExtraClass({ user, listNotif }) {
 				},
 			})
 			.then((res) => res.data)
-    setLoading(false)
-
-		router.push(router.asPath)
+		
+		if(result){
+			notifications.forEach(x => {
+				x.details[0].IsRead = true
+			});
+			setNotifications(notifications)
+		}
+		setLoading(false)
 	}
 
 	return (
 		<Layout title='Extra Class'>
-			<div className='max-w-screen-lg mx-auto px-4 sm:px-6 lg:px-8 pb-6'>
-				{listNotif && listNotif.data && listNotif.data.length > 0 ? (
-					<>
-						<div className='pt-6 pb-3 border-b border-gray-200 sm:flex sm:items-center sm:justify-between'>
-							<h3 className='text-lg leading-6 font-bold text-gray-900'>Notifications</h3>
-							<div className='mt-1.5 sm:mt-0 sm:ml-4'>
-								<button
-									type='button'
-									className='inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
-									onClick={handleMarkAllRead}
-								>
-									<CheckCircleIcon className={`${isLoading ? 'animate-spin' : ''} -ml-1 mr-2 h-5 w-5`} aria-hidden='true' />
-									Mark all read
-								</button>
-							</div>
+			{listNotif && listNotif.data && listNotif.data.length > 0 ? (
+				<div className='max-w-screen-lg mx-auto px-4 sm:px-6 lg:px-8 pb-6'>
+					<div className='pt-6 pb-3 border-b border-gray-200 sm:flex sm:items-center sm:justify-between'>
+						<h3 className='text-lg leading-6 font-bold text-gray-900'>Notifications</h3>
+						<div className='mt-1.5 sm:mt-0 sm:ml-4'>
+							<button
+								type='button'
+								className='inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
+								onClick={handleMarkAllRead}
+							>
+								<CheckCircleIcon
+									className={`${isLoading ? 'animate-spin' : ''} -ml-1 mr-2 h-5 w-5`}
+									aria-hidden='true'
+								/>
+								Mark all read
+							</button>
 						</div>
-						<ul className='divide-y divide-gray-200'>
-							{listNotif.data.map((nt, idx) => (
-								<NotificationList notif={nt} key={idx} />
-							))}
-						</ul>
-						<NotifPagination end={endPage} />
-					</>
-				) : (
-					<div className='w-full bg-blue-200 text-center rounded-lg px-4 py-10 mt-4'>
-						<h1 className='text-blue-800 text-base sm:text-2xl font-bold'>There are no notification available yet</h1>
-						<p className='text-blue-700 text-sm sm:text-base font-medium'>Please wait until receive a new notification.</p>
 					</div>
-				)}
-			</div>
+					<ul className='divide-y divide-gray-200'>
+						{notifications.map((nt, idx) => (
+							<NotificationList notif={nt} key={idx} />
+						))}
+					</ul>
+					<NotifPagination end={endPage} />
+				</div>
+			) : (
+				<div className='max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 pb-6'>
+					<div className='w-full bg-blue-200 text-center rounded-lg px-4 py-10 mt-4'>
+						<h1 className='text-blue-800 text-sm sm:text-2xl font-bold'>
+							There are no notification available yet
+						</h1>
+						<p className='text-blue-700 text-xs sm:text-base font-medium'>
+							Please wait until receive a new notification.
+						</p>
+					</div>
+				</div>
+			)}
 		</Layout>
 	)
 }
