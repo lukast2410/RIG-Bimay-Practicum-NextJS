@@ -83,7 +83,7 @@ export default function Modal() {
                     as="h3"
                     className="text-lg leading-6 font-medium text-gray-900"
                   >
-                    Alert!
+                    {modal.error ? "Error!" : "Success!"}
                   </Dialog.Title>
                   <div className="mt-2">
                     <p className="text-sm text-gray-500">{modal.message}</p>
