@@ -44,7 +44,7 @@ export default withSession(async (req, res) => {
 						},
 					}
 				)
-				.then((res) => console.log(res.data))
+				.then((res) => true)
 				.catch(err => null)
 
 			user = {
@@ -54,7 +54,6 @@ export default withSession(async (req, res) => {
 				Token: data.Token,
 			}
 		} else if (role == 'Assistant') {
-			console.log(1)
 			const [data, smt] = await Promise.all([
 				axios
 					.post(astLoginUrl, {
@@ -78,7 +77,7 @@ export default withSession(async (req, res) => {
 						},
 					}
 				)
-				.then((res) => console.log(res.data))
+				.then((res) => true)
 				.catch((err) => null)
 
 			const name = data.User.Name

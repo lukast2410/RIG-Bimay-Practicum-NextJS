@@ -17,7 +17,7 @@ function MyApp({ Component, pageProps }) {
 		navigator.permissions.query({ name: 'notifications' }).then((permission) => {
 			permission.onchange = () => {
 				if (permission.state == 'granted') {
-					navigator.serviceWorker.register('/sw.js')
+					navigator.serviceWorker.register('/service-worker.js')
 					if (router.asPath != '/auth/login') {
 						setOpen(true)
 					}
@@ -30,7 +30,7 @@ function MyApp({ Component, pageProps }) {
 		} else if (Notification.permission == 'denied') {
 			unregisterServiceWorker()
 		} else if (Notification.permission == 'granted') {
-			navigator.serviceWorker.register('/sw.js')
+			navigator.serviceWorker.register('/service-worker.js')
 		}
 	}, [])
 

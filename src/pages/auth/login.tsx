@@ -36,7 +36,6 @@ export default function Login() {
 			}
 			return null
 		})
-		console.log(sub)
 		let body = {
 			username: e.target.username.value,
 			password: e.target.password.value,
