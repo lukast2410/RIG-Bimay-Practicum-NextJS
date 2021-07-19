@@ -14,14 +14,26 @@ export default function Schedule({ user, schedule, time }) {
     if (!user || !user.isLoggedIn) {
         return <h1>Loading...</h1>;
     }
-    console.log(time)
-    console.log(time + " a")
+
+    function filterSchedule(): void {
+        schedule = schedule.filter((item) => {
+            const currDate = new Date(time);
+            const itemDate = new Date(item.Date);
+            const itemTime = item.Time.substring(0, 5).split(":");
+
+            var parsedHour: number = +itemTime[0];
+            var parsedMinute: number = +itemTime[1];
+            itemDate.setHours(parsedHour, parsedMinute + 120, 0, 0);
+            currDate.setHours(currDate.getHours() + 3, currDate.getMinutes() - 9, 0, 0)
+            console.log(currDate + " // " + (itemDate.getTime() > currDate.getTime()));
+            return itemDate.getTime() > currDate.getTime();
+        });
+    }
+
+    filterSchedule();
 
     return (
         <Layout title="Schedule">
-            <div>
-                {time}
-            </div>
             <div className="hidden sm:block">
                 <ScheduleTable schedule={schedule} />
             </div>
@@ -174,29 +186,27 @@ export const getServerSideProps = withSession(async function ({ req, res }) {
         });
     }
 
-    function filterSchedule(): void {
-        schedule = schedule.filter((item) => {
-            const currDate = new Date(time);
-            const itemDate = new Date(item.Date);
-            const itemTime = item.Time.substring(0, 5).split(":");
+    // function filterSchedule(): void {
+    //     schedule = schedule.filter((item) => {
+    //         const currDate = new Date(time);
+    //         const itemDate = new Date(item.Date);
+    //         const itemTime = item.Time.substring(0, 5).split(":");
 
-            var parsedHour: number = +itemTime[0];
-            var parsedMinute: number = +itemTime[1];
-            itemDate.setHours(parsedHour, parsedMinute + 120, 0, 0);
-            return itemDate.getTime() > currDate.getTime();
-        });
-    }
+    //         var parsedHour: number = +itemTime[0];
+    //         var parsedMinute: number = +itemTime[1];
+    //         itemDate.setHours(parsedHour, parsedMinute + 120, 0, 0);
+    //         return itemDate.getTime() > currDate.getTime();
+    //     });
+    // }
 
     sortScheduleByDefault();
-    filterSchedule();
+    // filterSchedule();
 
     const user = {
         ...userData,
         Semesters: smt,
         Courses: softwareCourse,
     };
-
-    // schedule = [];
 
     return {
         props: {
