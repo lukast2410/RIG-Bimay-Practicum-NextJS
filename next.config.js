@@ -9,7 +9,8 @@ module.exports = withPWA({
         dest: 'public',
         register: true,
         skipWaiting: true,
-        disable: prod ? false : true
+        disable: prod ? false : true,
+        sw: '/service-worker.js'
     },
     images: {
         domains: ['laboratory.binus.ac.id'],
