@@ -22,9 +22,7 @@ export default function ScheduleTable({ schedule }) {
         setSortedSchedule([...schedule]);
     };
 
-    const sortScheduleByDate = async (e) => {
-        e.preventDefault();
-
+    const sortScheduleByDate = () => {
         schedule.sort((item1, item2) => {
             const a = new Date(item1.Date);
             const b = new Date(item2.Date);
@@ -46,8 +44,7 @@ export default function ScheduleTable({ schedule }) {
         setSortedSchedule([...schedule]);
     };
 
-    const sortScheduleBySession = async (e) => {
-        e.preventDefault();
+    const sortScheduleBySession = () => {
         schedule.sort((item1, item2) => {
             const a = item1.Session;
             const b = item2.Session;
@@ -59,11 +56,11 @@ export default function ScheduleTable({ schedule }) {
 
     return (
         <>
-            <div className="max-w-screen-xl mx-auto flex items-center">
+            <div className="max-w-screen-2xl mx-auto flex items-center">
                 <div className="mx-auto flex flex-col py-4 w-full">
                     <div className="-my-2 overflow-x-auto">
                         {!sortedSchedule.length ? (
-                            <div className="overflow-hidden rounded-lg max-w-screen-lg mx-auto mt-4">
+                            <div className="overflow-hidden rounded-lg max-w-screen-2xl mx-auto mt-4">
                                 <div className="px-4">
                                     <div className="w-full bg-blue-200 text-center rounded-lg px-4 py-10 mt-4">
                                         <h1 className="text-blue-800 text-base sm:text-2xl font-bold">
