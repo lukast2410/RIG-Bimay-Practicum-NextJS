@@ -49,7 +49,7 @@ export default function ExtraClass({ user, listNotif }) {
 	}
 
 	return (
-		<Layout title='Extra Class'>
+		<Layout title='Notification'>
 			{listNotif && listNotif.data && listNotif.data.length > 0 ? (
 				<div className='max-w-screen-lg mx-auto px-4 sm:px-6 lg:px-8 pb-6'>
 					<div className='pt-6 pb-3 border-b border-gray-200 sm:flex sm:items-center sm:justify-between'>

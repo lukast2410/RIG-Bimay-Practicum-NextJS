@@ -18,7 +18,7 @@ export default function Modal() {
       error: modal.error,
     });
 
-    if(modal.error == false && modal.message === 'Successfully uploaded your answer!') 
+    if(modal.error == false && modal.message === 'Successfully uploaded your answer! Please download your answer to confirm!') 
       router.replace(router.asPath);
   }
 

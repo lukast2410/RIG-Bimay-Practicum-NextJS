@@ -9,7 +9,6 @@ import LearningOutcome from "../../../components/Course/course-information/Learn
 import GroupForming from "../../../components/Course/Group/GroupForming";
 import axios from "axios";
 import CourseBreadcrumbs from "../../../components/Course/course-information/Breadcrumbs";
-import DividerWithMessage from "../../../components/home/DividerWithMessage";
 import ReactHtmlParser from "react-html-parser";
 import { ModalProvider } from "../../../contexts/ModalContext";
 import Alert from "../../../components/Course/Alert";
@@ -73,10 +72,7 @@ export default function Group({
             />
           </div>
           <div className="flex-none">
-            <ClassDescription
-              subject={subject}
-              studentGroupDetail={courseDetail.StudentGroupDetail}
-            />
+						<ClassDescription subject={subject} studentGroupDetail={courseDetail.StudentGroupDetail}/>
           </div>
         </div>
         <div className="course-tab mt-6">

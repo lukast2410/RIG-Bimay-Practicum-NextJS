@@ -12,7 +12,7 @@ import CourseBreadcrumbs from "../../../components/Course/course-information/Bre
 import SessionMaterialDisclosure from "../../../components/Course/session-materials/SessionMaterialDisclosure";
 import ReactHtmlParser from 'react-html-parser';
 
-export default function SessionAndMaterials({ user, subject, courseDetail }) {
+export default function SessionAndMaterials({ user, subject, courseDetail, vbl }) {
   const [userData, setUserData] = useContext(UserContext);
   const [optionValue, setOptionValue] = useState(1);
   const section = useRef(null);
@@ -61,7 +61,7 @@ export default function SessionAndMaterials({ user, subject, courseDetail }) {
             />
           </div>
           <div className="flex-none">
-            <ClassDescription subject={subject} studentGroupDetail={courseDetail.StudentGroupDetail} />
+						<ClassDescription subject={subject} studentGroupDetail={courseDetail.StudentGroupDetail}/>
           </div>
         </div>
         <div className="course-tab mt-6">
@@ -140,10 +140,12 @@ export default function SessionAndMaterials({ user, subject, courseDetail }) {
           <SessionMaterialDisclosure
             sessionDetail={courseDetail.SessionDetail}
             classTransactionId={subject.ClassTransactionId}
+            vbl={vbl}
           />
           <SessionMaterial
             sessionDetail={courseDetail.SessionDetail}
             classTransactionId={subject.ClassTransactionId}
+            vbl={vbl}
           />
         </div>
       </div>
@@ -199,7 +201,7 @@ export const getServerSideProps = withSession(async function ({
   }
 
   const url = `${process.env.NEXT_PUBLIC_LABORATORY_URL}Binusmaya/GetScheduleDetail`;
-  const [smt, courseDetail, notif] = await Promise.all([
+  const [smt, courseDetail, notif, vbl] = await Promise.all([
     axios
       .get(process.env.NEXT_PUBLIC_LABORATORY_URL + "Binusmaya/GetSemester", {
         headers: {
@@ -230,6 +232,13 @@ export const getServerSideProps = withSession(async function ({
 				},
 			})
 			.then((res) => res.data),
+      axios
+        .get(`${process.env.NEXT_PUBLIC_LABORATORY_URL}general/GetVBL?coId=${subject.CourseOutlineId}`, {
+          headers: {
+            authorization: 'Bearer ' + token,
+          },
+        })
+        .then((res) => res.data),
 	])
 
 	const softwareCourse = courses.filter((course) => course.Laboratory === 'Software')
@@ -246,6 +255,7 @@ export const getServerSideProps = withSession(async function ({
       user,
       subject,
       courseDetail,
+      vbl
     },
   };
 });

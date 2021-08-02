@@ -5,6 +5,7 @@ import Link from "next/link";
 export default function SessionMaterialDisclosure({
   sessionDetail,
   classTransactionId,
+  vbl
 }) {
   const getFormattedDate = (date: string) => {
     const days = [
@@ -100,6 +101,27 @@ export default function SessionMaterialDisclosure({
                                 className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-binus-blue bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-binus-blue"
                               >
                                 Download Case
+                              </button>
+                            </Link>
+                          )}
+                        </dd>
+                      </div>
+                      <div className="py-2 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6 pb-4">
+                        <dt className="text-sm font-medium text-gray-500">
+                          Video Learning
+                        </dt>
+                        <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                          {!vbl[idx] || !vbl[idx].URL || vbl[idx].URL == '' ? (
+                            <p>No Video</p>
+                          ) : (
+                            <Link
+                              href={vbl[idx].URL}
+                            >
+                              <button
+                                type="button"
+                                className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-binus-blue bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-binus-blue"
+                              >
+                                Link Video
                               </button>
                             </Link>
                           )}

@@ -34,7 +34,7 @@ export default function ExtraClass({ user, today, upcoming, previous }) {
 						</Link>
 					</div>
 				)}
-				{today.length == 0 && upcoming.length == 0 && previous.length == 0 && (
+				{today.length == 0 && upcoming.length == 0 && previous.length == 0 ? (
 					<div className='w-full bg-blue-200 text-center rounded-lg px-4 py-10 mt-4'>
 						<h1 className='text-blue-800 text-sm sm:text-2xl font-bold'>
 							There are no extra class available yet
@@ -43,110 +43,111 @@ export default function ExtraClass({ user, today, upcoming, previous }) {
 							Please wait until your assistant add a new extra class
 						</p>
 					</div>
-				)}
-				<div className='w-full pb-6 pt-4'>
-					<div className='w-full p-2 bg-white rounded-2xl border border-gray-300'>
-						{today.length > 0 && (
-							<Disclosure as='div' className={`${upcoming.length > 0 || previous.length > 0 ? 'mb-2' : ''}`}>
-								{({ open }) => (
-									<>
-										<Disclosure.Button className='flex justify-between w-full px-8 py-4 text-md font-bold text-left text-blue-800 bg-blue-100 rounded-lg hover:bg-blue-200 focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-opacity-75'>
-											<span>Today Extra Class</span>
-											<ChevronDownIcon
-												className={`${
-													open ? 'transform -rotate-180' : ''
-												} w-6 h-6 text-blue-800 transition duration-200 ease-in`}
-											/>
-										</Disclosure.Button>
-										<Transition
-											show={open}
-											enter='transition duration-200 ease-out'
-											enterFrom='transform scale-95 opacity-0'
-											enterTo='transform scale-100 opacity-100'
-											leave='transition duration-150 ease-out'
-											leaveFrom='transform scale-100 opacity-100'
-											leaveTo='transform scale-95 opacity-0'
-										>
-											<Disclosure.Panel static className='px-2 py-2 lg:px-4 lg:pt-4 text-sm text-gray-500'>
-												<ul className='divide-y divide-gray-300'>
-													{today.map((x, idx) => (
-														<ExtraClassGrid key={idx} extra={x} />
-													))}
-												</ul>
-											</Disclosure.Panel>
-										</Transition>
-									</>
-								)}
-							</Disclosure>
-						)}
-						{upcoming.length > 0 && (
-							<Disclosure as='div' className={`${previous.length > 0 ? 'mb-2' : ''}`}>
-								{({ open }) => (
-									<>
-										<Disclosure.Button className='flex justify-between w-full px-8 py-4 text-md font-bold text-left text-blue-800 bg-blue-100 rounded-lg hover:bg-blue-200 focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-opacity-75'>
-											<span>Upcoming Extra Class</span>
-											<ChevronDownIcon
-												className={`${
-													open ? 'transform -rotate-180' : ''
-												} w-6 h-6 text-blue-800 transition duration-200 ease-in`}
-											/>
-										</Disclosure.Button>
-										<Transition
-											show={open}
-											enter='transition duration-200 ease-out'
-											enterFrom='transform scale-95 opacity-0'
-											enterTo='transform scale-100 opacity-100'
-											leave='transition duration-150 ease-out'
-											leaveFrom='transform scale-100 opacity-100'
-											leaveTo='transform scale-95 opacity-0'
-										>
-											<Disclosure.Panel static className='px-2 py-2 lg:px-4 lg:pt-4 text-sm text-gray-500'>
-												<ul className='divide-y divide-gray-200'>
-													{upcoming.map((x, idx) => (
-														<ExtraClassGrid key={idx} extra={x} />
-													))}
-												</ul>
-											</Disclosure.Panel>
-										</Transition>
-									</>
-								)}
-							</Disclosure>
-						)}
-						{previous.length > 0 && (
-							<Disclosure as='div' className=''>
-								{({ open }) => (
-									<>
-										<Disclosure.Button className='flex justify-between w-full px-8 py-4 text-md font-bold text-left text-blue-800 bg-blue-100 rounded-lg hover:bg-blue-200 focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-opacity-75'>
-											<span>Previous Extra Class</span>
-											<ChevronDownIcon
-												className={`${
-													open ? 'transform -rotate-180' : ''
-												} w-6 h-6 text-blue-800 transition duration-200 ease-in`}
-											/>
-										</Disclosure.Button>
-										<Transition
-											show={open}
-											enter='transition duration-200 ease-out'
-											enterFrom='transform scale-95 opacity-0'
-											enterTo='transform scale-100 opacity-100'
-											leave='transition duration-150 ease-out'
-											leaveFrom='transform scale-100 opacity-100'
-											leaveTo='transform scale-95 opacity-0'
-										>
-											<Disclosure.Panel static className='px-2 py-2 lg:px-4 lg:pt-4 text-sm text-gray-500'>
-												<ul className='divide-y divide-gray-200'>
-													{previous.map((x, idx) => (
-														<ExtraClassGrid key={idx} extra={x} />
-													))}
-												</ul>
-											</Disclosure.Panel>
-										</Transition>
-									</>
-								)}
-							</Disclosure>
-						)}
+				) : (
+					<div className='w-full pb-6 pt-4'>
+						<div className='w-full p-2 bg-white rounded-2xl border border-gray-300'>
+							{today.length > 0 && (
+								<Disclosure as='div' className={`${upcoming.length > 0 || previous.length > 0 ? 'mb-2' : ''}`}>
+									{({ open }) => (
+										<>
+											<Disclosure.Button className='flex justify-between w-full px-8 py-4 text-md font-bold text-left text-blue-800 bg-blue-100 rounded-lg hover:bg-blue-200 focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-opacity-75'>
+												<span>Today Extra Class</span>
+												<ChevronDownIcon
+													className={`${
+														open ? 'transform -rotate-180' : ''
+													} w-6 h-6 text-blue-800 transition duration-200 ease-in`}
+												/>
+											</Disclosure.Button>
+											<Transition
+												show={open}
+												enter='transition duration-200 ease-out'
+												enterFrom='transform scale-95 opacity-0'
+												enterTo='transform scale-100 opacity-100'
+												leave='transition duration-150 ease-out'
+												leaveFrom='transform scale-100 opacity-100'
+												leaveTo='transform scale-95 opacity-0'
+											>
+												<Disclosure.Panel static className='px-2 py-2 lg:px-4 lg:pt-4 text-sm text-gray-500'>
+													<ul className='divide-y divide-gray-300'>
+														{today.map((x, idx) => (
+															<ExtraClassGrid key={idx} extra={x} />
+														))}
+													</ul>
+												</Disclosure.Panel>
+											</Transition>
+										</>
+									)}
+								</Disclosure>
+							)}
+							{upcoming.length > 0 && (
+								<Disclosure as='div' className={`${previous.length > 0 ? 'mb-2' : ''}`}>
+									{({ open }) => (
+										<>
+											<Disclosure.Button className='flex justify-between w-full px-8 py-4 text-md font-bold text-left text-blue-800 bg-blue-100 rounded-lg hover:bg-blue-200 focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-opacity-75'>
+												<span>Upcoming Extra Class</span>
+												<ChevronDownIcon
+													className={`${
+														open ? 'transform -rotate-180' : ''
+													} w-6 h-6 text-blue-800 transition duration-200 ease-in`}
+												/>
+											</Disclosure.Button>
+											<Transition
+												show={open}
+												enter='transition duration-200 ease-out'
+												enterFrom='transform scale-95 opacity-0'
+												enterTo='transform scale-100 opacity-100'
+												leave='transition duration-150 ease-out'
+												leaveFrom='transform scale-100 opacity-100'
+												leaveTo='transform scale-95 opacity-0'
+											>
+												<Disclosure.Panel static className='px-2 py-2 lg:px-4 lg:pt-4 text-sm text-gray-500'>
+													<ul className='divide-y divide-gray-200'>
+														{upcoming.map((x, idx) => (
+															<ExtraClassGrid key={idx} extra={x} />
+														))}
+													</ul>
+												</Disclosure.Panel>
+											</Transition>
+										</>
+									)}
+								</Disclosure>
+							)}
+							{previous.length > 0 && (
+								<Disclosure as='div' className=''>
+									{({ open }) => (
+										<>
+											<Disclosure.Button className='flex justify-between w-full px-8 py-4 text-md font-bold text-left text-blue-800 bg-blue-100 rounded-lg hover:bg-blue-200 focus:outline-none focus-visible:ring focus-visible:ring-blue-500 focus-visible:ring-opacity-75'>
+												<span>Previous Extra Class</span>
+												<ChevronDownIcon
+													className={`${
+														open ? 'transform -rotate-180' : ''
+													} w-6 h-6 text-blue-800 transition duration-200 ease-in`}
+												/>
+											</Disclosure.Button>
+											<Transition
+												show={open}
+												enter='transition duration-200 ease-out'
+												enterFrom='transform scale-95 opacity-0'
+												enterTo='transform scale-100 opacity-100'
+												leave='transition duration-150 ease-out'
+												leaveFrom='transform scale-100 opacity-100'
+												leaveTo='transform scale-95 opacity-0'
+											>
+												<Disclosure.Panel static className='px-2 py-2 lg:px-4 lg:pt-4 text-sm text-gray-500'>
+													<ul className='divide-y divide-gray-200'>
+														{previous.map((x, idx) => (
+															<ExtraClassGrid key={idx} extra={x} />
+														))}
+													</ul>
+												</Disclosure.Panel>
+											</Transition>
+										</>
+									)}
+								</Disclosure>
+							)}
+						</div>
 					</div>
-				</div>
+				)}
 			</div>
 		</Layout>
 	)

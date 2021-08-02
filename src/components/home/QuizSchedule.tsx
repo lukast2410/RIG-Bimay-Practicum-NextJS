@@ -183,10 +183,7 @@ export default function QuizSchedule({ quiz }) {
 			source: Url
 		}
 
-		let urlUploadFile = 'User/UploadExam/' + requestData.fileItemId
-		if(typeExam != 'Exam'){
-			urlUploadFile = 'User/Upload/' + requestData.fileItemId
-		}
+		let urlUploadFile = 'User/Upload/' + requestData.fileItemId
 
 		const test = await axios.post(`${process.env.NEXT_PUBLIC_LABORATORY_URL}${urlUploadFile}`, requestData, {
 			headers: {

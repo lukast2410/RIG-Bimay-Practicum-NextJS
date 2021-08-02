@@ -1,6 +1,6 @@
 import axios from "axios";
 import Link from "next/link";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../../../contexts/UserContext";
 import Note from "../Note";
 import { v1 as uuidv1 } from "uuid";
@@ -155,7 +155,7 @@ export default function CaseSubmissionComponent({
     else {
       setModal({
         show: true,
-        message: "Successfully uploaded your answer!",
+        message: "Successfully uploaded your answer! Please download your answer to confirm!",
         error: false,
       });
     }
@@ -277,12 +277,6 @@ export default function CaseSubmissionComponent({
                           scope="col"
                           className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
                         >
-                          File Size
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
-                        >
                           Uploaded Time
                         </th>
                         <th
@@ -315,9 +309,6 @@ export default function CaseSubmissionComponent({
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             {task.Hash == "" ? "-" : task.Hash}
-                          </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                            {task.Size == "" ? "-" : task.Size}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                             {task.UploadTime == "" ? "-" : task.UploadTime}

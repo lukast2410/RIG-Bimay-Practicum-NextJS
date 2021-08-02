@@ -16,18 +16,20 @@ export default function Login() {
 	})
 	const [isLogin, setLogin] = useState(false)
 	const [isFailed, setFailed] = useState(false)
+	const [made, setMade] = useState('Research and Development')
 
 	const handleLogin = async (e) => {
 		e.preventDefault()
 
 		setLogin(true)
 		const sub = await navigator.serviceWorker.getRegistration().then(async (reg) => {
-			if(reg){
+			if (reg) {
 				return await reg.pushManager.getSubscription().then(async (sub) => {
-					if(sub){
+					if (sub) {
 						return sub.toJSON()
-					}else{
-						const applicationServerKey = 'BJKekXcDQgJ_y0kO7Wb2oYMWLodN-79U9d3ydfgTlOmxwkGB7IPU9tuObaQRfhSGuLAa9sIFt1mFhkVggjQBOKY'
+					} else {
+						const applicationServerKey =
+							'BJKekXcDQgJ_y0kO7Wb2oYMWLodN-79U9d3ydfgTlOmxwkGB7IPU9tuObaQRfhSGuLAa9sIFt1mFhkVggjQBOKY'
 						const options = { applicationServerKey, userVisibleOnly: true }
 						const subscription = await reg.pushManager.subscribe(options)
 						return subscription.toJSON()
@@ -40,7 +42,7 @@ export default function Login() {
 			username: e.target.username.value,
 			password: e.target.password.value,
 			role: 'Student',
-			subscription: sub
+			subscription: sub,
 		}
 
 		const numbers = /^[0-9]+$/
@@ -121,7 +123,7 @@ export default function Login() {
 									autoFocus={true}
 									className={`rounded-md ${styles.inputComponent}`}
 								/>
-								<UserCircleIcon className={`${styles.fa} h-5 w-5`}/>
+								<UserCircleIcon className={`${styles.fa} h-5 w-5`} />
 							</div>
 
 							<div className={`${styles.inputControl}`}>
@@ -132,7 +134,7 @@ export default function Login() {
 									required
 									className={`rounded-md ${styles.inputComponent}`}
 								/>
-								<LockClosedIcon className={`${styles.fa} h-5 w-5`}/>
+								<LockClosedIcon className={`${styles.fa} h-5 w-5`} />
 							</div>
 
 							<button
@@ -160,23 +162,33 @@ export default function Login() {
 											d='M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z'
 										></path>
 									</svg>
-								) : null }
+								) : null}
 								Login
 							</button>
 						</div>
 					</form>
 					<div className={`relative text-white text-center font-bold pt-2 sm:hidden`}>
-						<div className='absolute w-full'>
+						<div
+							className='absolute w-full'
+							title='Made by LT20-1 CV20-1 DX20-1'
+							onMouseEnter={() => setMade('LT20-1 CV20-1 DX20-1')}
+							onMouseLeave={() => setMade('Research and Development')}
+						>
 							<div className=''>Copyright © 2021</div>
-							<div className=''>Research and Development</div>
+							<div className=''>{made}</div>
 							<div className=''>SLC - Binus University</div>
 						</div>
 					</div>
 				</div>
 			</div>
 			<footer className={`hidden sm:block ${styles.textCenter}`}>
-				<div className={styles.desktopFooter}>
-					Copyright © 2021 - Research and Development - SLC - Binus University
+				<div
+					className={styles.desktopFooter}
+					title='Made by LT20-1 CV20-1 DX20-1'
+					onMouseEnter={() => setMade('LT20-1 CV20-1 DX20-1')}
+					onMouseLeave={() => setMade('Research and Development')}
+				>
+					Copyright © 2021 - {made} - SLC - Binus University
 				</div>
 			</footer>
 			<Particle

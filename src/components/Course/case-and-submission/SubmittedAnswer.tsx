@@ -92,12 +92,6 @@ export default function SubmittedAnswer({ submittedAnswers }) {
                           scope="col"
                           className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
                         >
-                          File Size (Bytes)
-                        </th>
-                        <th
-                          scope="col"
-                          className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
-                        >
                           Action
                         </th>
                       </tr>

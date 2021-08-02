@@ -56,7 +56,7 @@ export default function Subject({ user, subject, courseDetail }) {
 						<LearningOutcome learningOutcome={courseDetail.CourseOutlineDetail.LearningOutcome} />
 					</div>
 					<div className='flex-none'>
-						<ClassDescription subject={subject} studentGroupDetail={courseDetail.StudentGroupDetail} />
+						<ClassDescription subject={subject} studentGroupDetail={courseDetail.StudentGroupDetail}/>
 					</div>
 				</div>
 				<div className='course-tab mt-6'>

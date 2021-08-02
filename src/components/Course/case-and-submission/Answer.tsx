@@ -48,9 +48,6 @@ export default function Answer({ answer, idx, getFormattedDate}) {
         {getFormattedDate(answer.UploadDate)}
       </td>
       <td className="px-6 py-4 text-sm text-gray-900">{answer.Hash}</td>
-      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-        {answer.TotalSize}
-      </td>
       <td className="px-6 py-4 whitespace-nowrap text-sm text-purple-600">
         <button
           type="button"

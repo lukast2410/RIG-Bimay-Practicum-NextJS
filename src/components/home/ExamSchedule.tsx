@@ -179,9 +179,6 @@ export default function ExamSchedule({ exam }) {
 		}
 
 		let urlUploadFile = 'User/UploadExam/' + requestData.fileItemId
-		if(typeExam != 'Exam'){
-			urlUploadFile = 'User/Upload/' + requestData.fileItemId
-		}
 
 		const test = await axios.post(`${process.env.NEXT_PUBLIC_LABORATORY_URL}${urlUploadFile}`, requestData, {
 			headers: {

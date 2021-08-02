@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export default function SessionMaterial({sessionDetail, classTransactionId}) {
+export default function SessionMaterial({sessionDetail, classTransactionId, vbl}) {
 
     const getFormattedDate = (date: string) => {
       const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
@@ -52,6 +52,12 @@ export default function SessionMaterial({sessionDetail, classTransactionId}) {
                     >
                       Practicum Case
                     </th>
+                    <th
+                      scope="col"
+                      className="px-6 py-3 text-left text-xs font-medium text-white uppercase tracking-wider"
+                    >
+                      Video Learning
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
@@ -75,18 +81,35 @@ export default function SessionMaterial({sessionDetail, classTransactionId}) {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{material.Room === "" ? "-" : material.Room}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{material.Shift}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm ">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-center">
                         {
                           material.CaseId == "00000000-0000-0000-0000-000000000000"
                           ?
                           (
-                            <p  className="ml-6">No File</p>
+                            <p>No File</p>
                           )
                           :
                           (
                             <Link href={`https://bluejack.binus.ac.id/binusmayalab/Laboratory/GetCase/${classTransactionId}/${material.Session}/${material.CaseId}`}>
                               <button type="button" className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-binus-blue bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-binus-blue">
                                 Download Case
+                              </button>
+                            </Link>
+                          )
+                        }
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-center">
+                        {
+                          !vbl[idx] || !vbl[idx].URL || vbl[idx].URL == ''
+                          ?
+                          (
+                            <p>No Video</p>
+                          )
+                          :
+                          (
+                            <Link href={vbl[idx].URL}>
+                              <button type="button" className="inline-flex items-center px-2.5 py-1.5 border border-gray-300 shadow-sm text-xs font-medium rounded text-binus-blue bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-binus-blue">
+                                Link Video
                               </button>
                             </Link>
                           )

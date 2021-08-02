@@ -131,7 +131,7 @@ export default function ExtraClass({ user, listCourse, classes }) {
 								<div className='mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6'>
 									<div className='sm:col-span-6'>
 										<label htmlFor='first_name' className='block text-sm font-medium text-gray-700'>
-											First Assistant<strong className='text-red-700'>*</strong> (ex. NP17-1)
+											First Assistant<strong className='text-red-700'>*</strong> (ex. LT20-1)
 										</label>
 										<div className='mt-1'>
 											<input
@@ -147,7 +147,7 @@ export default function ExtraClass({ user, listCourse, classes }) {
 
 									<div className='sm:col-span-6'>
 										<label htmlFor='last_name' className='block text-sm font-medium text-gray-700'>
-											Second Assistant (ex. DL18-2)
+											Second Assistant (ex. KA20-1)
 										</label>
 										<div className='mt-1'>
 											<input

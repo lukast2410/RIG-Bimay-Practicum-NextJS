@@ -6,7 +6,7 @@ import { io } from 'socket.io-client'
 import { useEffect, useState } from 'react'
 import UpdateSuccess from '../components/UpdateSuccess'
 import { useRouter } from 'next/router'
-// https://binusmaya-practicum.herokuapp.com
+
 const socketServer = io('https://binusmaya-practicum.herokuapp.com', { transports: ['websocket'] })
 
 function MyApp({ Component, pageProps }) {
@@ -14,23 +14,25 @@ function MyApp({ Component, pageProps }) {
 	const router = useRouter()
 
 	useEffect(() => {
-		navigator.permissions.query({ name: 'notifications' }).then((permission) => {
-			permission.onchange = () => {
-				if (permission.state == 'granted') {
-					navigator.serviceWorker.register('/sw.js')
-					if (router.asPath != '/auth/login') {
-						setOpen(true)
+		if('serviceWorker' in navigator){
+			navigator.permissions.query({ name: 'notifications' }).then((permission) => {
+				permission.onchange = () => {
+					if (permission.state == 'granted') {
+						navigator.serviceWorker.register('/sw.js')
+						if (router.asPath != '/auth/login') {
+							setOpen(true)
+						}
 					}
 				}
+			})
+			if (Notification.permission == 'default') {
+				unregisterServiceWorker()
+				Notification.requestPermission((res) => {})
+			} else if (Notification.permission == 'denied') {
+				unregisterServiceWorker()
+			} else if (Notification.permission == 'granted') {
+				navigator.serviceWorker.register('/sw.js')
 			}
-		})
-		if (Notification.permission == 'default') {
-			unregisterServiceWorker()
-			Notification.requestPermission((res) => {})
-		} else if (Notification.permission == 'denied') {
-			unregisterServiceWorker()
-		} else if (Notification.permission == 'granted') {
-			navigator.serviceWorker.register('/sw.js')
 		}
 	}, [])
 
