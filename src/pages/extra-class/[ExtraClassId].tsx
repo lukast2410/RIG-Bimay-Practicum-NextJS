@@ -132,7 +132,7 @@ export default function ExtraClassDetail({ user, extra }) {
 								{extra.LinkZoom == '' || !extra.LinkZoom.includes('http') ? (
 									<p>To be announced...</p>
 								) : (
-									<a href={extra.LinkZoom}>
+									<a href={extra.LinkZoom} target="_blank"> 
 										<button
 											type='button'
 											className='inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
@@ -149,7 +149,7 @@ export default function ExtraClassDetail({ user, extra }) {
 								{extra.LinkRecord == '' ? (
 									<p>There is no recording...</p>
 								) : (
-									<a href={extra.LinkRecord}>
+									<a href={extra.LinkRecord} target="_blank">
 										<button
 											type='button'
 											className='inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
@@ -295,7 +295,7 @@ export const getServerSideProps = withSession(async function ({ req, res, query 
 		const [smt, extra, notif] = await Promise.all([
 			axios.get(process.env.NEXT_PUBLIC_LABORATORY_URL + 'Schedule/GetSemesters').then((res) => res.data),
 			axios
-				.get(`${process.env.NEXT_PUBLIC_EXTRA_URL}ExtraClassHeader/${userData.SemesterId}/${extraClassId}`, {
+				.get(`${process.env.NEXT_PUBLIC_EXTRA_URL}ExtraClassHeader/${extraClassId}`, {
 					headers: {
 						authorization: 'Bearer ' + token,
 					},
@@ -359,7 +359,7 @@ export const getServerSideProps = withSession(async function ({ req, res, query 
 			)
 			.then((res) => res.data),
 		axios
-			.get(`${process.env.NEXT_PUBLIC_EXTRA_URL}ExtraClassHeader/${userData.SemesterId}/${extraClassId}`, {
+			.get(`${process.env.NEXT_PUBLIC_EXTRA_URL}ExtraClassHeader/${extraClassId}`, {
 				headers: {
 					authorization: 'Bearer ' + token,
 				},
@@ -398,6 +398,7 @@ export const getServerSideProps = withSession(async function ({ req, res, query 
 	}
 
 	if (extra.Room == '' || extra.Room == '-') extra.Room = 'Online'
+
 
 	return {
 		props: {

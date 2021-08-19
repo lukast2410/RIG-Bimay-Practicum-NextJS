@@ -14,7 +14,7 @@ export default function DetailsData({ extra }) {
 	const handleRefresh = async () => {
 		setLoading(true)
 		const result = await axios
-			.get(`${process.env.NEXT_PUBLIC_EXTRA_URL}ExtraClassHeader/${userData.SemesterId}/${extraclass.ExtraClassId}`, {
+			.get(`${process.env.NEXT_PUBLIC_EXTRA_URL}ExtraClassHeader/${extraclass.ExtraClassId}`, {
 				headers: {
 					authorization: 'Bearer ' + userData.Token.token,
 				},

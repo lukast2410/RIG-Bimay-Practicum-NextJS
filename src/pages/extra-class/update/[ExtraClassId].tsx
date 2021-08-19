@@ -330,22 +330,10 @@ export const getServerSideProps = withSession(async function ({ req, res, query 
 	} else if (userData.Data.Role.includes('Software Teaching Assistant')) {
 		const token = userData?.Token.token
 		const extraClassId = query.ExtraClassId
-		const [smt, listCourse, extra, notif] = await Promise.all([
+		const [smt, extra, notif] = await Promise.all([
 			axios.get(process.env.NEXT_PUBLIC_LABORATORY_URL + 'Schedule/GetSemesters').then((res) => res.data),
 			axios
-				.get(
-					process.env.NEXT_PUBLIC_LABORATORY_URL +
-						'course/GetCourseOutlineInSemesterByUser?semesterId=' +
-						userData.SemesterId,
-					{
-						headers: {
-							authorization: 'Bearer ' + token,
-						},
-					}
-				)
-				.then((res) => res.data),
-			axios
-				.get(`${process.env.NEXT_PUBLIC_EXTRA_URL}ExtraClassHeader/${userData.SemesterId}/${extraClassId}`, {
+				.get(`${process.env.NEXT_PUBLIC_EXTRA_URL}ExtraClassHeader/${extraClassId}`, {
 					headers: {
 						authorization: 'Bearer ' + token,
 					},
@@ -380,17 +368,14 @@ export const getServerSideProps = withSession(async function ({ req, res, query 
 			}
 		}
 
-		const courseIdx = listCourse.findIndex((x) => x.Name == extra.Course)
-		const classes = await axios
-			.get(
-				`${process.env.NEXT_PUBLIC_LABORATORY_URL}ClassTransaction/GetClassTransactionByUser?semesterId=${userData.SemesterId}&coId=${listCourse[courseIdx].CourseOutlineId}`,
-				{
-					headers: {
-						authorization: 'Bearer ' + token,
-					},
-				}
-			)
-			.then((res) => res.data)
+		const listCourse = [{
+			Id: 1,
+			Name: extra.Course
+		}]
+		const classes = [{
+			Id: 1,
+			ClassName: extra.Class
+		}]
 
 		return {
 			props: {
